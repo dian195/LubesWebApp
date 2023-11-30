@@ -1,0 +1,176 @@
+﻿@using System.Security.Claims;
+@model WebApp.Models.UserProfileDTO;
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Profile | Lubes";
+}
+
+<div class="container-fluid flex-grow-1 container-p-y">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-sm-flex py-2 ms-2">
+                <h4 class="fw-bold mb-0">
+                    <span class="text-muted fw-light">Dashboard / </span>
+                    My Profile
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="card py-3 mb-4">
+        <div class="container" style="max-width: 800px;">
+            <div class="row">
+                <div class="col-6 col-md-3 mb-3">
+                    <label for="picture">
+                        <img src="~/assets/avatar/user-photo.png" class="img-fluid rounded cursor-pointer" alt="Photo Profile">
+                    </label>
+                    @* <input class="d-none" type="file" name="picture" id="picture" accept="image/png, image/jpeg, image/jpg" /> *@
+                </div>
+            </div>
+            <div class="row g-md-2">
+                <div class="col-md-6 mb-3">
+                    <label for="name" class="form-label">Username</label>
+                    <input type="text" id="usrnm" class="form-control" placeholder="Enter User Name" value="@User.FindFirstValue(ClaimTypes.NameIdentifier)" disabled />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="occupation" class="form-label">Nama</label>
+                    <input type="text" id="nama" class="form-control" placeholder="Enter Nama" value="@Model.namaUser" />
+                </div>
+            </div>
+            <div class="row g-md-2">
+                <div class="col-md-6 mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" id="email" class="form-control" placeholder="Enter Email" value="@Model.email" disabled />
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="roles" class="form-label">Role</label>
+                    <select id="ddlRole" class="form-select" onchange="roleChange(this)" disabled asp-for="roleId" asp-items="@(new SelectList(Model.Roles, "Id", "Role_Name"))">
+                        <option value="0" disabled>-- Select Role --</option>
+                    </select>
+                </div>
+            </div>
+            @if (Model.userId != 0)
+            {
+                <div class="row">
+                    <div class="col text-end">
+                        <button type="submit" id="btnSubmit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            }
+        </div>
+        <input type="hidden" id="roleidhdn" name="roleIDhdn" asp-for="roleId" />
+        <input type="hidden" id="idhdn" name="Idhdn" asp-for="userId" />
+        <input type="hidden" value="" name="testing" id="testing" />
+    </div>
+</div>
+
+@section scripts {
+    <script type="text/javascript">
+        function roleChange(ddlRole) {
+            var selectedText = ddlRole.options[ddlRole.selectedIndex].innerHTML;
+            document.getElementsByName("roleIDhdn")[0].value = selectedText;
+        }
+        
+        $("body").on("change", "#ddlRole", function () {
+            $("input[name=testing]").val($(this).find("option:selected").text());
+        });
+
+        $('#btnSubmit').on('click', function () {
+
+            try {
+
+                $('#btnSubmit').prop('disabled', true);
+
+                var roleid = $('#roleidhdn').val();
+                var id = $('#idhdn').val();
+                var username = $('#usrnm').val();
+                var nama = $('#nama').val();
+                var email = $('#email').val();
+
+                if (IsEmail(email) == false) {
+                    $('#btnSubmit').prop('disabled', false);
+                    return Swal.fire({
+                        title: 'Error !',
+                        text: 'Email tidak valid!',
+                        icon: 'warning',
+                    });
+                }
+
+                //Validasi
+                if (roleid.trim() == "" || id.trim() == "" || username.trim() == "" || nama.trim() == "" || email.trim() == "") {
+                    $('#btnSubmit').prop('disabled', false);
+                    return Swal.fire({
+                        title: 'Error !',
+                        text: 'Lengkapi Data !',
+                        icon: 'error',
+                    });
+                }
+
+                const obj = {
+                    "userId": id,
+                    "username": username,
+                    "namaUser": nama,
+                    "roleId": roleid,
+                    "email": email
+                };
+
+                console.log(JSON.stringify(obj));
+
+                //Save to db
+                $.ajax({
+                    url: "../api/UpdateProfile",
+                    method: "POST",
+                    processData: false,
+                    contentType: "application/json",
+                    data: JSON.stringify(obj),
+                    beforeSend: function (xhr) {
+                        $('#btnSubmit').prop('disabled', true);
+                    },
+                    success: function (response) {
+                        $('#btnSubmit').prop('disabled', false);
+                        if (response.id == 1)
+                        {
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: response.message,
+                                icon: 'success',
+                            }).then(function (result) {
+                                if (true) {
+                                    window.location.href = window.location.href;
+                                }
+                            });
+                        }
+                        else
+                        {
+                            return Swal.fire({
+                                title: 'Error !',
+                                text: response.message,
+                                icon: 'error',
+                            });
+                        }
+                    },
+                    error: function (response) {
+                        $('#btnSubmit').prop('disabled', false);
+                        return Swal.fire({
+                            title: 'Error !',
+                            text: response.message,
+                            icon: 'error',
+                        });
+                    },
+                });
+
+            }
+            catch (err) {
+                $('#btnSubmit').prop('disabled', false);
+                Swal.fire({
+                    title: 'Error !',
+                    text: err.message,
+                    icon: 'error',
+                });
+            }
+        })
+
+
+    </script>
+}

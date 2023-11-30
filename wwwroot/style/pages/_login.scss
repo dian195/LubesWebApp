@@ -1,0 +1,85 @@
+.login-section {
+  height: 100vh;
+
+  .login-wrapper {
+    height: 100%;
+  }
+
+  .bg-login {
+    .img-login {
+      width: 80%;
+    }
+  }
+
+  .card {
+    width: 80%;
+    max-width: 450px;
+    border: none;
+    padding: 15px;
+    box-shadow: rgba(233, 233, 233, 0.2) 0px 5px 30px;
+
+    .card-text {
+      font-size: 14px;
+      color: #999999;
+      font-weight: 300;
+      margin-bottom: 25px;
+    }
+
+    .remember {
+      font-size: 14px;
+    }
+
+    .forgot-password {
+      font-size: 13px;
+      color: $primary;
+      text-align: right;
+      margin-top: 10px;
+      text-decoration: none;
+    }
+
+    .privacy-policy {
+      text-decoration: none;
+    }
+
+    .btn {
+      padding-inline: 18px;
+      font-size: 15px;
+    }
+
+    .form-floating {
+      font-size: 15px;
+    }
+
+    .form-control {
+      font-size: 15px;
+    }
+
+    .form-control:focus {
+      box-shadow: none;
+      border: 0.2 #e1e1e1 solid;
+    }
+  }
+}
+
+// Mobile Device
+@media (max-width: 575.98px) {
+  .login-section {
+    height: max-content;
+    .login-wrapper {
+      height: 50%;
+    }
+
+    .bg-login {
+      .img-login {
+        width: 90%;
+        align-self: center;
+        margin-top: 50px;
+      }
+    }
+
+    .card {
+      width: 100%;
+      box-shadow: rgba(233, 233, 233, 0.2) 0px 5px 30px;
+    }
+  }
+}

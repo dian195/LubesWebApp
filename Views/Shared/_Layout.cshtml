@@ -1,0 +1,113 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+
+    <title>@ViewData["Title"]</title>
+
+    <link href="~/style/main.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="icon" type="image/x-icon" href="~/assets/favicon/favicon.png" />
+</head>
+
+<body>
+    <!-- HEADER -->
+    <section class="fixed-top">
+        <nav class="navbar">
+            <div class="container-fluid">
+                <a class="navbar-brand d-flex" href="/">
+                    <img src="~/assets/img/logo-lubricants.png" alt="E-Lubricants" />
+                </a>
+                <a asp-action="Report" asp-controller="Home" type="button" class="btn btn-report rounded-pill">Laporkan</a>
+            </div>
+        </nav>
+    </section>
+
+    <!-- Page Content -->
+
+    @RenderBody()
+
+    <!-- Footer -->
+    <footer>
+        <section class="footer-top">
+            <div class="container-fluid">
+                <div class="row footer-top-row">
+                    <div class="col-6 col-sm-4 col-md-2 text-center">
+                        <img class="logo-footer" src="~/assets/img/logo_fastron.png" alt="">
+                    </div>
+
+                    <div class="col-6 col-sm-4 col-md-2 text-center">
+                        <img class="logo-footer" src="~/assets/img/logo_enduro.png" alt="">
+                    </div>
+
+                    <div class="col-6 col-sm-4 col-md-2 text-center">
+                        <img class="logo-footer" src="~/assets/img/logo_meditran.png" alt="">
+                    </div>
+
+                    <div class="col-6 col-sm-4 col-md-2 text-center">
+                        <img class="logo-footer" src="~/assets/img/logo_primaxp.png" alt="">
+                    </div>
+
+                    <div class="col-6 col-sm-4 col-md-2 text-center">
+                        <img class="logo-footer" src="~/assets/img/logo_mesran.png" alt="">
+                    </div>
+
+                    <div class="col-6 col-sm-4 col-md-2 text-center">
+                        <img class="logo-footer" src="~/assets/img/logo_coolant.png" alt="">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col text-center">
+                        <a href="~/assets/pdf/Identifikasi_Botol_Pelumas_Pertamina.pdf" target="_blank" type="button"
+                           class="btn btn-download rounded-pill">
+                            <i class="fa fa-cloud-download"></i>
+                            Download Panduan
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+        <footer class="footer-bottom">
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <p>
+                            Copyright ©2023 Lubes | All rights reserved.
+                        </p>
+                        <img class="logo-footer-left" src="~/assets/img/logo-mypertamina-01.svg" alt="">
+                        <img class="logo-footer-right" src="~/assets/img/logo-mypertamina-02.svg" alt="">
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </footer>
+
+    <!-- Bootstrap core JavaScript -->
+    @* <script src="~/vendor/jquery/jquery.slim.min.js"></script> *@
+    <script src="~/vendor/jquery/jquery.min.js"></script>
+    <script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function IsEmail(email) {
+            var regex = /^([a-zA-Z0-9_\.\-\+])+\@@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+            console.log(regex);
+            if (!regex.test(email)) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+    </script>
+
+    @RenderSection("scripts", required: false)
+</body>
+
+</html>

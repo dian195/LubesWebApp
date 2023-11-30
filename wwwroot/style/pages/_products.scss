@@ -1,0 +1,133 @@
+.product-detail {
+  margin-top: 120px;
+  .title {
+    margin-bottom: 40px;
+
+    h3 {
+      font-size: 35px;
+      font-weight: 600;
+      text-align: center;
+    }
+  }
+
+  .card-batch {
+    text-align: center;
+    background-color: #ececec !important;
+    box-shadow: none !important;
+  }
+
+  .card-detail {
+    width: 90%;
+    max-width: 800px;
+    padding-inline: 5%;
+    padding-block: 30px;
+    border-radius: 20px;
+    background-color: #fff;
+    box-shadow: 0 0 30px #f3f3f3;
+    margin-bottom: 20px;
+
+    .title-detail {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .text-detail {
+      font-size: 16px;
+      font-weight: 300;
+    }
+  }
+}
+
+.overview {
+  padding-block: 80px;
+
+  .overview-img {
+    .img-overview {
+      width: 80%;
+    }
+  }
+
+  .overview-text {
+    padding-inline: 5%;
+    h2 {
+      font-weight: 600;
+      letter-spacing: 0.16px;
+      word-wrap: break-word;
+    }
+
+    li {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 30px;
+      text-align: justify;
+    }
+
+    .divider {
+      max-width: 200px;
+      border: 2.5px #0055b8 solid;
+      border-radius: 50px;
+      margin-block: 25px;
+    }
+  }
+}
+
+@media (max-width: 575.98px) {
+  .product-detail {
+    margin-top: 100px;
+
+    .title {
+      margin-bottom: 8px;
+
+      h3 {
+        font-size: 22px;
+      }
+    }
+
+    .card-detail {
+      width: 80%;
+      padding-inline: 7%;
+      padding-block: 20px;
+      border-radius: 15px;
+      margin-bottom: 10px;
+
+      .title-detail {
+        font-size: 15px;
+        margin-bottom: 5px;
+      }
+
+      .text-detail {
+        font-size: 15px;
+      }
+    }
+  }
+
+  .overview {
+    padding-block: 40px;
+
+    .overview-img {
+      .img-overview {
+        width: 90%;
+      }
+    }
+
+    .overview-text {
+      padding-inline: 10%;
+      order: 1;
+
+      h2 {
+        font-size: 18px;
+      }
+
+      li {
+        font-size: 15px;
+        line-height: 25px;
+      }
+
+      .divider {
+        max-width: 120px;
+        border: 2.5px #0055b8 solid;
+        margin-block: 15px;
+      }
+    }
+  }
+}

@@ -1,0 +1,115 @@
+﻿@model IPagedList<LogScanningDTO>
+@using X.PagedList.Mvc.Common;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Mvc.Core.Common;
+
+@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Scan | Lubes";
+}
+
+<div class="container-fluid flex-grow-1 container-p-y">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-sm-flex py-2 ms-2">
+                <h4 class="fw-bold mb-0">
+                    <span class="text-muted fw-light">Dashboard / </span>
+                    Scan Barcode
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table Card -->
+    <div class="card py-3">
+        <form method="post" asp-action="Scan" asp-controller="Admin" autocomplete="off">
+            <div class="row px-3">
+                <!-- Search -->
+                @* <div class="col-md-2 mb-2">
+                <select class="form-select" id="filterBySelect">
+                <option value="username">Username</option>
+                <option value="nama">Nama</option>
+                <option value="email">Email</option>
+                </select>
+                </div> *@
+                <div class="col-md-4 mb-2">
+                    <input type="text" id="txtSearch" value="@ViewBag.Filter" name="filter" autocomplete="off" class="form-control" placeholder="Search ..." />
+                </div>
+                <div class="col-md-2 mb-2">
+                    <button type="submit" class="btn btn-primary" id="btnSearch"><i class="bx bx-search fs-4"></i>&nbsp;Search</button>
+                </div>
+            </div>
+
+            <div class="row px-3">
+                <!-- Button Add -->
+                <div class="col-md-12 mb-2 text-end">
+                    <button type="button" class="btn btn-primary me-1" id="btnExport">
+                        <span class="tf-icons bx bx-file"></span>
+                        Export
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table Body -->
+            <div class="table-responsive text-nowrap py-3">
+                <table class="table table-striped" id="tblData">
+                    <thead>
+                        <tr>
+                            <th>Tanggal Scan</th>
+                            <th>QR No</th>
+                            <th>Product</th>
+                            <th>Lokasi Scan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (LogScanningDTO data in Model)
+                        {
+                            <tr>
+                                <td>@data.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                <td>@data.qrNo</td>
+                                <td>@data.productId</td>
+                                <td>@data.alamatMap</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <!-- Pagination -->
+            <div class="row mt-2 px-3">
+                <div class="col">
+                    <div class="demo-inline-spacing">
+                        <nav aria-label="Page navigation">
+
+                            @Html.PagedListPager(Model, page => Url.Action("Scan", new { pg = page, filter = ViewBag.Filter }), new PagedListRenderOptions()
+                            {
+                            ActiveLiElementClass = "active",
+                            PageClasses = new[]{ "page-link"},
+                            LiElementClasses=new[] { "page-item" },
+                            UlElementClasses = new[] { "pagination", "mt-3" },
+                            LinkToNextPageFormat = "Next",
+                            LinkToPreviousPageFormat = "Previous",
+                            DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                            DisplayLinkToNextPage = PagedListDisplayMode.Always
+                            })
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+@section scripts {
+    <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            $("#btnExport").click(function () {
+                $("#tblData").table2excel({
+                    filename: "Scan.xls"
+                });
+            });
+        });
+    </script>
+}

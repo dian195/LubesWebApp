@@ -1,0 +1,97 @@
+.footer-top {
+  background-image: url("../../assets/img/bg_footer.jpg");
+  background-size: cover;
+  background-position: center;
+  padding-block: 100px;
+
+  .btn-download {
+    padding-inline: 40px;
+    padding-block: 15px;
+    font-size: 14px;
+    background-color: #ca1b2d;
+    color: white;
+  }
+
+  .btn-download:hover {
+    background-color: #0055b8;
+    transition-duration: 500ms;
+  }
+
+  .footer-top-row {
+    padding-inline: 8%;
+    margin-bottom: 40px;
+  }
+
+  .logo-footer {
+    width: 80%;
+    max-width: 150px;
+  }
+}
+
+.footer-bottom {
+  position: relative;
+  padding-top: 20px;
+  padding-bottom: 10px;
+
+  p {
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .logo-footer-left {
+    position: absolute;
+    width: 30%;
+    max-width: 250px;
+    bottom: 0;
+    left: 0;
+  }
+
+  .logo-footer-right {
+    position: absolute;
+    width: 25%;
+    max-width: 210px;
+    bottom: 0;
+    right: 0;
+  }
+}
+
+// Mobile Device
+@media (max-width: 575.98px) {
+  .footer-top {
+    padding-block: 80px;
+    padding-bottom: 120px;
+
+    .btn-download {
+      font-size: 13px;
+    }
+
+    .footer-top-row {
+      padding-inline: 5%;
+    }
+
+    .logo-footer {
+      width: 85%;
+      margin-bottom: 30px;
+    }
+  }
+
+  .footer-bottom {
+    padding-top: 20px;
+    padding-bottom: 10px;
+
+    .logo-footer-left {
+      width: 45%;
+      max-width: 250px;
+      bottom: 58px;
+      left: 0;
+    }
+
+    .logo-footer-right {
+      width: 35%;
+      max-width: 210px;
+      bottom: 58px;
+      right: 0;
+    }
+  }
+}

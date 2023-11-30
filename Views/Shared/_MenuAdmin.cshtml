@@ -1,0 +1,79 @@
+﻿@{
+    var routeUrl = Url.RouteUrl(ViewContext.RouteData.Values);
+    var querystringPath = ViewContext.HttpContext.Request.QueryString.Value;
+    var fullroutewithqs = $"{routeUrl}{querystringPath}";
+}
+
+<aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+    <div class="app-brand demo">
+        <a href="~/" class="app-brand-link">
+            <span class="app-brand-logo demo">
+                <img src="~/assets/icon/logo_pertamina_lubricants.png" style="height: 35px;" alt="">
+            </span>
+        </a>
+
+        <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+            <i class="bx bx-chevron-left bx-sm align-middle"></i>
+        </a>
+    </div>
+
+    <div class="menu-inner-shadow"></div>
+
+    <ul class="menu-inner py-1">
+        <!-- Dashboard -->
+        <li class="menu-item @(routeUrl.ToLower() == "/admin/index" ? "active" : (routeUrl.ToLower() == "/admin/" ? "active" : string.Empty))">
+            <a asp-controller="Admin" asp-action="Index" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-home-circle"></i>
+                <div>Dashboard</div>
+            </a>
+        </li>
+
+        <!-- Report -->
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Pengaduan</span>
+        </li>
+        <!-- E-Book List -->
+        <li class="menu-item @(routeUrl.ToLower().Contains("/admin/pengaduan") ? "active" : string.Empty)">
+            <a asp-controller="Admin" asp-action="Pengaduan" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-book-content"></i>
+                <div>Pengaduan</div>
+            </a>
+        </li>
+
+        <!-- Scan Barcode -->
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Scan Barcode</span>
+        </li>
+        <!-- Category -->
+        <li class="menu-item @(routeUrl.ToLower().Contains("/admin/scan") ? "active" : string.Empty)">
+            <a asp-controller="Admin" asp-action="Scan" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-qr-scan"></i>
+                <div>Scan Barcode</div>
+            </a>
+        </li>
+
+        <!-- Master Product -->
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">Master Produk</span>
+        </li>
+        <!-- Products -->
+        <li class="menu-item @(routeUrl.ToLower().Contains("/admin/products") ? "active" : string.Empty)">
+            <a asp-controller="Admin" asp-action="Products" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-category"></i>
+                <div>Produk</div>
+            </a>
+        </li>
+
+        <!-- Users Management -->
+        <li class="menu-header small text-uppercase">
+            <span class="menu-header-text">User Management</span>
+        </li>
+        <!-- Users -->
+        <li class="menu-item @(routeUrl.ToLower().Contains("/admin/users") ? "active" : string.Empty)">
+            <a asp-controller="Admin" asp-action="Users" class="menu-link">
+                <i class="menu-icon tf-icons bx bxs-user-account"></i>
+                <div>User</div>
+            </a>
+        </li>
+    </ul>
+</aside>

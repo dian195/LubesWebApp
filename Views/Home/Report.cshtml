@@ -1,0 +1,302 @@
+﻿@model WebApp.Models.ReportProductDTO
+
+@{
+    ViewData["Title"] = "Form Pengaduan | Lubes";
+    Layout = "_Layout";
+}
+
+<section class="hero-banner">
+    <div class="row justify-content-center h-100">
+        <div class="col-10 col-md-8 align-self-center">
+            <h1 class="title-hero">
+                LAPORKAN DUGAAN TINDAKAN PEMALSUAN PRODUK PERTAMINA LUBRICANTS
+            </h1>
+        </div>
+    </div>
+</section>
+
+<!-- Report Form -->
+<div class="container report">
+    <div class="row">
+        <!-- Report Guide -->
+        <div class="col-md-6 report-guide">
+            <div class="row">
+                <div class="title-report mb-3">
+                    Petunjuk identifikasi keaslian produk (Lihat Gambar)
+                </div>
+                <div class="description-report">
+                    Terima kasih telah menggunakan layanan formulir online kami untuk melaporkan kasus pemalsuan
+                    produk pelumas Pertamina Lubricants. Kami sangat menghargai kontribusi Anda dalam menjaga
+                    integritas produk kami.
+                </div>
+                <div class="info-report my-4 my-md-5">
+                    Dalam hal ini, kami ingin menegaskan beberapa poin terkait dengan keamanan dan kerahasiaan
+                    identitas Anda
+                </div>
+            </div>
+            <div class="card-report">
+                <div class="number-card-report">
+                    01
+                </div>
+                <div class="title-card-report">
+                    Keamanan Data
+                </div>
+                <div class="text-card-report">
+                    Semua informasi yang Anda berikan melalui formulir ini akan dijaga dengan ketat. Kami
+                    menggunakan langkah-langkah keamanan teknologi terkini untuk memastikan data Anda tetap aman
+                    dari akses yang tidak sah atau penggunaan yang tidak sah.
+                </div>
+            </div>
+            <div class="card-report">
+                <div class="number-card-report">
+                    02
+                </div>
+                <div class="title-card-report">
+                    Kerahasiaan Identitas
+                </div>
+                <div class="text-card-report">
+                    Identitas Anda akan tetap dirahasiakan sepenuhnya. Kami tidak akan mengungkapkan informasi
+                    pribadi atau identifikasi Anda kepada pihak manapun tanpa izin tertulis Anda. Kami berkomitmen
+                    untuk menjaga kerahasiaan pelapor demi keamanan dan kenyamanan Anda.
+                </div>
+            </div>
+            <div class="card-report">
+                <div class="number-card-report">
+                    03
+                </div>
+                <div class="title-card-report">
+                    Penggunaan Informasi
+                </div>
+                <div class="text-card-report">
+                    Informasi yang Anda berikan akan digunakan secara eksklusif untuk investigasi dan penanganan
+                    kasus pemalsuan produk pelumas Pertamina Lubricants.
+                </div>
+            </div>
+            <div class="card-report">
+                <div class="number-card-report">
+                    04
+                </div>
+                <div class="title-card-report">
+                    Perlindungan Hukum
+                </div>
+                <div class="text-card-report">
+                    Kami akan berusaha semaksimal mungkin untuk memberikan perlindungan hukum kepada Anda sebagai
+                    pelapor. Namun, perlu diingat bahwa dalam beberapa keadaan, mungkin diperlukan kolaborasi dengan
+                    pihak berwenang untuk menyelesaikan kasus dengan efektif.umas Pertamina Lubricants.
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="description-report  my-5">
+                Dengan mengirimkan laporan Anda, Anda setuju dengan ketentuan di atas dan memahami bahwa penggunaan
+                formulir ini mengikuti kebijakan keamanan dan privasi PERTAMINA Lubricants.
+                <br>
+                <br>
+                Terima kasih atas partisipasi Anda dalam menjaga keamanan produk pelumas Pertamina Lubricants. Kami
+                yakin bahwa dengan bantuan Anda, kita dapat menciptakan lingkungan yang lebih aman dan dapat
+                diandalkan bagi semua konsumen.
+            </div>
+        </div>
+
+        <!-- Report Form -->
+        <div class="col-md-6 report-form">
+            <div class="row card-form">
+                <div class="col-12">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" asp-for="namaLengkap" id="txtNamaLengkap" placeholder="Nama Lengkap">
+                        <label for="txtNamaLengkap">Nama Lengkap</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-floating mb-3">
+                        <input type="tel" class="form-control" asp-for="nomorTelp" id="txtNomorWA" placeholder="Nomor Telepon">
+                        <label for="txtNomorWA">Nomor Telepon (Whatsapp)</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" asp-for="email" id="txtEmail" placeholder="Email">
+                        <label for="txtEmail">Email</label>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" asp-for="namaProduk" id="txtNamaProduct" placeholder="Nama Produk">
+                        <label for="txtNamaProduct">Nama Produk</label>
+                        <div id="txtNamaProduct" class="form-text px-2 text-muted">
+                            Apa Nama Produk PERTAMINA Lubricants yang anda laporkan diduga telah dipalsukan?
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 form-radio mt-4">
+                    <div class="form-title mb-2">
+                        Mana yang lebih dekat mendeskripsikan diri anda
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" asp-for="descPelapor" id="flexRadioDefault1"
+                               value="Perwira PERTAMINA Group">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Perwira PERTAMINA Group
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" asp-for="descPelapor" id="flexRadioDefault2"
+                               value="Distributor Pelumas PERTAMINA">
+                        <label class="form-check-label" for="flexRadioDefault2">
+                            Distributor Pelumas PERTAMINA
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" asp-for="descPelapor" id="flexRadioDefault3"
+                               value="Agen / Reseller">
+                        <label class="form-check-label" for="flexRadioDefault3">
+                            Agen / Reseller
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" asp-for="descPelapor" id="flexRadioDefault4"
+                               value="SPBU">
+                        <label class="form-check-label" for="flexRadioDefault4">
+                            SPBU
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" asp-for="descPelapor" id="flexRadioDefault5"
+                               value="Bengkel">
+                        <label class="form-check-label" for="flexRadioDefault5">
+                            Bengkel
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" asp-for="descPelapor" id="flexRadioDefault6"
+                               value="Customer Retail Umum">
+                        <label class="form-check-label" for="flexRadioDefault6">
+                            Customer Retail Umum
+                        </label>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input class="form-check-input" type="radio" asp-for="descPelapor" id="flexRadioDefault7"
+                               value="Customer Industri">
+                        <label class="form-check-label" for="flexRadioDefault7">
+                            Customer Industri
+                        </label>
+                    </div>
+                    <div class="col">
+                        <div class="form-check mb-2">
+                            <input class="form-check-input" type="radio" asp-for="descPelapor" id="flexRadioDefault8"
+                                   value="Lainnya">
+                            <label class="form-check-label" for="flexRadioDefault8">
+                                Lainnya
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 mt-3 text-end">
+                    <button type="submit" id="btnSubmit" class="btn btn-submit btn-primary">Kirim Laporan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+
+    <script>
+
+        $('#btnSubmit').on('click', function () {
+
+            try {
+
+                $('#btnSubmit').prop('disabled', true);
+
+                var namaLengkap = $('#txtNamaLengkap').val();
+                var nomorWA = $('#txtNomorWA').val();
+                var email = $('#txtEmail').val();
+                var namaProduct = $('#txtNamaProduct').val();
+                var descPelapor = $("input[name='descPelapor']:checked").val();
+
+                if (jQuery.type(descPelapor) === "undefined") {
+                    descPelapor = "";
+                }
+
+                if (IsEmail(email) == false) {
+                    $('#btnSubmit').prop('disabled', false);
+                    return Swal.fire({
+                        title: 'Error !',
+                        text: 'Email tidak valid!',
+                        icon: 'warning',
+                    });
+                }
+
+                //Validasi
+                if (namaLengkap.trim() == "" || nomorWA.trim() == "" || email.trim() == "" || namaProduct.trim() == "" || descPelapor.trim() == "") {
+                    $('#btnSubmit').prop('disabled', false);
+                    return Swal.fire({
+                        title: 'Error !',
+                        text: 'Lengkapi Data !',
+                        icon: 'error',
+                    });
+                }
+
+                const obj = {
+                    "namaLengkap": namaLengkap,
+                    "nomorTelp": nomorWA,
+                    "email": email,
+                    "namaProduk": namaProduct,
+                    "descPelapor": descPelapor
+                };
+
+                //Save to db
+                $.ajax({
+                    url: "/api/PostReportProduct",
+                    method: "POST",
+                    processData: false,
+                    contentType: "application/json",
+                    data: JSON.stringify(obj),
+                    beforeSend: function (xhr) {
+                        $('#btnSubmit').prop('disabled', true);
+                    },
+                    success: function (response) {
+                        $('#btnSubmit').prop('disabled', false);
+                        if (response.id == 1)
+                        {
+                            Swal.fire({
+                                title: 'Berhasil!',
+                                text: response.message,
+                                icon: 'success',
+                            }).then(function (result) {
+                                if (true) {
+                                    window.location.href = window.location.href;
+                                }
+                            });
+                        }
+                        else
+                        {
+                            return Swal.fire({
+                                title: 'Error !',
+                                text: response.message,
+                                icon: 'error',
+                            });
+                        }
+                    },
+                    error: function (response) {
+                        $('#btnSubmit').prop('disabled', false);
+                        return Swal.fire({
+                            title: 'Error !',
+                            text: response.message,
+                            icon: 'error',
+                        });
+                    },
+                });
+
+            }
+            catch (err) {
+                $('#btnSubmit').prop('disabled', false);
+                Swal.fire({
+                    title: 'Error !',
+                    text: err.message,
+                    icon: 'error',
+                });
+            }
+        })
+    </script>
+}

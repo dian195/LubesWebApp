@@ -1,0 +1,56 @@
+.hero-banner {
+  margin-bottom: 30px;
+  .title-hero {
+    font-size: 60px;
+    line-height: 1em;
+  }
+}
+
+.guide {
+  padding: 30px;
+
+  .badge-guide {
+    width: 90%;
+    max-width: 400px;
+  }
+
+  .card-guide {
+    padding-inline: 5%;
+    padding-block: 20px;
+    background-color: rgb(248, 248, 248);
+    border-radius: 20px;
+
+    .img-guide {
+      width: 200px;
+    }
+
+    .text-guide {
+      font-size: 20px;
+      line-height: 1.5em;
+      color: #4f4f4f;
+    }
+  }
+}
+
+// Mobile Device
+@media (max-width: 575.98px) {
+  .hero-banner {
+    .title-hero {
+      font-size: 40px;
+    }
+  }
+
+  .guide {
+    padding: 20px;
+
+    .card-guide {
+      padding-inline: 30px;
+
+      .text-guide {
+        font-size: 17px;
+        margin-bottom: 10px;
+        text-align: center;
+      }
+    }
+  }
+}

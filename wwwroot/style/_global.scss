@@ -1,0 +1,230 @@
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+.hero-banner {
+  background-image: url("../assets/img/bg_header.jpg");
+  background-position: center;
+  background-size: cover;
+  height: 450px;
+  overflow: hidden;
+
+  .title-hero {
+    font-size: 40px;
+    font-weight: 600;
+    text-align: center;
+    color: white;
+    margin-top: 20px;
+    margin-bottom: 0;
+  }
+}
+
+.card-wrapper {
+  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 12px;
+  max-width: 320px;
+
+  .card-thumbnail {
+    border: none;
+    height: 150px;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+
+    .badge {
+      position: absolute;
+      bottom: 10px;
+      right: 10px;
+      font-weight: 400;
+    }
+  }
+
+  .card-date {
+    font-size: 12px;
+    color: #999999;
+    font-weight: 300;
+    padding-inline: 5px;
+  }
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+    word-wrap: break-word;
+    margin-block: 8px;
+    padding-inline: 5px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-text {
+    color: #999999;
+    font-size: 13px;
+    font-weight: 300;
+    letter-spacing: 0.8px;
+    word-wrap: break-word;
+    padding-inline: 5px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .img-file {
+    width: 50px;
+  }
+
+  .card-title-file {
+    font-size: 15px;
+    font-weight: 500;
+    word-wrap: break-word;
+    padding-inline: 7px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .btn {
+    font-size: 11px;
+    margin-top: 15px;
+    margin-bottom: 5px;
+    margin-left: 5px;
+  }
+}
+
+.btn-load-more {
+  font-size: 14px;
+  padding-inline: 18px;
+}
+
+.breadcrumb {
+  margin-bottom: 30px;
+  margin-left: 8px;
+
+  .breadcrumb-item {
+    color: #999999;
+    a {
+      text-decoration: none;
+      color: #000;
+    }
+
+    a:hover {
+      color: #dc3545;
+    }
+  }
+}
+
+.btn-add {
+  font-size: 14px;
+  font-weight: 300;
+}
+
+.btn-danger {
+  padding-inline: 40px;
+  padding-block: 12px;
+  font-size: 14px;
+  background-color: #ca1b2d;
+  color: white;
+  margin-right: 3%;
+}
+
+.btn-light {
+  padding-inline: 40px;
+  padding-block: 12px;
+  font-size: 14px;
+  background-color: #eeeeee;
+  margin-right: 3%;
+}
+
+.btn-danger:hover {
+  background-color: #0055b8;
+  transition-duration: 500ms;
+}
+
+// Mobile Device
+@media (max-width: 575.98px) {
+  .hero-banner {
+    height: 450px;
+
+    .title-hero {
+      font-size: 28px;
+      font-weight: 600;
+      text-align: center;
+      color: white;
+    }
+  }
+
+  .card-wrapper {
+    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.05);
+    padding: 8px;
+    max-width: 200px;
+
+    .card-thumbnail {
+      height: 100px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+
+      .badge {
+        bottom: 8px;
+        right: 8px;
+        font-weight: 300;
+        font-size: 10px;
+      }
+    }
+
+    .card-date {
+      font-size: 11px;
+      color: #999999;
+    }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0;
+      margin-block: 6px;
+    }
+
+    .card-text {
+      color: #999999;
+      font-size: 12px;
+      font-weight: 300;
+      letter-spacing: 0;
+    }
+
+    .img-file {
+      width: 30px;
+    }
+
+    .card-title-file {
+      font-size: 14px;
+    }
+
+    .btn {
+      font-size: 10px;
+      margin-top: 12px;
+      margin-bottom: 5px;
+      margin-left: 3px;
+    }
+  }
+
+  .breadcrumb {
+    margin-bottom: 20px;
+
+    .breadcrumb-item {
+      font-size: 13px;
+    }
+  }
+
+  .btn-add {
+    margin-bottom: 15px;
+    margin-left: 5px;
+  }
+}

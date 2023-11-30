@@ -1,0 +1,45 @@
+.navbar {
+  position: relative;
+  padding-top: 20px;
+
+  .navbar-brand {
+    padding: 0;
+
+    img {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 50%;
+      max-width: 200px;
+    }
+  }
+
+  img {
+    margin-right: 15px;
+  }
+
+  .btn-report {
+    padding-inline: 40px;
+    padding-block: 12px;
+    font-size: 14px;
+    background-color: #ca1b2d;
+    color: white;
+    margin-right: 3%;
+  }
+
+  .btn-report:hover {
+    background-color: #0055b8;
+    transition-duration: 500ms;
+  }
+}
+
+// Mobile Device
+@media (max-width: 575.98px) {
+  .navbar {
+    padding-top: 12px;
+
+    .btn-report {
+      margin-right: 15px;
+    }
+  }
+}

@@ -1,0 +1,257 @@
+﻿@model WebApp.Models.ProductDetailDTO
+
+@{
+    ViewData["Title"] = "Detail Produk | Lubes";
+    Layout = "_Layout";
+}
+
+<div class="container product-detail">
+    <div class="row title">
+        <div class="col">
+            <h3>
+                Identifikasi Produk
+            </h3>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        @* <div class="card-detail card-batch">
+            <div class="col">
+                <div class="title-batch">
+                    Kode Batch
+                </div>
+            </div>
+            <div class="col">
+                <div class="text-batch">
+                    @Model.productionBatch
+                </div>
+            </div>
+        </div> *@
+        <div class="card-detail d-md-flex">
+            <div class="col-md-3">
+                <div class="title-detail">
+                    Kode QR
+                </div>
+            </div>
+            <div class="col-md-1 d-none d-md-block">
+                :
+            </div>
+            <div class="col-md-8">
+                <div class="text-detail">
+                    @Model.qrCode
+                </div>
+            </div>
+        </div>
+        <div class="card-detail d-md-flex">
+            <div class="col-md-3">
+                <div class="title-detail">
+                    Nama Produk
+                </div>
+            </div>
+            <div class="col-md-1 d-none d-md-block">
+                :
+            </div>
+            <div class="col-md-8">
+                <div class="text-detail">
+                    @Model.productName
+                </div>
+            </div>
+        </div>
+        <div class="card-detail d-md-flex">
+            <div class="col-md-3">
+                <div class="title-detail">
+                    Kemasan
+                </div>
+            </div>
+            <div class="col-md-1 d-none d-md-block">
+                :
+            </div>
+            <div class="col-md-8">
+                <div class="text-detail">
+                    @Model.productPackaging
+                </div>
+            </div>
+        </div>
+        <div class="card-detail d-md-flex">
+            <div class="col-md-3">
+                <div class="title-detail">
+                    Jumlah Scan
+                </div>
+            </div>
+            <div class="col-md-1 d-none d-md-block">
+                :
+            </div>
+            <div class="col-md-8">
+                <div class="text-detail">
+                    @Model.jmlScan kali di scan
+                </div>
+            </div>
+        </div>
+        <div class="card-detail d-md-flex">
+            <div class="col-md-3">
+                <div class="title-detail">
+                    Scan sebelumnya
+                </div>
+            </div>
+            <div class="col-md-1 d-none d-md-block">
+                :
+            </div>
+            <div class="col-md-8">
+                <div class="text-detail">
+                    @Model.lastAlamatMap
+                </div>
+            </div>
+        </div>
+        <div class="card-detail d-md-flex">
+            <div class="col-md-3">
+                <div class="title-detail">
+                    Lokasi Scan Saat Ini
+                </div>
+            </div>
+            <div class="col-md-1 d-none d-md-block">
+                :
+            </div>
+            <div class="col-md-8">
+                <div class="text-detail">
+                    <p id="locationResult_1"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container overview">
+    <div class="row">
+        <div class="col-md-6 overview-text align-self-center">
+            <h2>Petunjuk identifikasi keaslian produk (Lihat Gambar)</h2>
+        <div class="divider"></div>
+        <ol>
+            <li class="mb-3">
+                BATCH NUMBER print dengan Teknologi Laser Printing secara SEJAJAR pada Cap Ring dan Leher Botol.
+                Pastikan Nomor pada botol anda sama dengan Nomor Pada Tabel Diatas.
+            </li class="mb-3">
+            <li class="mb-3">
+                Pastikan Nama Produk pada botol Anda sesuai dengan Nama Produk pada Tabel.
+            </li>
+            <li class="mb-3">
+                QR Code Number adalah Unique tiap botol. Pastikan Nomor QR Botol Anda berbeda dengan QR Botol
+                yang lain, dan juga sesuai dengan Nomor QR yang ada pada Tabel.
+            </li>
+        </ol>
+        <div class="row mt-5">
+            <div class="col-6 col-md-auto">
+                <a href="~/assets/pdf/Identifikasi_Botol_Pelumas_Pertamina.pdf" target="_blank" class="btn btn-light rounded-pill" role="button">Panduan</a>
+            </div>
+            <div class="col-6 col-md-auto">
+                <a asp-action="Report" asp-controller="Home" class="btn btn-light rounded-pill" role="button">Laporkan</a>
+            </div>
+        </div>
+    </div>
+        <div class="col-md-6 overview-img text-center">
+            <img class="img-overview" src="~/assets/img/image_botol.jpg" alt="">
+        </div>
+    </div>
+</div>
+
+@section scripts {
+
+<script>
+    $(document).ready(function () {
+        getLocation();
+    });
+
+    function getLocation() {
+        if (navigator.geolocation) {
+             navigator.geolocation.getCurrentPosition(function (position) {
+                // Callback showPosition akan dipanggil setelah mendapatkan lokasi
+                showPosition(position);
+                reverseGeocode(position.coords.latitude, position.coords.longitude,position);
+            }, showError);
+        } else {
+            document.getElementById("locationResult_1").innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+
+    function showPosition(position) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+        document.getElementById("locationResult_1").innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
+    }
+
+    function sendAjaxRequest(position, address) {
+        var latitude = position.coords.latitude;
+        var longitude = position.coords.longitude;
+
+        // console.log(JSON.stringify({
+        //     "qrNo": "@Model.qrCode",
+        //     "productId": "@Model.productName",
+        //     "customerProfile": "-",
+        //     "latitude": latitude,
+        //     "longitude": longitude,
+        //     "alamatMap": address
+        // }));
+
+        var settings = {
+            "url": "/api/PostLogScanning",
+            "method": "POST",
+            "timeout": 0,
+            "headers": {
+                "Content-Type": "application/json"
+            },
+            "data": JSON.stringify({
+                "qrNo": "@Model.qrCode",
+                "productId": "@Model.productName",
+                "customerProfile": "-",
+                "latitude": '' + latitude,
+                "longitude": '' + longitude,
+                "alamatMap": address
+            }),
+        };
+
+        $.ajax(settings).done(function (response) {
+            console.log(response);
+        });
+    }
+
+    function showError(error) {
+        switch (error.code) {
+            case error.PERMISSION_DENIED:
+                document.getElementById("locationResult_1").innerHTML = "User denied the request for Geolocation.";
+                break;
+            case error.POSITION_UNAVAILABLE:
+                document.getElementById("locationResult_1").innerHTML = "Location information is unavailable.";
+                break;
+            case error.TIMEOUT:
+                document.getElementById("locationResult_1").innerHTML = "The request to get user location timed out.";
+                break;
+            case error.UNKNOWN_ERROR:
+                document.getElementById("locationResult_1").innerHTML = "An unknown error occurred.";
+                break;
+        }
+    }
+
+    function reverseGeocode(latitude, longitude, position) {
+        // Replace 'YOUR_API_KEY' with your actual Google Maps API key
+        var apiKey = 'AIzaSyDEDIpNJDJ7Vb_Ja_OBAmcKkDMPXBHvMK8';
+        var apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
+
+        $.ajax({
+            url: apiUrl,
+            method: 'GET',
+            dataType: 'json',
+            success: function (data) {
+                if (data.status === 'OK') {
+                    var address = data.results[0].formatted_address;
+                    document.getElementById("locationResult_1").innerHTML = address;
+                    sendAjaxRequest(position,address);
+
+                } else {
+                    console.error('Error in geocoding request. Status: ' + data.status);
+                }
+            },
+            error: function (error) {
+                console.error('Error in geocoding request:', error);
+            }
+        });
+    }    
+</script>
+}

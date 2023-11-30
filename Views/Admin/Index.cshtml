@@ -1,0 +1,217 @@
+﻿@{
+    Layout = "_LayoutAdmin";
+    ViewData["Title"] = "Dashboard | Lubes";
+}
+
+<div class="container-fluid flex-grow-1 container-p-y">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-sm-flex py-2 ms-2">
+                <h4 class="fw-bold mb-0">
+                    Dashboard
+                </h4>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="row">
+        <div class="col-sm-6 col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-auto">
+                            <div class="avatar flex-shrink-0">
+                                <img src="~/assets/img/icons/unicons/book.png" alt="" class="rounded" />
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <span class="d-block mb-1">Total Scan Barcode</span>
+                            <h3 class="card-title text-nowrap mb-2">2,456</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-auto">
+                            <div class="avatar flex-shrink-0">
+                                <img src="~/assets/img/icons/unicons/categories.png" alt="" class="rounded" />
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <span class="d-block mb-1">Total Pengaduan</span>
+                            <h3 class="card-title text-nowrap mb-2">782</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4 mb-4">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-auto">
+                            <div class="avatar flex-shrink-0">
+                                <img src="~/assets/img/icons/unicons/user.png" alt="" class="rounded" />
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <span class="d-block mb-1">Total Produk</span>
+                            <h3 class="card-title text-nowrap mb-2">2,456</h3>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+
+        <!-- Last Scan -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title m-0 me-2">Scan Barcode Terbaru</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="p-0 m-0">
+                        <li class="d-flex mb-4 pb-1">
+                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <small class="text-muted d-block mb-1">Kode Batch</small>
+                                    <h6 class="mb-0">0123456789</h6>
+                                </div>
+                                <div class="me-2">
+                                    <small class="text-muted d-block mb-1">Kode QR</small>
+                                    <h6 class="mb-0">X0Br6bWgB</h6>
+                                </div>
+                                <div class="user-progress d-flex align-items-center gap-1">
+                                    <a href="javascript:;" class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="d-flex mb-4 pb-1">
+                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <small class="text-muted d-block mb-1">Kode Batch</small>
+                                    <h6 class="mb-0">0123456789</h6>
+                                </div>
+                                <div class="me-2">
+                                    <small class="text-muted d-block mb-1">Kode QR</small>
+                                    <h6 class="mb-0">X0Br6bWgB</h6>
+                                </div>
+                                <div class="user-progress d-flex align-items-center gap-1">
+                                    <a href="javascript:;" class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="d-flex mb-4 pb-1">
+                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <small class="text-muted d-block mb-1">Kode Batch</small>
+                                    <h6 class="mb-0">0123456789</h6>
+                                </div>
+                                <div class="me-2">
+                                    <small class="text-muted d-block mb-1">Kode QR</small>
+                                    <h6 class="mb-0">X0Br6bWgB</h6>
+                                </div>
+                                <div class="user-progress d-flex align-items-center gap-1">
+                                    <a href="javascript:;" class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Last Report -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header d-flex align-items-center justify-content-between">
+                    <h5 class="card-title m-0 me-2">Pengaduan Terbaru</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="p-0 m-0">
+                        <li class="d-flex mb-4 pb-1">
+                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <small class="text-muted d-block mb-1">
+                                        Nama
+                                        Produk
+                                    </small>
+                                    <h6 class="mb-0"
+                                        style="max-width: 25ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                                        ENDURO MATIC 10W-30 API SL/JASO MB, 6X1 LTR
+                                    </h6>
+                                </div>
+                                <div class="me-2">
+                                    <small class="text-muted d-block mb-1">Lokasi</small>
+                                    <h6 class="mb-0"
+                                        style="max-width: 20ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                                        Kalimantan Barat
+                                    </h6>
+                                </div>
+                                <div class="user-progress d-flex align-items-center gap-1">
+                                    <a href="javascript:;" class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="d-flex mb-4 pb-1">
+                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <small class="text-muted d-block mb-1">
+                                        Nama
+                                        Produk
+                                    </small>
+                                    <h6 class="mb-0"
+                                        style="max-width: 25ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                                        ENDURO MATIC 10W-30 API SL/JASO MB, 6X1 LTR
+                                    </h6>
+                                </div>
+                                <div class="me-2">
+                                    <small class="text-muted d-block mb-1">Lokasi</small>
+                                    <h6 class="mb-0"
+                                        style="max-width: 20ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                                        Denpasar
+                                    </h6>
+                                </div>
+                                <div class="user-progress d-flex align-items-center gap-1">
+                                    <a href="javascript:;" class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat</a>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="d-flex mb-4 pb-1">
+                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                <div class="me-2">
+                                    <small class="text-muted d-block mb-1">
+                                        Nama
+                                        Produk
+                                    </small>
+                                    <h6 class="mb-0"
+                                        style="max-width: 25ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                                        ENDURO MATIC 10W-30 API SL/JASO MB, 6X1 LTR
+                                    </h6>
+                                </div>
+                                <div class="me-2">
+                                    <small class="text-muted d-block mb-1">Lokasi</small>
+                                    <h6 class="mb-0"
+                                        style="max-width: 20ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                                        Jakarta Timur
+                                    </h6>
+                                </div>
+                                <div class="user-progress d-flex align-items-center gap-1">
+                                    <a href="javascript:;" class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat</a>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

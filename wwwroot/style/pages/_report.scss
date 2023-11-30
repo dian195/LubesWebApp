@@ -1,0 +1,162 @@
+.hero-banner {
+  .title-hero {
+    font-size: 40px;
+  }
+}
+
+.report {
+  margin-top: 80px;
+  .report-guide {
+    max-width: 800px;
+    .title-report {
+      max-width: 500px;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .description-report {
+      font-weight: 300;
+      line-height: 1.8em;
+      text-align: justify;
+    }
+
+    .info-report {
+      background-color: #ffe7e9;
+      padding: 40px;
+      border-radius: 20px;
+      font-weight: 300;
+      text-align: justify;
+    }
+
+    .card-report {
+      padding-block: 25px;
+      .number-card-report {
+        font-size: 40px;
+        font-weight: 700;
+        line-height: 1em;
+      }
+
+      .title-card-report {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+
+      .text-card-report {
+        font-weight: 300;
+        line-height: 1.8em;
+        text-align: justify;
+      }
+    }
+
+    .line {
+      border-top: 1px dashed rgb(34, 34, 34);
+      margin-block: 20px;
+    }
+  }
+}
+
+.report-form {
+  padding-inline: 5%;
+
+  .card-form {
+    background-color: #fff;
+    box-shadow: 1px 1px 30px #f8f8f8;
+    border-radius: 30px;
+    padding-inline: 8%;
+    padding-top: 60px;
+    padding-bottom: 30px;
+    position: sticky;
+    top: 80px;
+    margin-bottom: 50px;
+
+    .form-control {
+      border-radius: 12px;
+    }
+
+    .btn-submit {
+      padding-inline: 25px;
+      padding-block: 12px;
+      border-radius: 50px;
+    }
+  }
+}
+
+// Mobile Device
+@media (max-width: 575.98px) {
+  .hero-banner {
+    .title-hero {
+      font-size: 30px;
+    }
+  }
+
+  .report {
+    margin-top: 40px;
+    padding-inline: 40px;
+
+    .report-guide {
+      .title-report {
+        font-size: 22px;
+      }
+
+      .description-report {
+        font-size: 15px;
+        line-height: 1.6em;
+      }
+
+      .info-report {
+        padding: 40px;
+        font-size: 15px;
+      }
+
+      .card-report {
+        padding-block: 20px;
+
+        .number-card-report {
+          font-size: 35px;
+          line-height: 1em;
+        }
+
+        .title-card-report {
+          font-size: 24px;
+        }
+
+        .text-card-report {
+          font-size: 15px;
+          line-height: 1.6em;
+        }
+      }
+
+      .line {
+        border-top: 1px dashed rgb(34, 34, 34);
+        margin-block: 15px;
+      }
+    }
+  }
+
+  .report-form {
+    padding-inline: 10px;
+
+    .card-form {
+      padding-inline: 10px;
+      padding-top: 40px;
+      padding-bottom: 20px;
+
+      .form-floating {
+        font-size: 14px;
+      }
+
+      .form-check-label {
+        font-size: 14px;
+      }
+
+      .form-title {
+        font-size: 14px;
+      }
+
+      .btn-submit {
+        font-size: 14px;
+      }
+    }
+  }
+}
