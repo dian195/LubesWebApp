@@ -65,7 +65,7 @@ namespace WebApp.Controllers
                 var dtusr = _context.account.Find(usr.userId);
                 if (dtusr != null)
                 {
-                    dtusr.lastLogin = DateTime.UtcNow;
+                    dtusr.lastLogin = DateTime.Now;
                     await _context.SaveChangesAsync();
                 }
 

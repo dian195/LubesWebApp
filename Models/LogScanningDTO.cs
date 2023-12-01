@@ -26,6 +26,6 @@ namespace WebApp.Models
         public string? alamatMap { get; set; }
 
         [Column("created_at")] 
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // Default value set to current UTC time
+        public DateTime CreatedAt { get; set; } = DateTime.Now; // Default value set to current UTC time
     }
 }

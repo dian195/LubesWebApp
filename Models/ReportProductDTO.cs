@@ -24,6 +24,6 @@ namespace WebApp.Models
         public string descPelapor { get; set; }
 
         [Column("Create_Date")]
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow; // Default value set to current UTC time
+        public DateTime CreatedAt { get; set; } = DateTime.Now; // Default value set to current UTC time
     }
 }

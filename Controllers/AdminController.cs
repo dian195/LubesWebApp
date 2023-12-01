@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Org.BouncyCastle.Ocsp;
 using System.Diagnostics;
 using System.Security.Claims;
 using WebApp.Models;
@@ -59,6 +60,305 @@ namespace WebApp.Controllers
                         )
                     .OrderBy(p => p.username).ToPagedList(pg, pageSize);
                 return View("Users", qry);
+            }
+        }
+
+        [HttpGet]
+        [Route("~/Admin/NewUser")]
+        [Authorize]//Admin, Operator, Supir
+        public IActionResult NewUser()
+        {
+            //Reset Data
+            NewUserDTO rv = new NewUserDTO();
+            rv.Roles = _context.role.Where(e => e.IsActive == 1).ToList();
+            rv.roleId = 0;
+            rv.username = "";
+            rv.password = "";
+            rv.confPassword = "";
+            rv.email = "";
+            rv.namaUser = "";
+            return PartialView("_AddUser", rv);
+        }
+
+        [HttpGet]
+        [Route("~/Admin/EditUser")]
+        [Authorize]
+        public IActionResult EditUser(int id)
+        {
+            //Reset Data
+            EditUserDTO rv = new EditUserDTO();
+            rv.Roles = _context.role.Where(e => e.IsActive == 1).ToList();
+            rv.usrId = id;
+            rv.roleId = 0;
+            rv.isActive = 0;
+            rv.username = "";
+            rv.email = "";
+            rv.namaUser = "";
+
+            var data = _context.account.Find(id);
+            if (data != null)
+            {
+                rv.namaUser = data.namaUser;
+                rv.email = data.email;
+                rv.username = data.username;
+                rv.isActive = data.isActive;
+                rv.usrId = data.userId;
+                rv.roleId = data.roleId;
+            }
+            
+            return PartialView("_EditUser", rv);
+        }
+
+        [HttpGet]
+        [Route("~/Admin/ChangePasswordUser")]
+        [Authorize]
+        public IActionResult ChangePasswordUser(int id)
+        {
+            ViewData["errormessage"] = "";
+            ViewData["SuccessMessage"] = "";
+
+            //Reset Data
+            UpdatePassProfileDTO rv = new UpdatePassProfileDTO();
+            rv.usrId = id;
+            rv.oldpass = "";
+            rv.newpass = "";
+            rv.confirmpass = "";
+
+            var data = _context.account.Where(e => e.userId == id).ToList();
+            if (data != null)
+            {
+                return PartialView("_ChangePasswordUser", rv);
+            }
+            else
+            {
+                ViewData["errormessage"] = "User tidak ditemukan !";
+                return PartialView("_ChangePasswordUser", rv);
+            }
+        }
+
+        [HttpPost]
+        [Route("~/Admin/ChangePasswordUser")]
+        [Authorize]
+        public IActionResult ChangePasswordUser(UpdatePassProfileDTO reg)
+        {
+            var gf = new GlobalFunction();
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            ViewData["errormessage"] = "";
+            ViewData["SuccessMessage"] = "";
+
+            ModelState.Clear();
+
+            //Validasi
+            if (string.IsNullOrEmpty(reg.oldpass) || string.IsNullOrEmpty(reg.confirmpass) || string.IsNullOrEmpty(reg.newpass))
+            {
+                ModelState.AddModelError("", "Lengkapi data!");
+                ViewData["errormessage"] = "Lengkapi data !";
+                return PartialView("_ChangePasswordUser", reg);
+            }
+            if (reg.confirmpass != reg.newpass)
+            {
+                ModelState.AddModelError("", "Konfirmasi Password tidak sama!");
+                ViewData["errormessage"] = "Konfirmasi Password tidak sama !";
+                return PartialView("_ChangePasswordUser", reg);
+            }
+            //End Validasi
+
+            try
+            {
+                string encOldPassword = EncryptionHelper.Encrypt(reg.oldpass);
+                string encNewPassword = EncryptionHelper.Encrypt(reg.newpass);
+
+                var dtusr2 = _context.account.Where(e => e.userId == reg.usrId && e.password == encOldPassword).FirstOrDefault();
+                if (dtusr2 == null)
+                {
+                    return Ok(new { Id = 0, Message = "Password tidak sesuai", reg });
+                }
+
+                var dtusr = _context.account.Find(reg.usrId);
+                if (dtusr != null)
+                {
+                    dtusr.password = encNewPassword;
+                    dtusr.lastUpdate = DateTime.Now;
+                    dtusr.lastUpdateBy = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    _context.SaveChanges();
+
+                    ViewData["SuccessMessage"] = "Data berhasil disimpan";
+                    return PartialView("_ChangePasswordUser", reg);
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Data user tidak ditemukan!");
+                    ViewData["ErrorMessage"] = "Data user tidak ditemukan!";
+                    return PartialView("_ChangePasswordUser", reg);
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                ViewData["ErrorMessage"] = ex.Message;
+                return PartialView("_ChangePasswordUser", reg);
+            }
+        }
+
+        [HttpPost]
+        [Route("~/Admin/EditUser")]
+        [Authorize]//Admin, Operator, Supir
+        public IActionResult EditUser(EditUserDTO reg)
+        {
+            var gf = new GlobalFunction();
+            reg.Roles = _context.role.Where(e => e.IsActive == 1).ToList();
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            ViewData["errormessage"] = "";
+            ViewData["SuccessMessage"] = "";
+
+            ModelState.Clear();
+
+            //Validasi
+            if (reg.roleId == 0 || string.IsNullOrEmpty(reg.namaUser) || string.IsNullOrEmpty(reg.username) || string.IsNullOrEmpty(reg.email))
+            {
+                ModelState.AddModelError("", "Lengkapi data!");
+                ViewData["errormessage"] = "Lengkapi data !";
+                return PartialView("_EditUser", reg);
+            }
+
+            bool validEmail = gf.ValidEmailDataAnnotations(reg.email == null ? "" : reg.email);
+            if (!validEmail)
+            {
+                ModelState.AddModelError("", "Format email tidak valid !");
+                ViewData["errormessage"] = "Format email tidak valid !";
+                return PartialView("_EditUser", reg);
+            }
+
+            var cekEmail = _context.account.Where(e => e.email == reg.email && e.userId != reg.usrId).ToList();
+            if (cekEmail.Count > 0)
+            {
+                ModelState.AddModelError("", "Email sudah digunakan !");
+                ViewData["errormessage"] = "Email sudah digunakan !";
+                return PartialView("_EditUser", reg);
+            }
+            //End Validasi
+
+            try
+            {
+                var dtusr = _context.account.Find(reg.usrId);
+                if (dtusr != null)
+                {
+                    dtusr.namaUser = reg.namaUser;
+                    dtusr.roleId = reg.roleId;
+                    dtusr.email = reg.email;
+                    dtusr.username = reg.username;
+                    dtusr.isActive = reg.isActive;
+                    dtusr.lastUpdate = DateTime.Now;
+                    dtusr.lastUpdateBy = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    _context.SaveChanges();
+
+                    ViewData["SuccessMessage"] = "Data berhasil disimpan";
+                    return PartialView("_EditUser", reg);
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Data user tidak ditemukan!");
+                    ViewData["ErrorMessage"] = "Data user tidak ditemukan!";
+                    return PartialView("_EditUser", reg);
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", ex.Message);
+                ViewData["ErrorMessage"] = ex.Message;
+                return PartialView("_EditUser", reg);
+            }
+        }
+
+        [HttpPost]
+        [Route("~/Admin/NewUser")]
+        [Authorize]//Admin, Operator, Supir
+        public IActionResult NewUser(NewUserDTO reg)
+        {
+            var data = new UserDTO();
+            var gf = new GlobalFunction();
+            reg.Roles = _context.role.Where(e => e.IsActive == 1).ToList();
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            ViewData["errormessage"] = "";
+            ViewData["SuccessMessage"] = "";
+
+            ModelState.Clear();
+
+            //Validasi
+            if (reg.roleId == 0 || string.IsNullOrEmpty(reg.namaUser) || string.IsNullOrEmpty(reg.username) || string.IsNullOrEmpty(reg.email) || string.IsNullOrEmpty(reg.password))
+            {
+                ModelState.AddModelError("", "Lengkapi data!");
+                ViewData["errormessage"] = "Lengkapi data !";
+                return PartialView("_AddUser", reg);
+            }
+
+            if (reg.password.Trim() != reg.confPassword.Trim())
+            {
+                reg.password = "";
+                reg.confPassword = "";
+
+                ModelState.AddModelError("", "Password tidak sama !");
+                ViewData["errormessage"] = "Password tidak sama !";
+                return PartialView("_AddUser", reg);
+            }
+
+            bool validEmail = gf.ValidEmailDataAnnotations(reg.email == null ? "" : reg.email);
+            if (!validEmail)
+            {
+                ModelState.AddModelError("", "Format email tidak valid !");
+                ViewData["errormessage"] = "Format email tidak valid !";
+                return PartialView("_AddUser", reg);
+            }
+
+            var cekUsername = _context.account.Where(e => e.username == reg.username).ToList();
+            if (cekUsername.Count > 0)
+            {
+                ModelState.AddModelError("", "Username sudah digunakan !");
+                ViewData["errormessage"] = "Username sudah digunakan !";
+                return PartialView("_AddUser", reg);
+            }
+
+            var cekEmail = _context.account.Where(e => e.email == reg.email).ToList();
+            if (cekEmail.Count > 0)
+            {
+                ModelState.AddModelError("", "Email sudah digunakan !");
+                ViewData["errormessage"] = "Email sudah digunakan !";
+                return PartialView("_AddUser", reg);
+            }
+            //End Validasi
+
+            data.username = reg.username;
+            data.namaUser = reg.namaUser;
+            data.roleId = reg.roleId;
+            data.password = reg.password;
+            data.email = reg.email;
+            data.isActive = 1;
+            data.createdBy = userId;
+            data.createdDate = DateTime.Now;
+
+            try
+            {
+                _context.account.Add(data);
+                _context.SaveChanges();
+
+                reg.username = "";
+                reg.namaUser = "";
+                reg.email = "";
+                reg.password = "";
+                reg.confPassword = "";
+                reg.roleId = 0;
+                
+                ViewData["SuccessMessage"] = "Data berhasil disimpan";
+                return PartialView("_AddUser", reg);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "ex.Message");
+                ViewData["ErrorMessage"] = ex.Message;
+                return PartialView("_AddUser", reg);
             }
         }
 

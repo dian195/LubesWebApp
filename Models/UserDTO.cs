@@ -70,4 +70,35 @@ namespace WebApp.Models
         public string? filter { get; set; }
         public int? pg;
     }
+
+    public class NewUserDTO
+    {
+        [Required]
+        public string? username { get; set; }
+        [Required]
+        public string? namaUser { get; set; }
+        public int roleId { get; set; }
+        [Required]
+        public string? password { get; set; }
+        [Required]
+        public string? confPassword { get; set; }
+        [Required]
+        public string? email { get; set; }
+        public List<RoleDTO> Roles { get; set; } = null!;
+    }
+
+    public class EditUserDTO
+    {
+        [Required]
+        public int? usrId { get; set; }
+        [Required]
+        public string? username { get; set; }
+        [Required]
+        public string? namaUser { get; set; }
+        public int roleId { get; set; }
+        [Required]
+        public string? email { get; set; }
+        public int isActive { get; set; }
+        public List<RoleDTO> Roles { get; set; } = null!;
+    }
 }

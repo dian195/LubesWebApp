@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Ocsp;
 using System;
 using System.Security.Claims;
 using WebApp.Models;
@@ -27,7 +28,7 @@ namespace WebApp.Controllers
 
             try
             {
-                logScanning.CreatedAt = DateTime.UtcNow;
+                logScanning.CreatedAt = DateTime.Now;
 
                 _context.log_scanning.Add(logScanning);
                 _context.SaveChanges();
@@ -50,7 +51,7 @@ namespace WebApp.Controllers
 
             try
             {
-                dto.CreatedAt = DateTime.UtcNow;
+                dto.CreatedAt = DateTime.Now;
 
                 _context.report_product.Add(dto);
                 _context.SaveChanges();
@@ -70,9 +71,14 @@ namespace WebApp.Controllers
             {
                 return Ok(new { Id = 0, Message = "Data kosong", dto });
             }
-
             try
             {
+                var cekEmail = _context.account.Where(e => e.email == dto.email && e.userId != dto.userId).ToList();
+                if (cekEmail.Count > 0)
+                {
+                    return Ok(new { Id = 0, Message = "Email sudah digunakan!", dto });
+                }
+
                 var dtusr = _context.account.Find(dto.userId);
                 if (dtusr != null)
                 {
@@ -80,7 +86,7 @@ namespace WebApp.Controllers
                     dtusr.roleId = dto.roleId;
                     dtusr.email = dto.email;
                     dtusr.username = dto.username;
-                    dtusr.lastUpdate = DateTime.UtcNow;
+                    dtusr.lastUpdate = DateTime.Now;
                     dtusr.lastUpdateBy = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     _context.SaveChangesAsync();
                 }
@@ -125,7 +131,7 @@ namespace WebApp.Controllers
                 if (dtusr != null)
                 {
                     dtusr.password = encNewPassword;
-                    dtusr.lastUpdate = DateTime.UtcNow;
+                    dtusr.lastUpdate = DateTime.Now;
                     dtusr.lastUpdateBy = User.FindFirstValue(ClaimTypes.NameIdentifier);
                     _context.SaveChangesAsync();
                 }

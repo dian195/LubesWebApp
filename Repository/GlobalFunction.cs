@@ -1,4 +1,5 @@
-﻿using System.Security.Cryptography;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace WebApp.Repository
@@ -119,5 +120,7 @@ namespace WebApp.Repository
                 return string.Empty;
             }
         }
+
+        public bool ValidEmailDataAnnotations(string input) => new EmailAddressAttribute().IsValid(input);
     }
 }
