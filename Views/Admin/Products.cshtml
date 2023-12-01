@@ -1,4 +1,9 @@
-﻿@{
+﻿@model IPagedList<SeriesMasterDTO>
+@using X.PagedList.Mvc.Common;
+@using X.PagedList.Mvc.Core;
+@using X.PagedList;
+@using X.PagedList.Mvc.Core.Common;
+@{
     Layout = "_LayoutAdmin";
     ViewData["Title"] = "Products | Lubes";
 }
@@ -15,6 +20,163 @@
         </div>
     </div>
 
+    <!-- Table Card -->
+    <div class="card py-3">
+        <form method="post" asp-action="Products" asp-controller="Admin" autocomplete="off">
+            <div class="row px-3">
+                <!-- Search -->
+                @* <div class="col-md-2 mb-2">
+                <select class="form-select" id="filterBySelect">
+                <option value="username">Username</option>
+                <option value="nama">Nama</option>
+                <option value="email">Email</option>
+                </select>
+                </div> *@
+                <div class="col-md-4 mb-2">
+                    <input type="text" id="txtSearch" value="@ViewBag.Filter" name="filter" autocomplete="off" class="form-control" placeholder="Search ..." />
+                </div>
+                <div class="col-md-2 mb-2">
+                    <button type="submit" class="btn btn-primary" id="btnSearch"><i class="bx bx-search fs-4"></i>&nbsp;Search</button>
+                </div>
+            </div>
 
+            <div class="row px-3">
+                <!-- Button Add -->
+                <div class="col-md-12 mb-2 text-end">
+                    <button type="button" class="btn btn-primary me-1" data-bs-toggle="modal" data-url="@Url.Action("NewProduct")">
+                        <span class="tf-icons bx bx-plus-circle"></span>
+                        Add Product
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table Body -->
+            <div class="table-responsive text-nowrap py-3">
+                <table class="table table-striped" id="tblData">
+                    <thead>
+                        <tr>
+                            <th>Series ID</th>
+                            <th>Product Name</th>
+                            <th>Product Packaging</th>
+                            <th>Product Volume</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (SeriesMasterDTO data in Model)
+                        {
+                            <tr>
+                                <td>@data.seriesID</td>
+                                <td>@data.productName</td>
+                                <td>@data.productPackaging</td>
+                                <td>@data.productVolume</td>
+                                <td>
+                                    <div class="dropdown">
+                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                            <i class="bx bx-edit"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <a class="dropdown-item" href="javascript:void(0);" data-bs-toggle="modal" data-url="@Url.Action("EditProduct", "Admin", new { id = data.id})">
+                                                <i class="bx bx-edit-alt me-1"></i>
+                                                Edit
+                                            </a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <!-- Pagination -->
+            <div class="row mt-2 px-3">
+                <div class="col">
+                    <div class="demo-inline-spacing">
+                        <nav aria-label="Page navigation">
+
+                            @Html.PagedListPager(Model, page => Url.Action("Products", new { pg = page, filter = ViewBag.Filter }), new PagedListRenderOptions()
+                            {
+                            ActiveLiElementClass = "active",
+                            PageClasses = new[]{ "page-link"},
+                            LiElementClasses=new[] { "page-item" },
+                            UlElementClasses = new[] { "pagination", "mt-3" },
+                            LinkToNextPageFormat = "Next",
+                            LinkToPreviousPageFormat = "Previous",
+                            DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                            DisplayLinkToNextPage = PagedListDisplayMode.Always
+                            })
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 
 </div>
+
+<div id="PlaceHolderHere"></div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(function () {
+
+            var PlaceHolderElement = $('#PlaceHolderHere');
+            $('button[data-bs-toggle="modal"]').click(function (event) {
+                var url = $(this).data('url');
+                var decodeURL = decodeURIComponent(url);
+                $.get(decodeURL).done(function (data) {
+                    PlaceHolderElement.html(data);
+                    PlaceHolderElement.find('.modal').modal('show');
+                })
+            })
+
+            $('a[data-bs-toggle="modal"]').click(function () { //click event
+                var url = $(this).data('url');
+                var decodeURL = decodeURIComponent(url);
+                $.get(decodeURL).done(function (data) {
+                    PlaceHolderElement.html(data);
+                    PlaceHolderElement.find('.modal').modal('show');
+                })
+            });
+
+            PlaceHolderElement.on('click', '[data-save="modal"]', function (event) {
+                $('.modal-footer').find('[data-save="modal"]').prop('disabled', true);
+
+                var form = $(this).parents('.modal').find('form');
+                var actionurl = form.attr('action');
+                var sendData = form.serialize();
+                console.log(actionurl);
+                console.log(sendData);
+                $.post(actionurl, sendData).done(function (data) {
+                    var newBody = $('.modal-body', data);
+
+                    // find IsValid input field and check it's value
+                    // if it's valid then hide modal window
+
+                    var isValid = newBody.find('[name="IsValid"]').val() == 'True';
+                    console.log(newBody.find('[name="IsValid"]').val())
+                    if (isValid) {
+                        PlaceHolderElement.find('.modal').modal('hide');
+
+                        Swal.fire({
+                            title: 'Berhasil!',
+                            text: 'Data berhasil disimpan !',
+                            icon: 'success',
+                        }).then(function (result) {
+                            if (true) {
+                                location.href = "/Admin/Products";
+                            }
+                        });
+
+                        //PlaceHolderElement.find('.modal-body').replaceWith(newBody); //kalo ga mau redirect ke halaman lain
+                    } else {
+                        PlaceHolderElement.find('.modal-body').replaceWith(newBody);
+                    }
+
+                    $('.modal-footer').find('[data-save="modal"]').prop('disabled', false);
+                })
+
+            })
+        })
+    </script>
+}

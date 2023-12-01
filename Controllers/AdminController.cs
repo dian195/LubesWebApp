@@ -31,6 +31,8 @@ namespace WebApp.Controllers
             return View();
         }
 
+        #region Users
+
         [Route("~/Admin/Users")]
         [Authorize]
         public async Task<IActionResult> Users(string? filter, int pg = 1)
@@ -361,14 +363,44 @@ namespace WebApp.Controllers
                 return PartialView("_AddUser", reg);
             }
         }
+        #endregion
 
+        #region Products
         [Route("~/Admin/Products")]
         [Authorize]
-        public IActionResult Products()
+        public IActionResult Products(string? filter, int pg = 1)
         {
-            return View();
-        }
+            if (pg != null && pg < 1)
+            {
+                pg = 1;
+            }
 
+            ViewBag.Filter = filter;
+
+            var pageSize = 10;
+
+            if ((filter == null ? "" : filter.Trim()) == "")
+            {
+                var qry = _context.series_master.AsNoTracking().OrderBy(p => p.seriesID).ToPagedList(pg, pageSize);
+                return View("Products", qry);
+            }
+            else
+            {
+                var qry = _context.series_master.AsNoTracking()
+                    .Where(
+                        acc =>
+                        EF.Functions.Like(acc.seriesID, "%" + filter + "%") ||
+                        EF.Functions.Like(acc.productName, "%" + filter + "%") ||
+                        EF.Functions.Like(acc.productPackaging, "%" + filter + "%") ||
+                        EF.Functions.Like(acc.productVolume, "%" + filter + "%") 
+                        )
+                    .OrderBy(p => p.seriesID).ToPagedList(pg, pageSize);
+                return View("Products", qry);
+            }
+        }
+        #endregion
+
+        #region Scan
         [Route("~/Admin/Scan")]
         [Authorize]
         public IActionResult Scan(string? filter, int pg = 1)
@@ -399,7 +431,9 @@ namespace WebApp.Controllers
                 return View("Scan", qry);
             }
         }
+        #endregion
 
+        #region Report
         [Route("~/Admin/Pengaduan")]
         [Authorize]
         public IActionResult Pengaduan(string? filter, int pg = 1)
@@ -433,7 +467,9 @@ namespace WebApp.Controllers
                 return View("Pengaduan", qry);
             }
         }
+        #endregion
 
+        #region Navbar menu, profile, setting, etc..
         [Route("~/Admin/Profile")]
         [Authorize]
         public IActionResult Profile()
@@ -466,6 +502,7 @@ namespace WebApp.Controllers
         {
             return View();
         }
+        #endregion
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
