@@ -23,5 +23,6 @@
         public string? lastLongitude { get; set; }
         public string? lastLatitude { get; set; }
         public string? lastAlamatMap { get; set; }
+        public string? lastScanTimestamp { get; set; }
     }
 }

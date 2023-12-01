@@ -17,7 +17,7 @@
         <div class="card-detail card-batch">
             <div class="col">
                 <div class="title-batch">
-                    Kode Batch
+                    BATCH NUMBER
                 </div>
             </div>
             <div class="col">
@@ -89,7 +89,22 @@
         <div class="card-detail d-md-flex">
             <div class="col-md-3">
                 <div class="title-detail">
-                    Scan sebelumnya
+                    Waktu Scan Sebelumnya
+                </div>
+            </div>
+            <div class="col-md-1 d-none d-md-block">
+                :
+            </div>
+            <div class="col-md-8">
+                <div class="text-detail">
+                    @Model.lastScanTimestamp
+                </div>
+            </div>
+        </div>
+        <div class="card-detail d-md-flex">
+            <div class="col-md-3">
+                <div class="title-detail">
+                    Lokasi Scan Sebelumnya
                 </div>
             </div>
             <div class="col-md-1 d-none d-md-block">
@@ -220,6 +235,7 @@
         switch (error.code) {
             case error.PERMISSION_DENIED:
                 document.getElementById("locationResult_1").innerHTML = "User denied the request for Geolocation.";
+                window.location.href = '../../Error'; //redirect ke halaman error
                 break;
             case error.POSITION_UNAVAILABLE:
                 document.getElementById("locationResult_1").innerHTML = "Location information is unavailable.";

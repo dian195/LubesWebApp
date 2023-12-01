@@ -58,7 +58,7 @@ namespace WebApp.Controllers
                 prodDetail.productName = product.productName;
                 //prodDetail.productUnit = product.productUnit;
                 prodDetail.productPackaging = product.productUnit;
-                prodDetail.productionBatch = product.productionBatch;
+                prodDetail.productionBatch = product.productionBatch == null ? "-" : (product.productionBatch == "" ? "-" : product.productionBatch);
 
                 string unit = product.productUnit;
 
@@ -67,6 +67,7 @@ namespace WebApp.Controllers
                 if (lastscan != null)
                 {
                     prodDetail.lastAlamatMap = lastscan.Count() > 0 ? (lastscan.OrderByDescending(s => s.CreatedAt).First().alamatMap ?? "-") : "-";
+                    prodDetail.lastScanTimestamp = lastscan.Count() > 0 ? (lastscan.OrderByDescending(s => s.CreatedAt).First().CreatedAt.ToString("dd/MM/yyyy HH:mm:ss") ?? "-") : "-";
                     prodDetail.jmlScan = lastscan.Count() + 1;
                 }
 
@@ -96,12 +97,14 @@ namespace WebApp.Controllers
                         prodDetail.seriesId = series.seriesID;
                         prodDetail.productPackaging = series.productPackaging;
                         //prodDetail.productionBatch = series.productionBatch;
+                        prodDetail.productionBatch = "-";
 
                         //Get Last Scan
                         var lastscan = _API.GetLastScan(param2, _context);
                         if (lastscan != null)
                         {
                             prodDetail.lastAlamatMap = lastscan.Count() > 0 ? (lastscan.OrderByDescending(s => s.CreatedAt).First().alamatMap ?? "-") : "-";
+                            prodDetail.lastScanTimestamp = lastscan.Count() > 0 ? (lastscan.OrderByDescending(s => s.CreatedAt).First().CreatedAt.ToString("dd/MM/yyyy HH:mm:ss") ?? "-") : "-";
                             prodDetail.jmlScan = lastscan.Count() + 1;
                         }
 
@@ -109,6 +112,7 @@ namespace WebApp.Controllers
                         {
                             return View("Index_Drum", prodDetail);
                         }
+
                         return View("Index_Lithos", prodDetail);
                     }
                 }
@@ -125,6 +129,12 @@ namespace WebApp.Controllers
         public IActionResult Login()
         {
             return View();
+        }
+
+        [Route("~/Error")]
+        public IActionResult ErrorLocation()
+        {
+            return View("ErrorLocation");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
