@@ -12000,106 +12000,9 @@ body {
   margin-bottom: 0;
 }
 
-.card-wrapper {
-  box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.05);
-  width: 100%;
-  border-radius: 12px;
-  overflow: hidden;
-  padding: 12px;
-  max-width: 320px;
-}
-.card-wrapper .card-thumbnail {
-  border: none;
-  height: 150px;
-  border-radius: 8px;
-  margin-bottom: 12px;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-}
-.card-wrapper .card-thumbnail .badge {
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
-  font-weight: 400;
-}
-.card-wrapper .card-date {
-  font-size: 12px;
-  color: #999999;
-  font-weight: 300;
-  padding-inline: 5px;
-}
-.card-wrapper .card-title {
-  font-size: 16px;
-  font-weight: 500;
-  letter-spacing: 0.1px;
-  word-wrap: break-word;
-  margin-block: 8px;
-  padding-inline: 5px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.card-wrapper .card-text {
-  color: #999999;
-  font-size: 13px;
-  font-weight: 300;
-  letter-spacing: 0.8px;
-  word-wrap: break-word;
-  padding-inline: 5px;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.card-wrapper .img-file {
-  width: 50px;
-}
-.card-wrapper .card-title-file {
-  font-size: 15px;
-  font-weight: 500;
-  word-wrap: break-word;
-  padding-inline: 7px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-.card-wrapper .btn {
-  font-size: 11px;
-  margin-top: 15px;
-  margin-bottom: 5px;
-  margin-left: 5px;
-}
-
-.btn-load-more {
-  font-size: 14px;
-  padding-inline: 18px;
-}
-
-.breadcrumb {
-  margin-bottom: 30px;
-  margin-left: 8px;
-}
-.breadcrumb .breadcrumb-item {
-  color: #999999;
-}
-.breadcrumb .breadcrumb-item a {
-  text-decoration: none;
-  color: #000;
-}
-.breadcrumb .breadcrumb-item a:hover {
-  color: #dc3545;
-}
-
-.btn-add {
-  font-size: 14px;
-  font-weight: 300;
-}
-
 .btn-danger {
   padding-inline: 40px;
+  text-wrap: nowrap;
   padding-block: 12px;
   font-size: 14px;
   background-color: #ca1b2d;
@@ -12109,6 +12012,7 @@ body {
 
 .btn-light {
   padding-inline: 40px;
+  text-wrap: nowrap;
   padding-block: 12px;
   font-size: 14px;
   background-color: #eeeeee;
@@ -12130,59 +12034,23 @@ body {
     text-align: center;
     color: white;
   }
-  .card-wrapper {
-    box-shadow: 0px 4px 30px rgba(0, 0, 0, 0.05);
-    padding: 8px;
-    max-width: 200px;
+  .btn-danger {
+    padding-inline: 20px;
+    text-wrap: nowrap;
+    padding-block: 12px;
+    font-size: 14px;
+    color: white;
+    margin-bottom: 15px;
   }
-  .card-wrapper .card-thumbnail {
-    height: 100px;
-    border-radius: 8px;
-    margin-bottom: 10px;
-  }
-  .card-wrapper .card-thumbnail .badge {
-    bottom: 8px;
-    right: 8px;
-    font-weight: 300;
-    font-size: 10px;
-  }
-  .card-wrapper .card-date {
-    font-size: 11px;
-    color: #999999;
-  }
-  .card-wrapper .card-title {
-    font-size: 15px;
-    font-weight: 500;
-    letter-spacing: 0;
-    margin-block: 6px;
-  }
-  .card-wrapper .card-text {
-    color: #999999;
-    font-size: 12px;
-    font-weight: 300;
-    letter-spacing: 0;
-  }
-  .card-wrapper .img-file {
-    width: 30px;
-  }
-  .card-wrapper .card-title-file {
+  .btn-light {
+    padding-inline: 20px;
+    text-wrap: nowrap;
+    padding-block: 12px;
     font-size: 14px;
   }
-  .card-wrapper .btn {
-    font-size: 10px;
-    margin-top: 12px;
-    margin-bottom: 5px;
-    margin-left: 3px;
-  }
-  .breadcrumb {
-    margin-bottom: 20px;
-  }
-  .breadcrumb .breadcrumb-item {
-    font-size: 13px;
-  }
-  .btn-add {
-    margin-bottom: 15px;
-    margin-left: 5px;
+  .btn-danger:hover {
+    background-color: #0055b8;
+    transition-duration: 500ms;
   }
 }
 .hero-banner {
@@ -12388,13 +12256,13 @@ body {
   box-shadow: 0 0 30px #f3f3f3;
   margin-bottom: 20px;
 }
-.product-detail .card-detail .title-detail {
-  font-size: 16px;
+.product-detail .card-detail .title-batch {
+  font-size: 22px;
   font-weight: 600;
 }
-.product-detail .card-detail .text-detail {
-  font-size: 16px;
-  font-weight: 300;
+.product-detail .card-detail .text-batch {
+  font-size: 24px;
+  font-weight: 400;
 }
 
 .overview {
@@ -12432,7 +12300,7 @@ body {
     margin-bottom: 8px;
   }
   .product-detail .title h3, .product-detail .title .h3 {
-    font-size: 22px;
+    font-size: 24px;
   }
   .product-detail .card-detail {
     width: 80%;
@@ -12441,12 +12309,12 @@ body {
     border-radius: 15px;
     margin-bottom: 10px;
   }
-  .product-detail .card-detail .title-detail {
-    font-size: 15px;
-    margin-bottom: 5px;
+  .product-detail .card-detail .title-batch {
+    font-size: 18px;
+    margin-bottom: 0;
   }
-  .product-detail .card-detail .text-detail {
-    font-size: 15px;
+  .product-detail .card-detail .text-batch {
+    font-size: 20px;
   }
   .overview {
     padding-block: 40px;
@@ -12574,7 +12442,9 @@ body {
     padding-top: 12px;
   }
   .navbar .btn-report {
-    margin-right: 15px;
+    padding-inline: 18px;
+    margin-right: 8px;
+    font-size: 12px;
   }
 }
 .footer-top {
