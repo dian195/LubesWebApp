@@ -22,5 +22,40 @@ namespace WebApp.Models
         public string? productPackaging { get; set; }
         [Column(name: "product_volume")]
         public string? productVolume { get; set; }
+        [Column("Created_By")]
+        public string? createdBy { get; set; }
+        [Column("Created_Date")]
+        public DateTime? createdDate { get; set; }
+        [Column("Last_Update_By")]
+        public string? lastUpdateBy { get; set; }
+        [Column("Last_Update")]
+        public DateTime? lastUpdate { get; set; }
     }
+
+    public class AddSeriesMasterDTO
+    {
+        [Required]
+        public string? seriesId { get; set; }
+        [Required]
+        public string? productName { get; set; }
+        [Required]
+        public string? productPackaging { get; set; }
+        [Required]
+        public string? productVolume { get; set; }
+    }
+
+    public class EditSeriesMasterDTO
+    {
+        [Required]
+        public int? id { get; set; }
+        [Required]
+        public string? seriesId { get; set; }
+        [Required]
+        public string? productName { get; set; }
+        [Required]
+        public string? productPackaging { get; set; }
+        [Required]
+        public string? productVolume { get; set; }
+    }
+
 }

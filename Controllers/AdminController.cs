@@ -67,7 +67,7 @@ namespace WebApp.Controllers
 
         [HttpGet]
         [Route("~/Admin/NewUser")]
-        [Authorize]//Admin, Operator, Supir
+        [Authorize]
         public IActionResult NewUser()
         {
             //Reset Data
@@ -88,6 +88,9 @@ namespace WebApp.Controllers
         public IActionResult EditUser(int id)
         {
             //Reset Data
+            ViewData["errormessage"] = "";
+            ViewData["SuccessMessage"] = "";
+
             EditUserDTO rv = new EditUserDTO();
             rv.Roles = _context.role.Where(e => e.IsActive == 1).ToList();
             rv.usrId = id;
@@ -106,6 +109,11 @@ namespace WebApp.Controllers
                 rv.isActive = data.isActive;
                 rv.usrId = data.userId;
                 rv.roleId = data.roleId;
+            }
+            else
+            {
+                ViewData["errormessage"] = "User tidak ditemukan !";
+                return PartialView("_EditUser", rv);
             }
             
             return PartialView("_EditUser", rv);
@@ -205,7 +213,7 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [Route("~/Admin/EditUser")]
-        [Authorize]//Admin, Operator, Supir
+        [Authorize]
         public IActionResult EditUser(EditUserDTO reg)
         {
             var gf = new GlobalFunction();
@@ -276,7 +284,7 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [Route("~/Admin/NewUser")]
-        [Authorize]//Admin, Operator, Supir
+        [Authorize]
         public IActionResult NewUser(NewUserDTO reg)
         {
             var data = new UserDTO();
@@ -398,6 +406,194 @@ namespace WebApp.Controllers
                 return View("Products", qry);
             }
         }
+
+        [HttpGet]
+        [Route("~/Admin/NewProduct")]
+        [Authorize]
+        public IActionResult NewProduct()
+        {
+            //Reset Data
+            AddSeriesMasterDTO rv = new AddSeriesMasterDTO();
+            rv.productName = rv.seriesId = rv.productVolume = "";
+            rv.productPackaging = "0";
+            return PartialView("_AddProduct", rv);
+        }
+
+        [HttpPost]
+        [Route("~/Admin/NewProduct")]
+        [Authorize]
+        public IActionResult NewProduct(AddSeriesMasterDTO reg)
+        {
+            var data = new SeriesMasterDTO();
+            var gf = new GlobalFunction();
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            ViewData["errormessage"] = "";
+            ViewData["SuccessMessage"] = "";
+
+            ModelState.Clear();
+
+            //Validasi
+            if (string.IsNullOrEmpty(reg.productName) || string.IsNullOrEmpty(reg.productPackaging) || string.IsNullOrEmpty(reg.productVolume) || string.IsNullOrEmpty(reg.seriesId))
+            {
+                ModelState.AddModelError("", "Lengkapi data!");
+                ViewData["errormessage"] = "Lengkapi data !";
+                return PartialView("_AddProduct", reg);
+            }
+
+            if (reg.productPackaging.Trim() == "0")
+            {
+                ModelState.AddModelError("", "Pilih Packaging !");
+                ViewData["errormessage"] = "Pilih Packaging !";
+                return PartialView("_AddProduct", reg);
+            }
+
+            var cek = _context.series_master.Where(e => e.seriesID == reg.seriesId).ToList();
+            if (cek.Count > 0)
+            {
+                ModelState.AddModelError("", "Series ID sudah digunakan !");
+                ViewData["errormessage"] = "Series ID sudah digunakan !";
+                return PartialView("_AddProduct", reg);
+            }
+
+            //End Validasi
+
+            data.productVolume = reg.productVolume;
+            data.productPackaging = reg.productPackaging;
+            data.productName = reg.productName;
+            data.seriesID = reg.seriesId;
+            data.createdBy = userId;
+            data.createdDate = DateTime.Now;
+
+            try
+            {
+                _context.series_master.Add(data);
+                _context.SaveChanges();
+
+                reg = new AddSeriesMasterDTO();
+                reg.productVolume = "";
+                reg.productName = "";
+                reg.productPackaging = "0";
+                reg.seriesId = "";
+
+                ViewData["SuccessMessage"] = "Data berhasil disimpan";
+                return PartialView("_AddProduct", reg);
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "ex.Message");
+                ViewData["ErrorMessage"] = ex.Message;
+                return PartialView("_AddProduct", reg);
+            }
+        }
+
+        [HttpGet]
+        [Route("~/Admin/EditProduct")]
+        [Authorize]
+        public IActionResult EditProduct(int id)
+        {
+            //Reset Data
+            ViewData["errormessage"] = "";
+            ViewData["SuccessMessage"] = "";
+
+            ModelState.Clear();
+            EditSeriesMasterDTO rv = new EditSeriesMasterDTO();
+            rv.productName = rv.seriesId = rv.productVolume = "";
+            rv.productPackaging = "0";
+            rv.id = id;
+
+            var data = _context.series_master.Find(id);
+            if (data != null)
+            {
+                rv.productName = data.productName;
+                rv.seriesId = data.seriesID;
+                rv.productVolume = data.productVolume;
+                rv.productPackaging = data.productPackaging;
+            }
+            else
+            {
+                ViewData["errormessage"] = "Produk tidak ditemukan !";
+                return PartialView("_EditProduct", rv);
+            }
+
+            return PartialView("_EditProduct", rv);
+        }
+
+        [HttpPost]
+        [Route("~/Admin/EditProduct")]
+        [Authorize]
+        public IActionResult EditProduct(EditSeriesMasterDTO reg)
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            ViewData["errormessage"] = "";
+            ViewData["SuccessMessage"] = "";
+
+            ModelState.Clear();
+
+            //Validasi
+            if (reg.id == 0)
+            {
+                ModelState.AddModelError("", "Data tidak ditemukan !");
+                ViewData["errormessage"] = "Data tidak ditemukan !";
+                return PartialView("_EditProduct", reg);
+            }
+
+            if (string.IsNullOrEmpty(reg.productName) || string.IsNullOrEmpty(reg.productPackaging) || string.IsNullOrEmpty(reg.productVolume) || string.IsNullOrEmpty(reg.seriesId))
+            {
+                ModelState.AddModelError("", "Lengkapi data!");
+                ViewData["errormessage"] = "Lengkapi data !";
+                return PartialView("_EditProduct", reg);
+            }
+
+            if (reg.productPackaging.Trim() == "0")
+            {
+                ModelState.AddModelError("", "Pilih Packaging !");
+                ViewData["errormessage"] = "Pilih Packaging !";
+                return PartialView("_EditProduct", reg);
+            }
+
+            var cek = _context.series_master.Where(e => e.seriesID == reg.seriesId && e.id != reg.id).ToList();
+            if (cek.Count > 0)
+            {
+                ModelState.AddModelError("", "Series ID sudah digunakan !");
+                ViewData["errormessage"] = "Series ID sudah digunakan !";
+                return PartialView("_EditProduct", reg);
+            }
+
+            //End Validasi
+
+            try
+            {
+                var dtusr = _context.series_master.Find(reg.id);
+                if (dtusr != null)
+                {
+                    dtusr.productVolume = reg.productVolume;
+                    dtusr.productPackaging = reg.productPackaging;
+                    dtusr.productName = reg.productName;
+                    dtusr.seriesID = reg.seriesId;
+                    dtusr.lastUpdate = DateTime.Now;
+                    dtusr.lastUpdateBy = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                    _context.SaveChanges();
+
+                    ViewData["SuccessMessage"] = "Data berhasil disimpan";
+                    return PartialView("_EditProduct", reg);
+                }
+                else
+                {
+                    ModelState.AddModelError("", "Data tidak ditemukan!");
+                    ViewData["ErrorMessage"] = "Data tidak ditemukan!";
+                    return PartialView("_EditProduct", reg);
+                }
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "ex.Message");
+                ViewData["ErrorMessage"] = ex.Message;
+                return PartialView("_EditProduct", reg);
+            }
+        }
+
         #endregion
 
         #region Scan
