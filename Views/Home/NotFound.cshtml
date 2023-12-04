@@ -7,8 +7,122 @@
     <div class="row title">
         <div class="col">
             <h3>
-                Series Tidak Terdaftar pada Database Kami.
+                @ViewBag.MessageSeries
+                <p id="locationResult_1"></p>
             </h3>
         </div>
     </div>
 </div>
+
+
+
+@section scripts {
+
+    <script>
+
+        $(document).ready(function () {
+            getLocation();
+        });
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    // Callback showPosition akan dipanggil setelah mendapatkan lokasi
+                    showPosition(position);
+                    reverseGeocode(position.coords.latitude, position.coords.longitude, position);
+                }, showError);
+            } else {
+                document.getElementById("locationResult_1").innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showPosition(position) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+            //document.getElementById("locationResult_1").innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
+        }
+
+        function sendAjaxRequest(position, address) {
+            var latitude = position.coords.latitude;
+            var longitude = position.coords.longitude;
+
+            console.log(JSON.stringify({
+                "qrNo": "@ViewBag.uniqueNumber",
+                "productId": "@ViewBag.curUrl",
+                "customerProfile": "-",
+                "latitude": '' + latitude,
+                "longitude": '' + longitude,
+                "alamatMap": address
+            }));
+
+            var settings = {
+                "url": "../../api/PostLogScanning",
+                "method": "POST",
+                "timeout": 0,
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                "data": JSON.stringify({
+                    "qrNo": "@ViewBag.uniqueNumber",
+                    "productId": "@ViewBag.curUrl",
+                    "customerProfile": "-",
+                    "latitude": '' + latitude,
+                    "longitude": '' + longitude,
+                    "alamatMap": address
+                }),
+            };
+
+            $.ajax(settings).done(function (response) {
+                if (response.id === 0) {
+                    Swal.fire({
+                        title: 'Error !',
+                        text: response.message,
+                        icon: 'error',
+                    });
+                }
+                console.log(response.message);
+            });
+        }
+
+        function showError(error) {
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    document.getElementById("locationResult_1").innerHTML = "User denied the request for Geolocation.";
+                    window.location.href = '../Error'; //redirect ke halaman error
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    document.getElementById("locationResult_1").innerHTML = "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    document.getElementById("locationResult_1").innerHTML = "The request to get user location timed out.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    document.getElementById("locationResult_1").innerHTML = "An unknown error occurred.";
+                    break;
+            }
+        }
+
+        function reverseGeocode(latitude, longitude, position) {
+            // Replace 'YOUR_API_KEY' with your actual Google Maps API key
+            var apiKey = 'AIzaSyDEDIpNJDJ7Vb_Ja_OBAmcKkDMPXBHvMK8';
+            var apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
+            var addressresult = "";
+            $.ajax({
+                url: apiUrl,
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.status === 'OK') {
+                        var address = data.results[0].formatted_address;
+                        sendAjaxRequest(position, address);
+                    } else {
+                        console.error('Error in geocoding request. Status: ' + data.status);
+                    }
+                },
+                error: function (error) {
+                    console.error('Error in geocoding request:', error);
+                }
+            });
+        }
+    </script>
+}

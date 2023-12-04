@@ -1,8 +1,11 @@
 ﻿using Google.Protobuf.WellKnownTypes;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Net.Http;
 using WebApp.Models;
 using WebApp.Repository;
 using WebApp.Repository.Interfaces;
@@ -38,6 +41,10 @@ namespace WebApp.Controllers
         [HttpGet("/{param1}/{param2}")]
         public async Task<IActionResult> Index(string param1, string param2)
         {
+            //var url = HttpContext.Request.GetEncodedUrl();
+            var url = HttpContext.Request.GetDisplayUrl();
+            ViewBag.curUrl = url;
+
             var prodDetail = new ProductDetailDTO();
             SeriesMasterDTO? series = null;
             series = new SeriesMasterDTO();
@@ -87,6 +94,7 @@ namespace WebApp.Controllers
                     Console.WriteLine(series);
                     if (series == null)
                     {
+                        ViewBag.MessageSeries = "Tidak Terdaftar pada Database Kami";
                         return View("NotFound");
                     }
                     else
@@ -118,16 +126,32 @@ namespace WebApp.Controllers
                 }
                 else
                 {
+                    ViewBag.MessageSeries = "Tidak Terdaftar pada Database Kami";
                     return View("NotFound");
                 }
             }
 
+            ViewBag.MessageSeries = "Tidak Terdaftar pada Database Kami";
             return View("NotFound");
         }
 
         [Route("~/Login")]
         public IActionResult Login()
         {
+            return View();
+        }
+
+        [Route("~/NotFound")]
+        public IActionResult NotFound()
+        {
+            if (ViewBag.MessageSeries == null)
+            {
+                return RedirectToAction("Index");
+            }
+            if (ViewBag.MessageSeries == "")
+            {
+                return RedirectToAction("Index");
+            }
             return View();
         }
 

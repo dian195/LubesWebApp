@@ -7,7 +7,7 @@
     var fullroutewithqs = $"{routeUrl}{querystringPath}";
 }
 
-<div class="container product-detail">
+<div id="panelDrum_1" class="container product-detail">
     <div class="row title">
         <div class="col">
             <h3>
@@ -136,7 +136,7 @@
     </div>
 </div>
 
-<div class="container overview">
+<div id="panelDrum_2" class="container overview">
     <div class="row">
         <div class="col-md-6 overview-text align-self-center">
             <h2>Petunjuk identifikasi keaslian produk (Lihat Gambar)</h2>
@@ -169,6 +169,16 @@
     </div>
 </div>
 
+<div id="panelError" class="container product-detail">
+    <div class="row title">
+        <div class="col">
+            <h3>
+                <p id="errorMessage"></p>
+            </h3>
+        </div>
+    </div>
+</div>
+
 @section scripts {
 
 <script>
@@ -178,20 +188,27 @@
 
     function getLocation() {
         if (navigator.geolocation) {
+            $("#panelDrum_1").show();
+            $("#panelDrum_2").show();
+            $("#panelError").hide();
              navigator.geolocation.getCurrentPosition(function (position) {
                 // Callback showPosition akan dipanggil setelah mendapatkan lokasi
                 showPosition(position);
                 reverseGeocode(position.coords.latitude, position.coords.longitude,position);
             }, showError);
         } else {
-            document.getElementById("locationResult_1").innerHTML = "Geolocation is not supported by this browser.";
+            $("#panelDrum_1").hide();
+            $("#panelDrum_2").hide();
+            $("#panelError").show();
+            //document.getElementById("locationResult_1").innerHTML = "Geolocation is not supported by this browser.";
+            document.getElementById("errorMessage").innerHTML = "Geolocation is not supported by this browser.";
         }
     }
 
     function showPosition(position) {
         var latitude = position.coords.latitude;
         var longitude = position.coords.longitude;
-        document.getElementById("locationResult_1").innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
+        //document.getElementById("locationResult_1").innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
     }
 
     function sendAjaxRequest(position, address) {
@@ -230,19 +247,27 @@
     }
 
     function showError(error) {
+        $("#panelDrum_1").hide();
+        $("#panelDrum_2").hide();
+        $("#panelError").show();
+
         switch (error.code) {
             case error.PERMISSION_DENIED:
                 document.getElementById("locationResult_1").innerHTML = "User denied the request for Geolocation.";
-                window.location.href = '../../Error'; //redirect ke halaman error
+                document.getElementById("errorMessage").innerHTML = "Anda Harus Allow Location";
+                //window.location.href = '../../Error'; //redirect ke halaman error
                 break;
             case error.POSITION_UNAVAILABLE:
                 document.getElementById("locationResult_1").innerHTML = "Location information is unavailable.";
+                document.getElementById("errorMessage").innerHTML = "Location information is unavailable";
                 break;
             case error.TIMEOUT:
                 document.getElementById("locationResult_1").innerHTML = "The request to get user location timed out.";
+                document.getElementById("errorMessage").innerHTML = "The request to get user location timed out";
                 break;
             case error.UNKNOWN_ERROR:
                 document.getElementById("locationResult_1").innerHTML = "An unknown error occurred.";
+                document.getElementById("errorMessage").innerHTML = "An unknown error occurred";
                 break;
         }
     }
@@ -251,7 +276,6 @@
         // Replace 'YOUR_API_KEY' with your actual Google Maps API key
         var apiKey = 'AIzaSyDEDIpNJDJ7Vb_Ja_OBAmcKkDMPXBHvMK8';
         var apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
-
         $.ajax({
             url: apiUrl,
             method: 'GET',
@@ -261,7 +285,6 @@
                     var address = data.results[0].formatted_address;
                     document.getElementById("locationResult_1").innerHTML = address;
                     sendAjaxRequest(position,address);
-
                 } else {
                     console.error('Error in geocoding request. Status: ' + data.status);
                 }
