@@ -1,4 +1,5 @@
 ﻿using iTextSharp.text;
+using K4os.Compression.LZ4.Internal;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -722,7 +723,7 @@ namespace WebApp.Controllers
         [Obsolete]
         [Authorize]
         [Route("~/Admin/Pengaduan/Export")]
-        public async Task<FileResult> exportPengaduan(string fromDate, string toDate, string filter)
+        public FileResult exportPengaduan(string fromDate, string toDate, string filter)
         {
             List<ReportProductDTO> dataExport = new List<ReportProductDTO>();
             MemoryStream result = new MemoryStream();
@@ -736,11 +737,11 @@ namespace WebApp.Controllers
                 //Get Data
                 if ((filter == null ? "" : filter.Trim()) == "")
                 {
-                    dataExport = await _context.report_product.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToListAsync();
+                    dataExport =  _context.report_product.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToList();
                 }
                 else
                 {
-                    dataExport = await _context.report_product.AsNoTracking()
+                    dataExport =  _context.report_product.AsNoTracking()
                         .Where(
                             acc =>
                                 EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
@@ -749,7 +750,7 @@ namespace WebApp.Controllers
                                 EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
                                 EF.Functions.Like(acc.namaProduk, "%" + filter + "%")
                             )
-                        .OrderByDescending(p => p.CreatedAt).ToListAsync();
+                        .OrderByDescending(p => p.CreatedAt).ToList();
                 }
 
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -766,7 +767,7 @@ namespace WebApp.Controllers
         [Obsolete]
         [Authorize]
         [Route("~/Admin/Products/Export")]
-        public async Task<FileResult> exportProducts(string filter)
+        public FileResult exportProducts(string filter)
         {
             List<SeriesMasterDTO> dataExport = new List<SeriesMasterDTO>();
             MemoryStream result = new MemoryStream();
@@ -778,11 +779,11 @@ namespace WebApp.Controllers
                 //Get Data
                 if ((filter == null ? "" : filter.Trim()) == "")
                 {
-                    dataExport = await _context.series_master.AsNoTracking().OrderBy(p => p.seriesID).ToListAsync();
+                    dataExport =  _context.series_master.AsNoTracking().OrderBy(p => p.seriesID).ToList();
                 }
                 else
                 {
-                    dataExport = await _context.series_master.AsNoTracking()
+                    dataExport =  _context.series_master.AsNoTracking()
                         .Where(
                             acc =>
                             EF.Functions.Like(acc.seriesID, "%" + filter + "%") ||
@@ -790,7 +791,7 @@ namespace WebApp.Controllers
                             EF.Functions.Like(acc.productPackaging, "%" + filter + "%") ||
                             EF.Functions.Like(acc.productVolume, "%" + filter + "%")
                     )
-                        .OrderBy(p => p.seriesID).ToListAsync();
+                        .OrderBy(p => p.seriesID).ToList();
                 }
 
                 _export.exportProduct(filter, dataExport, ref result);
@@ -806,7 +807,7 @@ namespace WebApp.Controllers
         [Obsolete]
         [Authorize]
         [Route("~/Admin/Scan/Export")]
-        public async Task<FileResult> exportScanAsync(string filter)
+        public FileResult exportScanAsync(string filter)
         {
             List<LogScanningDTO> dataExport = new List<LogScanningDTO>();
             MemoryStream result = new MemoryStream();
@@ -818,17 +819,17 @@ namespace WebApp.Controllers
                 //Get Data
                 if ((filter == null ? "" : filter.Trim()) == "")
                 {
-                    dataExport = await _context.log_scanning.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToListAsync();
+                    dataExport =  _context.log_scanning.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToList();
                 }
                 else
                 {
-                    dataExport = await _context.log_scanning.AsNoTracking()
+                    dataExport =  _context.log_scanning.AsNoTracking()
                         .Where(
                             acc =>
                                 EF.Functions.Like(acc.productId, "%" + filter + "%") ||
                                 EF.Functions.Like(acc.qrNo, "%" + filter + "%")
                     )
-                        .OrderByDescending(p => p.CreatedAt).ToListAsync();
+                        .OrderByDescending(p => p.CreatedAt).ToList();
                 }
 
                 _export.exportScan(filter, dataExport, ref result);

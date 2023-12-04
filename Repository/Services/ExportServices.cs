@@ -196,8 +196,8 @@ namespace WebApp.Repository.Services
                 ws.Cells.Style.Font.Size = 11;
                 ws.Cells.Style.Font.Name = "Calibri";
 
-                ws.Column(1).Width = 20;
-                ws.Column(2).Width = 30;
+                ws.Column(1).Width = 15;
+                ws.Column(2).Width = 55;
                 ws.Column(3).Width = 20;
                 ws.Column(4).Width = 20;
 
