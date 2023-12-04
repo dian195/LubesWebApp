@@ -40,7 +40,25 @@ namespace WebApp.Controllers
         [Route("~/Admin/Index", Name = "~/Admin/Index"), Route("~/Admin", Name = "~/Admin")]
         public IActionResult Index()
         {
-            return View();
+            DashboardDTO dto = new DashboardDTO();
+            dto.reportProduct = new List<ReportProductDTO>();
+            dto.logScanning = new List<LogScanningDTO>();
+
+            try
+            {
+                //get total scan
+                dto.totalScan = _context.log_scanning.Count();
+                dto.totalPengaduan = _context.report_product.Count();
+                dto.totalProduct = _context.series_master.Count();
+                dto.logScanning = _context.log_scanning.OrderByDescending(e => e.CreatedAt).Take(5).ToList();
+                dto.reportProduct = _context.report_product.OrderByDescending(e => e.CreatedAt).Take(5).ToList();
+            }
+            catch (Exception ex)
+            {
+                
+            }
+
+            return View(dto);
         }
 
         #region Users

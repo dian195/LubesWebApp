@@ -148,5 +148,30 @@ namespace WebApp.Controllers
             }
         }
 
+        [HttpGet]
+        [Consumes("application/json")]
+        public IActionResult dashboardItem()
+        {
+            DashboardDTO dto = new DashboardDTO();
+            dto.reportProduct = new List<ReportProductDTO>();
+            dto.logScanning = new List<LogScanningDTO>();
+
+            try
+            {
+                //get total scan
+                dto.totalScan = _context.log_scanning.Count();
+                dto.totalPengaduan = _context.report_product.Count();
+                dto.totalProduct = _context.series_master.Count();
+                dto.logScanning = _context.log_scanning.OrderByDescending(e => e.CreatedAt).Take(5).ToList();
+                dto.reportProduct = _context.report_product.OrderByDescending(e => e.CreatedAt).Take(5).ToList();
+
+                return Ok(new { Id = 1, Message = "", dto });
+            }
+            catch (Exception ex)
+            {
+                return Ok(new { Id = 0, Message = ex.Message, dto });
+            }
+        }
+
     }
 }

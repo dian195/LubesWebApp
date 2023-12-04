@@ -1,4 +1,5 @@
-﻿@{
+﻿@model WebApp.Models.DashboardDTO;
+@{
     Layout = "_LayoutAdmin";
     ViewData["Title"] = "Dashboard | Lubes";
 }
@@ -27,7 +28,7 @@
                         </div>
                         <div class="col-auto">
                             <span class="d-block mb-1">Total Scan Barcode</span>
-                            <h3 class="card-title text-nowrap mb-2">2,456</h3>
+                            <h3 class="card-title text-nowrap mb-2">@Model.totalScan.Value.ToString("N0")</h3>
                         </div>
                     </div>
                 </div>
@@ -44,7 +45,7 @@
                         </div>
                         <div class="col-auto">
                             <span class="d-block mb-1">Total Pengaduan</span>
-                            <h3 class="card-title text-nowrap mb-2">782</h3>
+                            <h3 class="card-title text-nowrap mb-2">@Model.totalPengaduan.Value.ToString("N0")</h3>
                         </div>
                     </div>
                 </div>
@@ -61,7 +62,7 @@
                         </div>
                         <div class="col-auto">
                             <span class="d-block mb-1">Total Produk</span>
-                            <h3 class="card-title text-nowrap mb-2">2,456</h3>
+                            <h3 class="card-title text-nowrap mb-2">@Model.totalProduct.Value.ToString("N0")</h3>
                         </div>
                     </div>
                 </div>
@@ -79,51 +80,25 @@
                 </div>
                 <div class="card-body">
                     <ul class="p-0 m-0">
-                        <li class="d-flex mb-4 pb-1">
-                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                    <small class="text-muted d-block mb-1">Kode Batch</small>
-                                    <h6 class="mb-0">0123456789</h6>
+
+                        @foreach (LogScanningDTO data in Model.logScanning)
+                        {
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                        <small class="text-muted d-block mb-1">Kode QR</small>
+                                        <h6 class="mb-0">@data.qrNo</h6>
+                                    </div>
+                                    <div class="me-2">
+                                        <small class="text-muted d-block mb-1">Lokasi Scan</small>
+                                        <h6 class="mb-0">@data.kabupaten.Trim()</h6>
+                                    </div>
+                                    @* <div class="user-progress d-flex align-items-center gap-1">
+                                        <a href="javascript:;" class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat</a>
+                                    </div> *@
                                 </div>
-                                <div class="me-2">
-                                    <small class="text-muted d-block mb-1">Kode QR</small>
-                                    <h6 class="mb-0">X0Br6bWgB</h6>
-                                </div>
-                                <div class="user-progress d-flex align-items-center gap-1">
-                                    <a href="javascript:;" class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="d-flex mb-4 pb-1">
-                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                    <small class="text-muted d-block mb-1">Kode Batch</small>
-                                    <h6 class="mb-0">0123456789</h6>
-                                </div>
-                                <div class="me-2">
-                                    <small class="text-muted d-block mb-1">Kode QR</small>
-                                    <h6 class="mb-0">X0Br6bWgB</h6>
-                                </div>
-                                <div class="user-progress d-flex align-items-center gap-1">
-                                    <a href="javascript:;" class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="d-flex mb-4 pb-1">
-                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                    <small class="text-muted d-block mb-1">Kode Batch</small>
-                                    <h6 class="mb-0">0123456789</h6>
-                                </div>
-                                <div class="me-2">
-                                    <small class="text-muted d-block mb-1">Kode QR</small>
-                                    <h6 class="mb-0">X0Br6bWgB</h6>
-                                </div>
-                                <div class="user-progress d-flex align-items-center gap-1">
-                                    <a href="javascript:;" class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat</a>
-                                </div>
-                            </div>
-                        </li>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -137,78 +112,30 @@
                 </div>
                 <div class="card-body">
                     <ul class="p-0 m-0">
-                        <li class="d-flex mb-4 pb-1">
-                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                    <small class="text-muted d-block mb-1">
-                                        Nama
-                                        Produk
-                                    </small>
-                                    <h6 class="mb-0"
-                                        style="max-width: 25ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-                                        ENDURO MATIC 10W-30 API SL/JASO MB, 6X1 LTR
-                                    </h6>
+                        @foreach (ReportProductDTO data in Model.reportProduct)
+                        {
+                            <li class="d-flex mb-4 pb-1">
+                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
+                                    <div class="me-2">
+                                        <small class="text-muted d-block mb-1">
+                                            Nama Produk
+                                        </small>
+                                        <h6 class="mb-0" style="max-width: 25ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                                            @data.namaProduk.Trim()
+                                        </h6>
+                                    </div>
+                                    <div class="me-2">
+                                        <small class="text-muted d-block mb-1">Desc Pelapor</small>
+                                        <h6 class="mb-0" style="max-width: 25ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
+                                            @data.descPelapor.Trim()
+                                        </h6>
+                                    </div>
+                                    @* <div class="user-progress d-flex align-items-center gap-1">
+                                        <a href="javascript:;" class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat</a>
+                                    </div> *@
                                 </div>
-                                <div class="me-2">
-                                    <small class="text-muted d-block mb-1">Lokasi</small>
-                                    <h6 class="mb-0"
-                                        style="max-width: 20ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-                                        Kalimantan Barat
-                                    </h6>
-                                </div>
-                                <div class="user-progress d-flex align-items-center gap-1">
-                                    <a href="javascript:;" class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="d-flex mb-4 pb-1">
-                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                    <small class="text-muted d-block mb-1">
-                                        Nama
-                                        Produk
-                                    </small>
-                                    <h6 class="mb-0"
-                                        style="max-width: 25ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-                                        ENDURO MATIC 10W-30 API SL/JASO MB, 6X1 LTR
-                                    </h6>
-                                </div>
-                                <div class="me-2">
-                                    <small class="text-muted d-block mb-1">Lokasi</small>
-                                    <h6 class="mb-0"
-                                        style="max-width: 20ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-                                        Denpasar
-                                    </h6>
-                                </div>
-                                <div class="user-progress d-flex align-items-center gap-1">
-                                    <a href="javascript:;" class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat</a>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="d-flex mb-4 pb-1">
-                            <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                <div class="me-2">
-                                    <small class="text-muted d-block mb-1">
-                                        Nama
-                                        Produk
-                                    </small>
-                                    <h6 class="mb-0"
-                                        style="max-width: 25ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-                                        ENDURO MATIC 10W-30 API SL/JASO MB, 6X1 LTR
-                                    </h6>
-                                </div>
-                                <div class="me-2">
-                                    <small class="text-muted d-block mb-1">Lokasi</small>
-                                    <h6 class="mb-0"
-                                        style="max-width: 20ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-                                        Jakarta Timur
-                                    </h6>
-                                </div>
-                                <div class="user-progress d-flex align-items-center gap-1">
-                                    <a href="javascript:;" class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat</a>
-                                </div>
-                            </div>
-                        </li>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
