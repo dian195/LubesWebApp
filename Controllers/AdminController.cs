@@ -25,8 +25,8 @@ namespace WebApp.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly AppDB _context;
-        private readonly IConfiguration _appconf; 
-        private readonly IExport _export; 
+        private readonly IConfiguration _appconf;
+        private readonly IExport _export;
 
         public AdminController(ILogger<HomeController> logger, AppDB context, IConfiguration appconf, IExport export)
         {
@@ -127,7 +127,7 @@ namespace WebApp.Controllers
                 ViewData["errormessage"] = "User tidak ditemukan !";
                 return PartialView("_EditUser", rv);
             }
-            
+
             return PartialView("_EditUser", rv);
         }
 
@@ -372,7 +372,7 @@ namespace WebApp.Controllers
                 reg.password = "";
                 reg.confPassword = "";
                 reg.roleId = 0;
-                
+
                 ViewData["SuccessMessage"] = "Data berhasil disimpan";
                 return PartialView("_AddUser", reg);
             }
@@ -412,7 +412,7 @@ namespace WebApp.Controllers
                         EF.Functions.Like(acc.seriesID, "%" + filter + "%") ||
                         EF.Functions.Like(acc.productName, "%" + filter + "%") ||
                         EF.Functions.Like(acc.productPackaging, "%" + filter + "%") ||
-                        EF.Functions.Like(acc.productVolume, "%" + filter + "%") 
+                        EF.Functions.Like(acc.productVolume, "%" + filter + "%")
                         )
                     .OrderBy(p => p.seriesID).ToPagedList(pg, pageSize);
                 return View("Products", qry);
@@ -611,32 +611,81 @@ namespace WebApp.Controllers
         #region Scan
         [Route("~/Admin/Scan")]
         [Authorize]
-        public IActionResult Scan(string? filter, int pg = 1)
+        public IActionResult Scan(string? filter, string? fromDate, string? toDate, int pg = 1)
         {
             if (pg != null && pg < 1)
             {
                 pg = 1;
             }
 
+            fromDate = fromDate == null ? "" : fromDate;
+            toDate = toDate == null ? "" : toDate;
+
             ViewBag.Filter = filter;
+            ViewBag.FromDate = fromDate;
+            ViewBag.ToDate = toDate;
+
+            DateTime dtFrom = DateTime.Now;
+            DateTime dtTo = DateTime.Now;
+
+            try
+            {
+                dtFrom = DateTime.Now;
+                dtFrom = fromDate.Trim() == "" ? DateTime.Now : DateTime.Parse(fromDate.Trim());
+                dtTo = toDate == null ? DateTime.Now : DateTime.Parse(toDate.Trim()).AddDays(1);
+                fromDate = fromDate.Trim() == "" ? "" : DateTime.Parse(fromDate.Trim()).ToString("yyyy-MM-dd");
+                toDate = toDate.Trim() == "" ? "" : DateTime.Parse(toDate.Trim()).ToString("yyyy-MM-dd");
+            }
+            catch
+            {
+                fromDate = "";
+                toDate = "";
+            }
 
             var pageSize = 10;
 
             if ((filter == null ? "" : filter.Trim()) == "")
             {
-                var qry = _context.log_scanning.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
-                return View("Scan", qry);
+                if (fromDate.Trim() != "" && toDate.Trim() != "")
+                {
+                    var qry = _context.log_scanning.AsNoTracking().Where(e => e.CreatedAt >= dtFrom && e.CreatedAt < dtTo).OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                    return View("Scan", qry);
+                }
+                else
+                {
+                    var qry = _context.log_scanning.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                    return View("Scan", qry);
+                }
             }
             else
             {
-                var qry = _context.log_scanning.AsNoTracking()
+                if (fromDate.Trim() != "" && toDate.Trim() != "")
+                {
+                    var qry = _context.log_scanning.AsNoTracking()
+                    .Where(
+                        acc =>
+                            acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
+                            (EF.Functions.Like(acc.productId, "%" + filter + "%") ||
+                            EF.Functions.Like(acc.qrNo, "%" + filter + "%") ||
+                            EF.Functions.Like(acc.provinsi, "%" + filter + "%") ||
+                            EF.Functions.Like(acc.kabupaten, "%" + filter + "%"))
+                        )
+                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                    return View("Scan", qry);
+                }
+                else
+                {
+                     var qry = _context.log_scanning.AsNoTracking()
                     .Where(
                         acc =>
                             EF.Functions.Like(acc.productId, "%" + filter + "%") ||
-                            EF.Functions.Like(acc.qrNo, "%" + filter + "%") 
+                            EF.Functions.Like(acc.qrNo, "%" + filter + "%") ||
+                            EF.Functions.Like(acc.provinsi, "%" + filter + "%") ||
+                            EF.Functions.Like(acc.kabupaten, "%" + filter + "%")
                         )
                     .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
-                return View("Scan", qry);
+                    return View("Scan", qry);
+                }
             }
         }
         #endregion
@@ -725,7 +774,7 @@ namespace WebApp.Controllers
                         )
                     .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
                     return View("Pengaduan", qry);
-                }                
+                }
             }
         }
         #endregion
@@ -780,7 +829,7 @@ namespace WebApp.Controllers
         {
             List<ReportProductDTO> dataExport = new List<ReportProductDTO>();
             MemoryStream result = new MemoryStream();
-            
+
             try
             {
                 fromDate = fromDate == null ? "" : fromDate.Trim();
@@ -873,11 +922,11 @@ namespace WebApp.Controllers
                 //Get Data
                 if ((filter == null ? "" : filter.Trim()) == "")
                 {
-                    dataExport =  _context.series_master.AsNoTracking().OrderBy(p => p.seriesID).ToList();
+                    dataExport = _context.series_master.AsNoTracking().OrderBy(p => p.seriesID).ToList();
                 }
                 else
                 {
-                    dataExport =  _context.series_master.AsNoTracking()
+                    dataExport = _context.series_master.AsNoTracking()
                         .Where(
                             acc =>
                             EF.Functions.Like(acc.seriesID, "%" + filter + "%") ||
@@ -901,7 +950,7 @@ namespace WebApp.Controllers
         [Obsolete]
         [Authorize]
         [Route("~/Admin/Scan/Export")]
-        public FileResult exportScanAsync(string filter)
+        public FileResult exportScanAsync(string filter, string fromDate, string toDate)
         {
             List<LogScanningDTO> dataExport = new List<LogScanningDTO>();
             MemoryStream result = new MemoryStream();
@@ -909,21 +958,65 @@ namespace WebApp.Controllers
             try
             {
                 filter = filter == null ? "" : filter.Trim();
+                fromDate = fromDate == null ? "" : fromDate;
+                toDate = toDate == null ? "" : toDate;
+
+                DateTime dtFrom = DateTime.Now;
+                DateTime dtTo = DateTime.Now;
+
+                try
+                {
+                    dtFrom = DateTime.Now;
+                    dtFrom = fromDate.Trim() == "" ? DateTime.Now : DateTime.Parse(fromDate.Trim());
+                    dtTo = toDate == null ? DateTime.Now : DateTime.Parse(toDate.Trim()).AddDays(1);
+                    fromDate = fromDate.Trim() == "" ? "" : DateTime.Parse(fromDate.Trim()).ToString("yyyy-MM-dd");
+                    toDate = toDate.Trim() == "" ? "" : DateTime.Parse(toDate.Trim()).ToString("yyyy-MM-dd");
+                }
+                catch
+                {
+                    fromDate = "";
+                    toDate = "";
+                }
 
                 //Get Data
                 if ((filter == null ? "" : filter.Trim()) == "")
                 {
-                    dataExport =  _context.log_scanning.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToList();
+                    if (fromDate.Trim() != "" && toDate.Trim() != "")
+                    {
+                        dataExport = _context.log_scanning.Where(e => e.CreatedAt >= dtFrom && e.CreatedAt < dtTo).AsNoTracking().OrderByDescending(p => p.CreatedAt).ToList();
+                    }
+                    else
+                    {
+                        dataExport = _context.log_scanning.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToList();
+                    }
                 }
                 else
                 {
-                    dataExport =  _context.log_scanning.AsNoTracking()
+                    if (fromDate.Trim() != "" && toDate.Trim() != "")
+                    {
+                        dataExport = _context.log_scanning.AsNoTracking()
+                        .Where(
+                            acc =>
+                                acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo && 
+                                (EF.Functions.Like(acc.productId, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.qrNo, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.provinsi, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.kabupaten, "%" + filter + "%"))
+                        )
+                        .OrderByDescending(p => p.CreatedAt).ToList();
+                    }
+                    else
+                    {
+                        dataExport = _context.log_scanning.AsNoTracking()
                         .Where(
                             acc =>
                                 EF.Functions.Like(acc.productId, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.qrNo, "%" + filter + "%")
-                    )
+                                EF.Functions.Like(acc.qrNo, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.provinsi, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.kabupaten, "%" + filter + "%")
+                        )
                         .OrderByDescending(p => p.CreatedAt).ToList();
+                    }
                 }
 
                 _export.exportScan(filter, dataExport, ref result);

@@ -97,16 +97,16 @@
                     <div class="demo-inline-spacing">
                         <nav aria-label="Page navigation">
 
-                            @Html.PagedListPager(Model, page => Url.Action("Pengaduan", new { pg = page, filter = ViewBag.Filter }), new PagedListRenderOptions()
+                            @Html.PagedListPager(Model, page => Url.Action("Pengaduan", new { pg = page, filter = ViewBag.Filter, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate }), new PagedListRenderOptions()
                             {
-                            ActiveLiElementClass = "active",
-                            PageClasses = new[]{ "page-link"},
-                            LiElementClasses=new[] { "page-item" },
-                            UlElementClasses = new[] { "pagination", "mt-3" },
-                            LinkToNextPageFormat = "Next",
-                            LinkToPreviousPageFormat = "Previous",
-                            DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
-                            DisplayLinkToNextPage = PagedListDisplayMode.Always
+                                ActiveLiElementClass = "active",
+                                PageClasses = new[]{ "page-link"},
+                                LiElementClasses=new[] { "page-item" },
+                                UlElementClasses = new[] { "pagination", "mt-3" },
+                                LinkToNextPageFormat = "Next",
+                                LinkToPreviousPageFormat = "Previous",
+                                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                                DisplayLinkToNextPage = PagedListDisplayMode.Always
                             })
                         </nav>
                     </div>
