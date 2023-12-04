@@ -102,13 +102,15 @@
 </div>
 
 @section scripts {
-    <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+    @* <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script> *@
     <script type="text/javascript">
         $(function () {
             $("#btnExport").click(function () {
-                $("#tblData").table2excel({
-                    filename: "Scan.xls"
-                });
+                // $("#tblData").table2excel({
+                //     filename: "Scan.xls"
+                // });
+                var filter = $("#txtSearch").val();
+                window.open('/Admin/Scan/Export?filter=' + filter);
             });
         });
     </script>

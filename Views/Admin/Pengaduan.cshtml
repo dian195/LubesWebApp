@@ -107,13 +107,27 @@
 
 
 @section scripts {
-    <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
+    @* <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script> *@
     <script type="text/javascript">
         $(function () {
             $("#btnExport").click(function () {
-                $("#tblData").table2excel({
-                    filename: "Pengaduan.xls"
-                });
+                // var from = $("#fromDate").val();
+                // var to = $("#toDate").val();
+                var from = '';
+                var to = '';
+                var filter = $("#txtSearch").val();
+                window.open('/Admin/Pengaduan/Export?filter=' + filter + '&fromDate=' + from + '&toDate=' + to);
+
+                // if (fromDate != "" && toDate != "") {
+                //     window.open('/Reports/PrintCompanyRevenueReport?filter=' + filter + '&fromDate=' + from + '&toDate=' + to);
+                // }
+                // else {
+                //     alert('Tanggal harus diisi !');
+                // }
+
+                // $("#tblData").table2excel({
+                //     filename: "Pengaduan.xls"
+                // });
             });
         });
     </script>

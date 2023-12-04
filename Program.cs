@@ -54,6 +54,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 
 builder.Services.AddScoped<IAPIQRScanServices, APIQRScanServices>();
 builder.Services.AddScoped<ILogin, LoginServices>();
+builder.Services.AddScoped<IExport, ExportServices>();
 
 
 #endregion

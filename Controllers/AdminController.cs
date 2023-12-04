@@ -1,12 +1,21 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using iTextSharp.text;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using Org.BouncyCastle.Ocsp;
+using System.Data;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Printing;
 using System.Security.Claims;
 using WebApp.Models;
 using WebApp.Repository;
+using WebApp.Repository.Interfaces;
+using WebApp.Repository.Services;
 using X.PagedList;
 
 namespace WebApp.Controllers
@@ -15,13 +24,15 @@ namespace WebApp.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly AppDB _context;
-        private readonly IConfiguration _appconf;
+        private readonly IConfiguration _appconf; 
+        private readonly IExport _export; 
 
-        public AdminController(ILogger<HomeController> logger, AppDB context, IConfiguration appconf)
+        public AdminController(ILogger<HomeController> logger, AppDB context, IConfiguration appconf, IExport export)
         {
             _logger = logger;
             _context = context;
             _appconf = appconf;
+            _export = export;
         }
 
         [Authorize]
@@ -706,8 +717,133 @@ namespace WebApp.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        #region Export
+        //Print
+        [Obsolete]
+        [Authorize]
+        [Route("~/Admin/Pengaduan/Export")]
+        public async Task<FileResult> exportPengaduan(string fromDate, string toDate, string filter)
+        {
+            List<ReportProductDTO> dataExport = new List<ReportProductDTO>();
+            MemoryStream result = new MemoryStream();
+            
+            try
+            {
+                fromDate = fromDate == null ? "" : fromDate.Trim();
+                toDate = toDate == null ? "" : toDate.Trim();
+                filter = filter == null ? "" : filter.Trim();
+
+                //Get Data
+                if ((filter == null ? "" : filter.Trim()) == "")
+                {
+                    dataExport = await _context.report_product.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToListAsync();
+                }
+                else
+                {
+                    dataExport = await _context.report_product.AsNoTracking()
+                        .Where(
+                            acc =>
+                                EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.email, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%")
+                            )
+                        .OrderByDescending(p => p.CreatedAt).ToListAsync();
+                }
+
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                _export.exportPengaduan(fromDate, toDate, filter, dataExport, ref result);
+            }
+            catch (Exception exc)
+            {
+
+            }
+
+            return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Pengaduan.xlsx");
+        }
+
+        [Obsolete]
+        [Authorize]
+        [Route("~/Admin/Products/Export")]
+        public async Task<FileResult> exportProducts(string filter)
+        {
+            List<SeriesMasterDTO> dataExport = new List<SeriesMasterDTO>();
+            MemoryStream result = new MemoryStream();
+
+            try
+            {
+                filter = filter == null ? "" : filter.Trim();
+
+                //Get Data
+                if ((filter == null ? "" : filter.Trim()) == "")
+                {
+                    dataExport = await _context.series_master.AsNoTracking().OrderBy(p => p.seriesID).ToListAsync();
+                }
+                else
+                {
+                    dataExport = await _context.series_master.AsNoTracking()
+                        .Where(
+                            acc =>
+                            EF.Functions.Like(acc.seriesID, "%" + filter + "%") ||
+                            EF.Functions.Like(acc.productName, "%" + filter + "%") ||
+                            EF.Functions.Like(acc.productPackaging, "%" + filter + "%") ||
+                            EF.Functions.Like(acc.productVolume, "%" + filter + "%")
+                    )
+                        .OrderBy(p => p.seriesID).ToListAsync();
+                }
+
+                _export.exportProduct(filter, dataExport, ref result);
+            }
+            catch (Exception exc)
+            {
+
+            }
+
+            return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Products.xlsx");
+        }
+
+        [Obsolete]
+        [Authorize]
+        [Route("~/Admin/Scan/Export")]
+        public async Task<FileResult> exportScanAsync(string filter)
+        {
+            List<LogScanningDTO> dataExport = new List<LogScanningDTO>();
+            MemoryStream result = new MemoryStream();
+
+            try
+            {
+                filter = filter == null ? "" : filter.Trim();
+
+                //Get Data
+                if ((filter == null ? "" : filter.Trim()) == "")
+                {
+                    dataExport = await _context.log_scanning.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToListAsync();
+                }
+                else
+                {
+                    dataExport = await _context.log_scanning.AsNoTracking()
+                        .Where(
+                            acc =>
+                                EF.Functions.Like(acc.productId, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.qrNo, "%" + filter + "%")
+                    )
+                        .OrderByDescending(p => p.CreatedAt).ToListAsync();
+                }
+
+                _export.exportScan(filter, dataExport, ref result);
+            }
+            catch (Exception exc)
+            {
+
+            }
+
+            return File(result, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "Scans.xlsx");
+        }
+        #endregion
 
 
-        
+
+
     }
 }
