@@ -211,7 +211,7 @@
         //document.getElementById("locationResult_1").innerHTML = "Latitude: " + latitude + "<br>Longitude: " + longitude;
     }
 
-    function sendAjaxRequest(position, address) {
+    function sendAjaxRequest(position, address,kelurahan,kecamatan,kabupatenkota,provinsi,negara) {
         var latitude = position.coords.latitude;
         var longitude = position.coords.longitude;
 
@@ -237,12 +237,17 @@
                 "customerProfile": "-",
                 "latitude": '' + latitude,
                 "longitude": '' + longitude,
-                "alamatMap": address
+                "alamatMap": address,
+                "kelurahan": kelurahan,
+                "kecamatan": kecamatan,
+                "kabupaten": kabupatenkota,
+                "provinsi": provinsi,
+                "negara": negara
             }),
         };
 
         $.ajax(settings).done(function (response) {
-            console.log(response);
+            //console.log(response);
         });
     }
 
@@ -282,9 +287,35 @@
             dataType: 'json',
             success: function (data) {
                 if (data.status === 'OK') {
+                    var getProv = data.results[0].address_components.filter(function(address_component){
+                        return address_component.types.includes("administrative_area_level_1");
+                    }); 
+
+                    var getKabKota = data.results[0].address_components.filter(function(address_component){
+                        return address_component.types.includes("administrative_area_level_2");
+                    }); 
+
+                    var getKec = data.results[0].address_components.filter(function(address_component){
+                        return address_component.types.includes("administrative_area_level_3");
+                    }); 
+
+                    var getKel = data.results[0].address_components.filter(function(address_component){
+                        return address_component.types.includes("administrative_area_level_4");
+                    }); 
+
+                    var getNegara = data.results[0].address_components.filter(function(address_component){
+                        return address_component.types.includes("country");
+                    }); 
+
                     var address = data.results[0].formatted_address;
+                    var kelurahan = getKel.length ? getKel[0].long_name: "";
+                    var kecamatan = getKec.length ? getKec[0].long_name: "";
+                    var kabupatenkota = getKabKota.length ? getKabKota[0].long_name: "";
+                    var provinsi = getProv.length ? getProv[0].long_name: "";
+                    var negara = getNegara.length ? getNegara[0].long_name: "";
+
                     document.getElementById("locationResult_1").innerHTML = address;
-                    sendAjaxRequest(position,address);
+                    sendAjaxRequest(position,address,kelurahan,kecamatan,kabupatenkota,provinsi,negara);
                 } else {
                     console.error('Error in geocoding request. Status: ' + data.status);
                 }

@@ -644,25 +644,77 @@ namespace WebApp.Controllers
         #region Report
         [Route("~/Admin/Pengaduan")]
         [Authorize]
-        public IActionResult Pengaduan(string? filter, int pg = 1)
+        public IActionResult Pengaduan(string? filter, string? fromDate, string? toDate, int pg = 1)
         {
             if (pg != null && pg < 1)
             {
                 pg = 1;
             }
 
+            fromDate = fromDate == null ? "" : fromDate;
+            toDate = toDate == null ? "" : toDate;
+
             ViewBag.Filter = filter;
+            ViewBag.FromDate = fromDate;
+            ViewBag.ToDate = toDate;
+
+            DateTime dtFrom = DateTime.Now;
+            DateTime dtTo = DateTime.Now;
+
+            try
+            {
+                dtFrom = DateTime.Now;
+                dtFrom = fromDate.Trim() == "" ? DateTime.Now : DateTime.Parse(fromDate.Trim());
+                dtTo = toDate == null ? DateTime.Now : DateTime.Parse(toDate.Trim()).AddDays(1);
+                fromDate = fromDate.Trim() == "" ? "" : DateTime.Parse(fromDate.Trim()).ToString("yyyy-MM-dd");
+                toDate = toDate.Trim() == "" ? "" : DateTime.Parse(toDate.Trim()).ToString("yyyy-MM-dd");
+            }
+            catch
+            {
+                fromDate = "";
+                toDate = "";
+            }
 
             var pageSize = 10;
 
             if ((filter == null ? "" : filter.Trim()) == "")
             {
-                var qry = _context.report_product.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
-                return View("Pengaduan", qry);
+                if (fromDate.Trim() != "" && toDate.Trim() != "")
+                {
+                    var qry = _context.report_product.AsNoTracking()
+                    .Where(
+                        acc =>
+                            acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo
+                        )
+                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                    return View("Pengaduan", qry);
+                }
+                else
+                {
+                    var qry = _context.report_product.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                    return View("Pengaduan", qry);
+                }
             }
             else
             {
-                var qry = _context.report_product.AsNoTracking()
+                if (fromDate.Trim() != "" && toDate.Trim() != "")
+                {
+                    var qry = _context.report_product.AsNoTracking()
+                    .Where(
+                        acc =>
+                            acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
+                            (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.email, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%"))
+                        )
+                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                    return View("Pengaduan", qry);
+                }
+                else
+                {
+                    var qry = _context.report_product.AsNoTracking()
                     .Where(
                         acc =>
                             EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
@@ -672,7 +724,8 @@ namespace WebApp.Controllers
                             EF.Functions.Like(acc.namaProduk, "%" + filter + "%")
                         )
                     .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
-                return View("Pengaduan", qry);
+                    return View("Pengaduan", qry);
+                }                
             }
         }
         #endregion
@@ -734,14 +787,54 @@ namespace WebApp.Controllers
                 toDate = toDate == null ? "" : toDate.Trim();
                 filter = filter == null ? "" : filter.Trim();
 
+                DateTime dtFrom = DateTime.Now;
+                DateTime dtTo = DateTime.Now;
+
+                try
+                {
+                    dtFrom = DateTime.Now;
+                    dtFrom = fromDate.Trim() == "" ? DateTime.Now : DateTime.Parse(fromDate.Trim());
+                    dtTo = toDate == null ? DateTime.Now : DateTime.Parse(toDate.Trim()).AddDays(1);
+                    fromDate = fromDate.Trim() == "" ? "" : DateTime.Parse(fromDate.Trim()).ToString("yyyy-MM-dd");
+                    toDate = toDate.Trim() == "" ? "" : DateTime.Parse(toDate.Trim()).ToString("yyyy-MM-dd");
+                }
+                catch
+                {
+                    fromDate = "";
+                    toDate = "";
+                }
+
                 //Get Data
                 if ((filter == null ? "" : filter.Trim()) == "")
                 {
-                    dataExport =  _context.report_product.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToList();
+                    if (fromDate.Trim() != "" && toDate.Trim() != "")
+                    {
+                        dataExport = _context.report_product.AsNoTracking().Where(acc => acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo).OrderByDescending(p => p.CreatedAt).ToList();
+                    }
+                    else
+                    {
+                        dataExport = _context.report_product.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToList();
+                    }
                 }
                 else
                 {
-                    dataExport =  _context.report_product.AsNoTracking()
+                    if (fromDate.Trim() != "" && toDate.Trim() != "")
+                    {
+                        dataExport = _context.report_product.AsNoTracking()
+                        .Where(
+                            acc =>
+                                acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
+                                (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.email, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%"))
+                            )
+                        .OrderByDescending(p => p.CreatedAt).ToList();
+                    }
+                    else
+                    {
+                        dataExport = _context.report_product.AsNoTracking()
                         .Where(
                             acc =>
                                 EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
@@ -751,6 +844,7 @@ namespace WebApp.Controllers
                                 EF.Functions.Like(acc.namaProduk, "%" + filter + "%")
                             )
                         .OrderByDescending(p => p.CreatedAt).ToList();
+                    }
                 }
 
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;

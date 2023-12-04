@@ -33,7 +33,19 @@
                 <option value="email">Email</option>
                 </select>
                 </div> *@
-                <div class="col-md-4 mb-2">
+                <div class="col-md-3 mb-2">
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">From</span> 
+                        <input type="date" id="fromDate" value="@ViewBag.FromDate" name="fromDate" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">To</span> 
+                        <input type="date" id="toDate" value="@ViewBag.ToDate" name="toDate" class="form-control" />
+                    </div>
+                </div>
+                <div class="col-md-3 mb-2">
                     <input type="text" id="txtSearch" value="@ViewBag.Filter" name="filter" autocomplete="off" class="form-control" placeholder="Search ..." />
                 </div>
                 <div class="col-md-2 mb-2">
@@ -41,7 +53,7 @@
                 </div>
             </div>
 
-            <div class="row px-3">
+            <div class="row px-3 mt-3">
                 <!-- Button Add -->
                 <div class="col-md-12 mb-2 text-end">
                     <button type="button" class="btn btn-primary me-1" id="btnExport">
@@ -111,10 +123,8 @@
     <script type="text/javascript">
         $(function () {
             $("#btnExport").click(function () {
-                // var from = $("#fromDate").val();
-                // var to = $("#toDate").val();
-                var from = '';
-                var to = '';
+                var from = $("#fromDate").val();
+                var to = $("#toDate").val();
                 var filter = $("#txtSearch").val();
                 window.open('/Admin/Pengaduan/Export?filter=' + filter + '&fromDate=' + from + '&toDate=' + to);
 
