@@ -77,25 +77,28 @@
             <div class="card">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title m-0 me-2">Scan Barcode Terbaru</h5>
+                    <div class="text-end">
+                        <a href="~/Admin/Scan" class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat Lainnya</a>
+                    </div>
+
                 </div>
                 <div class="card-body">
                     <ul class="p-0 m-0">
 
                         @foreach (LogScanningDTO data in Model.logScanning)
                         {
-                            <li class="d-flex mb-4 pb-1">
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <small class="text-muted d-block mb-1">Kode QR</small>
-                                        <h6 class="mb-0">@data.qrNo</h6>
-                                    </div>
-                                    <div class="me-2">
-                                        <small class="text-muted d-block mb-1">Lokasi Scan</small>
-                                        <h6 class="mb-0">@data.kabupaten</h6>
-                                    </div>
-                                    @* <div class="user-progress d-flex align-items-center gap-1">
-                                        <a href="javascript:;" class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat</a>
-                                    </div> *@
+                            <li class="row mb-4 pb-1">
+                                <div class="col-4">
+                                    <small class="text-muted d-block mb-1">Waktu Scan</small>
+                                    <h6 class="mb-0">@data.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss")</h6>
+                                </div>
+                                <div class="col-4">
+                                    <small class="text-muted d-block mb-1">Kode QR</small>
+                                    <h6 class="mb-0">@data.qrNo</h6>
+                                </div>
+                                <div class="col-4">
+                                    <small class="text-muted d-block mb-1">Lokasi Scan</small>
+                                    <h6 class="mb-0">@data.kabupaten</h6>
                                 </div>
                             </li>
                         }
@@ -109,30 +112,36 @@
             <div class="card h-100">
                 <div class="card-header d-flex align-items-center justify-content-between">
                     <h5 class="card-title m-0 me-2">Pengaduan Terbaru</h5>
+                    <div class="text-end">
+                        <a href="~/Admin/Pengaduan" class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat Lainnya</a>
+                    </div>
                 </div>
                 <div class="card-body">
                     <ul class="p-0 m-0">
                         @foreach (ReportProductDTO data in Model.reportProduct)
                         {
-                            <li class="d-flex mb-4 pb-1">
-                                <div class="d-flex w-100 flex-wrap align-items-center justify-content-between gap-2">
-                                    <div class="me-2">
-                                        <small class="text-muted d-block mb-1">
-                                            Nama Produk
-                                        </small>
-                                        <h6 class="mb-0" style="max-width: 25ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-                                            @data.namaProduk.Trim()
-                                        </h6>
-                                    </div>
-                                    <div class="me-2">
-                                        <small class="text-muted d-block mb-1">Desc Pelapor</small>
-                                        <h6 class="mb-0" style="max-width: 25ch; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;">
-                                            @data.descPelapor.Trim()
-                                        </h6>
-                                    </div>
-                                    @* <div class="user-progress d-flex align-items-center gap-1">
-                                        <a href="javascript:;" class="btn btn-sm btn-outline-success rounded-pill px-3">Lihat</a>
-                                    </div> *@
+                            <li class="row mb-4 pb-1">
+                                <div class="col-4">
+                                    <small class="text-muted d-block mb-1">
+                                        Tgl Laporan
+                                    </small>
+                                    <h6 class="mb-0">
+                                        @data.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss").Trim()
+                                    </h6>
+                                </div>
+                                <div class="col-4">
+                                    <small class="text-muted d-block mb-1">
+                                        Nama Produk
+                                    </small>
+                                    <h6 class="mb-0">
+                                        @data.namaProduk.Trim()
+                                    </h6>
+                                </div>
+                                <div class="col-4">
+                                    <small class="text-muted d-block mb-1">Desc Pelapor</small>
+                                    <h6 class="mb-0">
+                                        @data.descPelapor.Trim()
+                                    </h6>
                                 </div>
                             </li>
                         }
