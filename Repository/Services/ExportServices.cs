@@ -315,8 +315,11 @@ namespace WebApp.Repository.Services
             }
         }
 
-        public void exportScan(string filter, List<LogScanningDTO> dataExport, ref MemoryStream mem)
+        public void exportScan(string filter, string fromDate, string toDate, string kota, string prov, List<LogScanningDTO> dataExport, ref MemoryStream mem)
         {
+            string strFromDate = fromDate != "" ? DateTime.Parse(fromDate).ToString("dd MMM yyyy") : "";
+            string strToDate = toDate != "" ? DateTime.Parse(toDate).ToString("dd MMM yyyy") : "";
+
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (ExcelPackage p = new ExcelPackage())
             {
@@ -346,11 +349,17 @@ namespace WebApp.Repository.Services
                 ws.Cells[1, 1].Style.Font.Bold = true;
                 ws.Cells[1, 1].Style.Font.Size = 14;
 
-                ws.Cells[2, 1].Value = "Filter Data";
-                ws.Cells[2, 2].Value = ": " + filter;
+                ws.Cells[2, 1].Value = "Tanggal";
+                ws.Cells[2, 2].Value = ": " + strFromDate + " - " + strToDate;
+                ws.Cells[3, 1].Value = "Kode QR / Produk";
+                ws.Cells[3, 2].Value = ": " + filter;
+                ws.Cells[4, 1].Value = "Kota";
+                ws.Cells[4, 2].Value = ": " + kota;
+                ws.Cells[5, 1].Value = "Provinsi";
+                ws.Cells[5, 2].Value = ": " + prov;
 
                 // Create table header
-                int rowIndex = 4;
+                int rowIndex = 6;
                 int colIndex = 1;
 
                 foreach (DataColumn dc in dt.Columns)

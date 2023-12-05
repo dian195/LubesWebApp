@@ -45,8 +45,25 @@
                         <input type="date" id="toDate" value="@ViewBag.ToDate" name="toDate" class="form-control" />
                     </div>
                 </div>
+            </div>
+            <div class="row px-3">
                 <div class="col-md-3 mb-2">
-                    <input type="text" id="txtSearch" value="@ViewBag.Filter" name="filter" autocomplete="off" class="form-control" placeholder="Search ..." />
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">QR / Produk</span>
+                        <input type="text" id="txtSearch" value="@ViewBag.Filter" name="filter" autocomplete="off" class="form-control" placeholder="Search QR / Produk..." />
+                    </div>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">Kota</span>
+                        <input type="text" id="txtKota" value="@ViewBag.kota" name="kota" autocomplete="off" class="form-control" placeholder="Search Kota" />
+                    </div>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">Provinsi</span>
+                        <input type="text" id="txtProv" value="@ViewBag.Prov" name="Prov" autocomplete="off" class="form-control" placeholder="Search Provinsi" />
+                    </div>
                 </div>
                 <div class="col-md-2 mb-2">
                     <button type="submit" class="btn btn-primary" id="btnSearch"><i class="bx bx-search fs-4"></i>&nbsp;Search</button>
@@ -93,16 +110,16 @@
                     <div class="demo-inline-spacing">
                         <nav aria-label="Page navigation">
 
-                            @Html.PagedListPager(Model, page => Url.Action("Scan", new { pg = page, filter = ViewBag.Filter, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate }), new PagedListRenderOptions()
+                            @Html.PagedListPager(Model, page => Url.Action("Scan", new { pg = page, filter = ViewBag.Filter, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate, Prov = ViewBag.Prov, kota = ViewBag.kota }), new PagedListRenderOptions()
                             {
-                                ActiveLiElementClass = "active",
-                                PageClasses = new[]{ "page-link"},
-                                LiElementClasses=new[] { "page-item" },
-                                UlElementClasses = new[] { "pagination", "mt-3" },
-                                LinkToNextPageFormat = "Next",
-                                LinkToPreviousPageFormat = "Previous",
-                                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
-                                DisplayLinkToNextPage = PagedListDisplayMode.Always
+                            ActiveLiElementClass = "active",
+                            PageClasses = new[]{ "page-link"},
+                            LiElementClasses=new[] { "page-item" },
+                            UlElementClasses = new[] { "pagination", "mt-3" },
+                            LinkToNextPageFormat = "Next",
+                            LinkToPreviousPageFormat = "Previous",
+                            DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                            DisplayLinkToNextPage = PagedListDisplayMode.Always
                             })
                         </nav>
                     </div>
@@ -118,11 +135,12 @@
     <script type="text/javascript">
         $(function () {
             $("#btnExport").click(function () {
-                // $("#tblData").table2excel({
-                //     filename: "Scan.xls"
-                // });
+                var from = $("#fromDate").val();
+                var to = $("#toDate").val();
+                var kota = $("#txtKota").val();
+                var prov = $("#txtProv").val();
                 var filter = $("#txtSearch").val();
-                window.open('/Admin/Scan/Export?filter=' + filter);
+                window.open('/Admin/Scan/Export?filter=' + filter + '&fromDate=' + from + '&toDate=' + to + '&Prov=' + prov + '&kota=' + kota);
             });
         });
     </script>

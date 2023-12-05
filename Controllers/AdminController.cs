@@ -629,7 +629,7 @@ namespace WebApp.Controllers
         #region Scan
         [Route("~/Admin/Scan")]
         [Authorize]
-        public IActionResult Scan(string? filter, string? fromDate, string? toDate, int pg = 1)
+        public IActionResult Scan(string? filter, string? fromDate, string? toDate, string? Prov, string? kota, int pg = 1)
         {
             if (pg != null && pg < 1)
             {
@@ -638,10 +638,14 @@ namespace WebApp.Controllers
 
             fromDate = fromDate == null ? "" : fromDate;
             toDate = toDate == null ? "" : toDate;
+            Prov = Prov == null ? "" : Prov;
+            kota = kota == null ? "" : kota;
 
             ViewBag.Filter = filter;
             ViewBag.FromDate = fromDate;
             ViewBag.ToDate = toDate;
+            ViewBag.Prov = Prov;
+            ViewBag.Kota = kota;
 
             DateTime dtFrom = DateTime.Now;
             DateTime dtTo = DateTime.Now;
@@ -666,43 +670,161 @@ namespace WebApp.Controllers
             {
                 if (fromDate.Trim() != "" && toDate.Trim() != "")
                 {
-                    var qry = _context.log_scanning.AsNoTracking().Where(e => e.CreatedAt >= dtFrom && e.CreatedAt < dtTo).OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
-                    return View("Scan", qry);
+                    if (Prov.Trim() == "" && kota.Trim() == "")
+                    {
+                        var qry = _context.log_scanning.AsNoTracking().Where(e =>
+                                e.CreatedAt >= dtFrom &&
+                                e.CreatedAt < dtTo
+                            ).OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Scan", qry);
+                    }
+                    else if (Prov.Trim() != "" && kota.Trim() == "")
+                    {
+                        var qry = _context.log_scanning.AsNoTracking().Where(e =>
+                                    e.CreatedAt >= dtFrom &&
+                                    e.CreatedAt < dtTo &&
+                                    EF.Functions.Like(e.provinsi, "%" + Prov + "%") 
+                                    ).OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Scan", qry);
+                    }
+                    else if (Prov.Trim() == "" && kota.Trim() != "")
+                    {
+                        var qry = _context.log_scanning.AsNoTracking().Where(e =>
+                                    e.CreatedAt >= dtFrom &&
+                                    e.CreatedAt < dtTo &&
+                                    EF.Functions.Like(e.kabupaten, "%" + kota + "%")
+                                    ).OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Scan", qry);
+                    }
+                    else
+                    {
+                        var qry = _context.log_scanning.AsNoTracking().Where(e =>
+                                    e.CreatedAt >= dtFrom &&
+                                    e.CreatedAt < dtTo &&
+                                    EF.Functions.Like(e.provinsi, "%" + Prov + "%") &&
+                                    EF.Functions.Like(e.kabupaten, "%" + kota + "%")
+                                    ).OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Scan", qry);
+                    }
                 }
                 else
                 {
-                    var qry = _context.log_scanning.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
-                    return View("Scan", qry);
+                    if (Prov.Trim() == "" && kota.Trim() == "")
+                    {
+                        var qry = _context.log_scanning.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Scan", qry);
+                    }
+                    else if (Prov.Trim() != "" && kota.Trim() == "")
+                    {
+                        var qry = _context.log_scanning.AsNoTracking().Where(e =>
+                                    EF.Functions.Like(e.provinsi, "%" + Prov + "%") 
+                                    ).OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Scan", qry);
+                    }
+                    else if (Prov.Trim() == "" && kota.Trim() != "")
+                    {
+                        var qry = _context.log_scanning.AsNoTracking().Where(e =>
+                                    EF.Functions.Like(e.kabupaten, "%" + kota + "%")
+                                    ).OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Scan", qry);
+                    }
+                    else
+                    {
+                        var qry = _context.log_scanning.AsNoTracking().Where(e =>
+                                    EF.Functions.Like(e.provinsi, "%" + Prov + "%") &&
+                                    EF.Functions.Like(e.kabupaten, "%" + kota + "%")
+                                    ).OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Scan", qry);
+                    }
                 }
             }
             else
             {
                 if (fromDate.Trim() != "" && toDate.Trim() != "")
                 {
-                    var qry = _context.log_scanning.AsNoTracking()
-                    .Where(
-                        acc =>
-                            acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
-                            (EF.Functions.Like(acc.productId, "%" + filter + "%") ||
-                            EF.Functions.Like(acc.qrNo, "%" + filter + "%") ||
-                            EF.Functions.Like(acc.provinsi, "%" + filter + "%") ||
-                            EF.Functions.Like(acc.kabupaten, "%" + filter + "%"))
-                        )
-                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
-                    return View("Scan", qry);
+                    if (Prov.Trim() == "" && kota.Trim() == "")
+                    {
+                        var qry = _context.log_scanning.AsNoTracking().Where(e =>
+                                e.CreatedAt >= dtFrom &&
+                                e.CreatedAt < dtTo &&
+                                (EF.Functions.Like(e.productId, "%" + filter + "%") ||
+                                EF.Functions.Like(e.qrNo, "%" + filter + "%"))
+                            ).OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Scan", qry);
+                    }
+                    else if (Prov.Trim() != "" && kota.Trim() == "")
+                    {
+                        var qry = _context.log_scanning.AsNoTracking().Where(e =>
+                                    e.CreatedAt >= dtFrom &&
+                                    e.CreatedAt < dtTo &&
+                                    EF.Functions.Like(e.provinsi, "%" + Prov + "%") &&
+                                    (EF.Functions.Like(e.productId, "%" + filter + "%") ||
+                                    EF.Functions.Like(e.qrNo, "%" + filter + "%"))
+                                    ).OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Scan", qry);
+                    }
+                    else if (Prov.Trim() == "" && kota.Trim() != "")
+                    {
+                        var qry = _context.log_scanning.AsNoTracking().Where(e =>
+                                    e.CreatedAt >= dtFrom &&
+                                    e.CreatedAt < dtTo &&
+                                    EF.Functions.Like(e.kabupaten, "%" + kota + "%") &&
+                                    (EF.Functions.Like(e.productId, "%" + filter + "%") ||
+                                    EF.Functions.Like(e.qrNo, "%" + filter + "%"))
+                                    ).OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Scan", qry);
+                    }
+                    else
+                    {
+                        var qry = _context.log_scanning.AsNoTracking().Where(e =>
+                                    e.CreatedAt >= dtFrom &&
+                                    e.CreatedAt < dtTo &&
+                                    EF.Functions.Like(e.provinsi, "%" + Prov + "%") &&
+                                    EF.Functions.Like(e.kabupaten, "%" + kota + "%") &&
+                                    (EF.Functions.Like(e.productId, "%" + filter + "%") ||
+                                    EF.Functions.Like(e.qrNo, "%" + filter + "%"))
+                                    ).OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Scan", qry);
+                    }
                 }
                 else
                 {
-                     var qry = _context.log_scanning.AsNoTracking()
-                    .Where(
-                        acc =>
-                            EF.Functions.Like(acc.productId, "%" + filter + "%") ||
-                            EF.Functions.Like(acc.qrNo, "%" + filter + "%") ||
-                            EF.Functions.Like(acc.provinsi, "%" + filter + "%") ||
-                            EF.Functions.Like(acc.kabupaten, "%" + filter + "%")
-                        )
-                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
-                    return View("Scan", qry);
+                    if (Prov.Trim() == "" && kota.Trim() == "")
+                    {
+                        var qry = _context.log_scanning.AsNoTracking().Where(e =>
+                                (EF.Functions.Like(e.productId, "%" + filter + "%") ||
+                                EF.Functions.Like(e.qrNo, "%" + filter + "%"))
+                            ).OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Scan", qry);
+                    }
+                    else if (Prov.Trim() != "" && kota.Trim() == "")
+                    {
+                        var qry = _context.log_scanning.AsNoTracking().Where(e =>
+                                    EF.Functions.Like(e.provinsi, "%" + Prov + "%") &&
+                                    (EF.Functions.Like(e.productId, "%" + filter + "%") ||
+                                    EF.Functions.Like(e.qrNo, "%" + filter + "%"))
+                                    ).OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Scan", qry);
+                    }
+                    else if (Prov.Trim() == "" && kota.Trim() != "")
+                    {
+                        var qry = _context.log_scanning.AsNoTracking().Where(e =>
+                                    EF.Functions.Like(e.kabupaten, "%" + kota + "%") &&
+                                    (EF.Functions.Like(e.productId, "%" + filter + "%") ||
+                                    EF.Functions.Like(e.qrNo, "%" + filter + "%"))
+                                    ).OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Scan", qry);
+                    }
+                    else
+                    {
+                        var qry = _context.log_scanning.AsNoTracking().Where(e =>
+                                    EF.Functions.Like(e.provinsi, "%" + Prov + "%") &&
+                                    EF.Functions.Like(e.kabupaten, "%" + kota + "%") &&
+                                    (EF.Functions.Like(e.productId, "%" + filter + "%") ||
+                                    EF.Functions.Like(e.qrNo, "%" + filter + "%"))
+                                    ).OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Scan", qry);
+                    }
                 }
             }
         }
@@ -968,7 +1090,7 @@ namespace WebApp.Controllers
         [Obsolete]
         [Authorize]
         [Route("~/Admin/Scan/Export")]
-        public FileResult exportScanAsync(string filter, string fromDate, string toDate)
+        public FileResult exportScanAsync(string filter, string fromDate, string toDate, string? Prov, string? kota)
         {
             List<LogScanningDTO> dataExport = new List<LogScanningDTO>();
             MemoryStream result = new MemoryStream();
@@ -978,6 +1100,8 @@ namespace WebApp.Controllers
                 filter = filter == null ? "" : filter.Trim();
                 fromDate = fromDate == null ? "" : fromDate;
                 toDate = toDate == null ? "" : toDate;
+                Prov = Prov == null ? "" : Prov;
+                kota = kota == null ? "" : kota;
 
                 DateTime dtFrom = DateTime.Now;
                 DateTime dtTo = DateTime.Now;
@@ -987,8 +1111,6 @@ namespace WebApp.Controllers
                     dtFrom = DateTime.Now;
                     dtFrom = fromDate.Trim() == "" ? DateTime.Now : DateTime.Parse(fromDate.Trim());
                     dtTo = toDate == null ? DateTime.Now : DateTime.Parse(toDate.Trim()).AddDays(1);
-                    fromDate = fromDate.Trim() == "" ? "" : DateTime.Parse(fromDate.Trim()).ToString("yyyy-MM-dd");
-                    toDate = toDate.Trim() == "" ? "" : DateTime.Parse(toDate.Trim()).ToString("yyyy-MM-dd");
                 }
                 catch
                 {
@@ -996,48 +1118,153 @@ namespace WebApp.Controllers
                     toDate = "";
                 }
 
-                //Get Data
                 if ((filter == null ? "" : filter.Trim()) == "")
                 {
                     if (fromDate.Trim() != "" && toDate.Trim() != "")
                     {
-                        dataExport = _context.log_scanning.Where(e => e.CreatedAt >= dtFrom && e.CreatedAt < dtTo).AsNoTracking().OrderByDescending(p => p.CreatedAt).ToList();
+                        if (Prov.Trim() == "" && kota.Trim() == "")
+                        {
+                            dataExport = _context.log_scanning.AsNoTracking().Where(e =>
+                                    e.CreatedAt >= dtFrom &&
+                                    e.CreatedAt < dtTo
+                                ).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else if (Prov.Trim() != "" && kota.Trim() == "")
+                        {
+                            dataExport = _context.log_scanning.AsNoTracking().Where(e =>
+                                        e.CreatedAt >= dtFrom &&
+                                        e.CreatedAt < dtTo &&
+                                        EF.Functions.Like(e.provinsi, "%" + Prov + "%")
+                                        ).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else if (Prov.Trim() == "" && kota.Trim() != "")
+                        {
+                            dataExport = _context.log_scanning.AsNoTracking().Where(e =>
+                                        e.CreatedAt >= dtFrom &&
+                                        e.CreatedAt < dtTo &&
+                                        EF.Functions.Like(e.kabupaten, "%" + kota + "%")
+                                        ).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else
+                        {
+                            dataExport = _context.log_scanning.AsNoTracking().Where(e =>
+                                        e.CreatedAt >= dtFrom &&
+                                        e.CreatedAt < dtTo &&
+                                        EF.Functions.Like(e.provinsi, "%" + Prov + "%") &&
+                                        EF.Functions.Like(e.kabupaten, "%" + kota + "%")
+                                        ).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
                     }
                     else
                     {
-                        dataExport = _context.log_scanning.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToList();
+                        if (Prov.Trim() == "" && kota.Trim() == "")
+                        {
+                            dataExport = _context.log_scanning.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else if (Prov.Trim() != "" && kota.Trim() == "")
+                        {
+                            dataExport = _context.log_scanning.AsNoTracking().Where(e =>
+                                        EF.Functions.Like(e.provinsi, "%" + Prov + "%")
+                                        ).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else if (Prov.Trim() == "" && kota.Trim() != "")
+                        {
+                            dataExport = _context.log_scanning.AsNoTracking().Where(e =>
+                                        EF.Functions.Like(e.kabupaten, "%" + kota + "%")
+                                        ).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else
+                        {
+                            dataExport = _context.log_scanning.AsNoTracking().Where(e =>
+                                        EF.Functions.Like(e.provinsi, "%" + Prov + "%") &&
+                                        EF.Functions.Like(e.kabupaten, "%" + kota + "%")
+                                        ).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
                     }
                 }
                 else
                 {
                     if (fromDate.Trim() != "" && toDate.Trim() != "")
                     {
-                        dataExport = _context.log_scanning.AsNoTracking()
-                        .Where(
-                            acc =>
-                                acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo && 
-                                (EF.Functions.Like(acc.productId, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.qrNo, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.provinsi, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.kabupaten, "%" + filter + "%"))
-                        )
-                        .OrderByDescending(p => p.CreatedAt).ToList();
+                        if (Prov.Trim() == "" && kota.Trim() == "")
+                        {
+                            dataExport = _context.log_scanning.AsNoTracking().Where(e =>
+                                    e.CreatedAt >= dtFrom &&
+                                    e.CreatedAt < dtTo &&
+                                    (EF.Functions.Like(e.productId, "%" + filter + "%") ||
+                                    EF.Functions.Like(e.qrNo, "%" + filter + "%"))
+                                ).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else if (Prov.Trim() != "" && kota.Trim() == "")
+                        {
+                            dataExport = _context.log_scanning.AsNoTracking().Where(e =>
+                                        e.CreatedAt >= dtFrom &&
+                                        e.CreatedAt < dtTo &&
+                                        EF.Functions.Like(e.provinsi, "%" + Prov + "%") &&
+                                        (EF.Functions.Like(e.productId, "%" + filter + "%") ||
+                                        EF.Functions.Like(e.qrNo, "%" + filter + "%"))
+                                        ).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else if (Prov.Trim() == "" && kota.Trim() != "")
+                        {
+                            dataExport = _context.log_scanning.AsNoTracking().Where(e =>
+                                        e.CreatedAt >= dtFrom &&
+                                        e.CreatedAt < dtTo &&
+                                        EF.Functions.Like(e.kabupaten, "%" + kota + "%") &&
+                                        (EF.Functions.Like(e.productId, "%" + filter + "%") ||
+                                        EF.Functions.Like(e.qrNo, "%" + filter + "%"))
+                                        ).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else
+                        {
+                            dataExport = _context.log_scanning.AsNoTracking().Where(e =>
+                                        e.CreatedAt >= dtFrom &&
+                                        e.CreatedAt < dtTo &&
+                                        EF.Functions.Like(e.provinsi, "%" + Prov + "%") &&
+                                        EF.Functions.Like(e.kabupaten, "%" + kota + "%") &&
+                                        (EF.Functions.Like(e.productId, "%" + filter + "%") ||
+                                        EF.Functions.Like(e.qrNo, "%" + filter + "%"))
+                                        ).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
                     }
                     else
                     {
-                        dataExport = _context.log_scanning.AsNoTracking()
-                        .Where(
-                            acc =>
-                                EF.Functions.Like(acc.productId, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.qrNo, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.provinsi, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.kabupaten, "%" + filter + "%")
-                        )
-                        .OrderByDescending(p => p.CreatedAt).ToList();
+                        if (Prov.Trim() == "" && kota.Trim() == "")
+                        {
+                            dataExport = _context.log_scanning.AsNoTracking().Where(e =>
+                                    (EF.Functions.Like(e.productId, "%" + filter + "%") ||
+                                    EF.Functions.Like(e.qrNo, "%" + filter + "%"))
+                                ).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else if (Prov.Trim() != "" && kota.Trim() == "")
+                        {
+                            dataExport = _context.log_scanning.AsNoTracking().Where(e =>
+                                        EF.Functions.Like(e.provinsi, "%" + Prov + "%") &&
+                                        (EF.Functions.Like(e.productId, "%" + filter + "%") ||
+                                        EF.Functions.Like(e.qrNo, "%" + filter + "%"))
+                                        ).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else if (Prov.Trim() == "" && kota.Trim() != "")
+                        {
+                            dataExport = _context.log_scanning.AsNoTracking().Where(e =>
+                                        EF.Functions.Like(e.kabupaten, "%" + kota + "%") &&
+                                        (EF.Functions.Like(e.productId, "%" + filter + "%") ||
+                                        EF.Functions.Like(e.qrNo, "%" + filter + "%"))
+                                        ).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else
+                        {
+                            dataExport = _context.log_scanning.AsNoTracking().Where(e =>
+                                        EF.Functions.Like(e.provinsi, "%" + Prov + "%") &&
+                                        EF.Functions.Like(e.kabupaten, "%" + kota + "%") &&
+                                        (EF.Functions.Like(e.productId, "%" + filter + "%") ||
+                                        EF.Functions.Like(e.qrNo, "%" + filter + "%"))
+                                        ).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
                     }
                 }
 
-                _export.exportScan(filter, dataExport, ref result);
+                _export.exportScan(filter, fromDate, toDate, kota, Prov, dataExport, ref result);
             }
             catch (Exception exc)
             {
