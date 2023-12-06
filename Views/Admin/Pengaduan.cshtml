@@ -35,13 +35,13 @@
                 </div> *@
                 <div class="col-md-3 mb-2">
                     <div class="input-group input-group-merge">
-                        <span class="input-group-text">From</span> 
+                        <span class="input-group-text">From</span>
                         <input type="date" id="fromDate" value="@ViewBag.FromDate" name="fromDate" class="form-control" />
                     </div>
                 </div>
                 <div class="col-md-3 mb-2">
                     <div class="input-group input-group-merge">
-                        <span class="input-group-text">To</span> 
+                        <span class="input-group-text">To</span>
                         <input type="date" id="toDate" value="@ViewBag.ToDate" name="toDate" class="form-control" />
                     </div>
                 </div>
@@ -81,13 +81,13 @@
                         @foreach (ReportProductDTO data in Model)
                         {
                             <tr>
-                                <td>@data.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss")</td>
-                                <td>@data.namaLengkap</td>
-                                <td>@data.nomorTelp</td>
-                                <td>@data.email</td>
-                                <td>@data.namaProduk</td>
-                                <td>@data.descPelapor</td>
-                                <td>@data.descLaporan</td>
+                                <td valign="top">@data.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                <td valign="top">@data.namaLengkap</td>
+                                <td valign="top">@data.nomorTelp</td>
+                                <td valign="top">@data.email</td>
+                                <td valign="top">@data.namaProduk</td>
+                                <td valign="top">@data.descPelapor</td>
+                                <td valign="top" style="white-space:pre-wrap; word-wrap:break-word">@data.descLaporan</td>
                             </tr>
                         }
                     </tbody>
@@ -101,6 +101,7 @@
 
                             @Html.PagedListPager(Model, page => Url.Action("Pengaduan", new { pg = page, filter = ViewBag.Filter, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate }), new PagedListRenderOptions()
                             {
+                                MaximumPageNumbersToDisplay = 4,
                                 ActiveLiElementClass = "active",
                                 PageClasses = new[]{ "page-link"},
                                 LiElementClasses=new[] { "page-item" },

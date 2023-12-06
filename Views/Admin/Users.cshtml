@@ -112,6 +112,7 @@
 
                             @Html.PagedListPager(Model, page => Url.Action("Users", new { pg = page, filter = ViewBag.Filter }), new PagedListRenderOptions()
                             {
+                                MaximumPageNumbersToDisplay = 4,
                                 ActiveLiElementClass = "active",
                                 PageClasses = new[]{ "page-link"},
                                 LiElementClasses=new[] { "page-item" },

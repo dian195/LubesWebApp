@@ -35,7 +35,7 @@ namespace WebApp.Repository.Services
                 ws.Column(4).Width = 30;
                 ws.Column(5).Width = 50;
                 ws.Column(6).Width = 45;
-                ws.Column(6).Width = 50;
+                ws.Column(7).Width = 50;
 
                 DataTable dt = new DataTable();
 

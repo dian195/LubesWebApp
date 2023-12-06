@@ -100,14 +100,15 @@
 
                             @Html.PagedListPager(Model, page => Url.Action("Products", new { pg = page, filter = ViewBag.Filter }), new PagedListRenderOptions()
                             {
-                            ActiveLiElementClass = "active",
-                            PageClasses = new[]{ "page-link"},
-                            LiElementClasses=new[] { "page-item" },
-                            UlElementClasses = new[] { "pagination", "mt-3" },
-                            LinkToNextPageFormat = "Next",
-                            LinkToPreviousPageFormat = "Previous",
-                            DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
-                            DisplayLinkToNextPage = PagedListDisplayMode.Always
+                                MaximumPageNumbersToDisplay = 4,
+                                ActiveLiElementClass = "active",
+                                PageClasses = new[]{ "page-link"},
+                                LiElementClasses=new[] { "page-item" },
+                                UlElementClasses = new[] { "pagination", "mt-3" },
+                                LinkToNextPageFormat = "Next",
+                                LinkToPreviousPageFormat = "Previous",
+                                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                                DisplayLinkToNextPage = PagedListDisplayMode.Always
                             })
                         </nav>
                     </div>

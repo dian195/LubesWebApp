@@ -112,14 +112,15 @@
 
                             @Html.PagedListPager(Model, page => Url.Action("Scan", new { pg = page, filter = ViewBag.Filter, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate, Prov = ViewBag.Prov, kota = ViewBag.kota }), new PagedListRenderOptions()
                             {
-                            ActiveLiElementClass = "active",
-                            PageClasses = new[]{ "page-link"},
-                            LiElementClasses=new[] { "page-item" },
-                            UlElementClasses = new[] { "pagination", "mt-3" },
-                            LinkToNextPageFormat = "Next",
-                            LinkToPreviousPageFormat = "Previous",
-                            DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
-                            DisplayLinkToNextPage = PagedListDisplayMode.Always
+                                MaximumPageNumbersToDisplay = 4,
+                                ActiveLiElementClass = "active",
+                                PageClasses = new[]{ "page-link"},
+                                LiElementClasses=new[] { "page-item" },
+                                UlElementClasses = new[] { "pagination", "mt-3" },
+                                LinkToNextPageFormat = "Next",
+                                LinkToPreviousPageFormat = "Previous",
+                                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                                DisplayLinkToNextPage = PagedListDisplayMode.Always
                             })
                         </nav>
                     </div>
