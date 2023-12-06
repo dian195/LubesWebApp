@@ -16,7 +16,26 @@
 </section>
 
 <!-- Report Form -->
-<div class="container report">
+<div id="panelError" class="container product-detail">
+    <div class="row title">
+        <div class="col">
+            <h3>
+                <p id="errorMessage"></p>
+            </h3>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="hdnLat" />
+<input type="hidden" id="hdnLong" />
+<input type="hidden" id="hdnaMap" />
+<input type="hidden" id="hdnKel" />
+<input type="hidden" id="hdnKec" />
+<input type="hidden" id="hdnKab" />
+<input type="hidden" id="hdnProv" />
+<input type="hidden" id="hdnNegara" />
+
+<div id="panelLaporan" class="container report">
     <div class="row">
         <!-- Report Guide -->
         <div class="col-md-6 report-guide">
@@ -127,6 +146,15 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-12">
+                    <div class="form-floating mb-3">
+                        <textarea rows="4" class="form-control" asp-for="namaProduk" id="txtDescLaporan" placeholder="Deskripsi Laporan"></textarea>
+                        <label for="txtDescLaporan">Deskripsi Laporan</label>
+                        <div id="txtDescLaporan" class="form-text px-2 text-muted">
+                            Deskripsikan dengan singkat dan jelas Laporan Anda, dengan memberikan keterangan nama toko / bengkel / agen atau keterangan-keterangan yang lain yang anda anggap penting
+                        </div>
+                    </div>
+                </div>
                 <div class="col-12 form-radio mt-4">
                     <div class="form-title mb-2">
                         Mana yang lebih dekat mendeskripsikan diri anda
@@ -190,17 +218,118 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-12">
+                    <div class="form-floating mb-3">
+                        <div class="form-text px-2 text-muted">
+                            Lokasi pelaporan secara otomatis akan dicapture menggunakan lokasi device (gadget) anda. Pastikan setting location di device (gadget) anda sudah aktif.
+                        </div>
+                    </div>
+                </div>
                 <div class="col-12 mt-3 text-end">
                     <button type="submit" id="btnSubmit" class="btn btn-submit btn-primary">Kirim Laporan</button>
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 
 @section scripts {
 
     <script>
+        $(document).ready(function () {
+            getLocation();
+        });
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                $("#panelLaporan").show();
+                $("#panelError").hide();
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    // Callback showPosition akan dipanggil setelah mendapatkan lokasi
+                    reverseGeocode(position.coords.latitude, position.coords.longitude, position);
+                }, showError);
+            } else {
+                $("#panelLaporan").hide();
+                $("#panelError").show();
+                document.getElementById("errorMessage").innerHTML = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showError(error) {
+            $("#panelLaporan").hide();
+            $("#panelError").show();
+
+            switch (error.code) {
+                case error.PERMISSION_DENIED:
+                    document.getElementById("errorMessage").innerHTML = "Anda Harus Allow Location";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    document.getElementById("errorMessage").innerHTML = "Location information is unavailable";
+                    break;
+                case error.TIMEOUT:
+                    document.getElementById("errorMessage").innerHTML = "The request to get user location timed out";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    document.getElementById("errorMessage").innerHTML = "An unknown error occurred";
+                    break;
+            }
+        }
+
+        function reverseGeocode(latitude, longitude, position) {
+            // Replace 'YOUR_API_KEY' with your actual Google Maps API key
+            var apiKey = 'AIzaSyDEDIpNJDJ7Vb_Ja_OBAmcKkDMPXBHvMK8';
+            var apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${apiKey}`;
+            $.ajax({
+                url: apiUrl,
+                method: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    if (data.status === 'OK') {
+                        var getProv = data.results[0].address_components.filter(function (address_component) {
+                            return address_component.types.includes("administrative_area_level_1");
+                        });
+
+                        var getKabKota = data.results[0].address_components.filter(function (address_component) {
+                            return address_component.types.includes("administrative_area_level_2");
+                        });
+
+                        var getKec = data.results[0].address_components.filter(function (address_component) {
+                            return address_component.types.includes("administrative_area_level_3");
+                        });
+
+                        var getKel = data.results[0].address_components.filter(function (address_component) {
+                            return address_component.types.includes("administrative_area_level_4");
+                        });
+
+                        var getNegara = data.results[0].address_components.filter(function (address_component) {
+                            return address_component.types.includes("country");
+                        });
+
+                        var address = data.results[0].formatted_address;
+                        var kelurahan = getKel.length ? getKel[0].long_name : "";
+                        var kecamatan = getKec.length ? getKec[0].long_name : "";
+                        var kabupatenkota = getKabKota.length ? getKabKota[0].long_name : "";
+                        var provinsi = getProv.length ? getProv[0].long_name : "";
+                        var negara = getNegara.length ? getNegara[0].long_name : "";
+
+                        $('#hdnLat').val(latitude);
+                        $('#hdnLong').val(longitude);
+                        $('#hdnaMap').val(address);
+                        $('#hdnKel').val(kelurahan);
+                        $('#hdnKec').val(kecamatan);
+                        $('#hdnKab').val(kabupatenkota);
+                        $('#hdnProv').val(provinsi);
+                        $('#hdnNegara').val(negara);
+                    } else {
+                        console.error('Error in geocoding request. Status: ' + data.status);
+                    }
+                },
+                error: function (error) {
+                    console.error('Error in geocoding request:', error);
+                }
+            });
+        }
 
         $('#btnSubmit').on('click', function () {
 
@@ -208,10 +337,20 @@
 
                 $('#btnSubmit').prop('disabled', true);
 
+                var latitude = $('#hdnLat').val();
+                var longitude = $('#hdnLong').val();
+                var address = $('#hdnaMap').val();
+                var kelurahan = $('#hdnKel').val();
+                var kecamatan = $('#hdnKec').val();
+                var kabupatenkota = $('#hdnKab').val();
+                var provinsi = $('#hdnProv').val();
+                var negara = $('#hdnNegara').val();
+
                 var namaLengkap = $('#txtNamaLengkap').val();
                 var nomorWA = $('#txtNomorWA').val();
                 var email = $('#txtEmail').val();
                 var namaProduct = $('#txtNamaProduct').val();
+                var descLaporan = $('#txtDescLaporan').val();
                 var descPelapor = $("input[name='descPelapor']:checked").val();
 
                 if (jQuery.type(descPelapor) === "undefined") {
@@ -228,7 +367,7 @@
                 }
 
                 //Validasi
-                if (namaLengkap.trim() == "" || nomorWA.trim() == "" || email.trim() == "" || namaProduct.trim() == "" || descPelapor.trim() == "") {
+                if (namaLengkap.trim() == "" || nomorWA.trim() == "" || email.trim() == "" || namaProduct.trim() == "" || descPelapor.trim() == "" || descLaporan.trim() == "") {
                     $('#btnSubmit').prop('disabled', false);
                     return Swal.fire({
                         title: 'Error !',
@@ -237,15 +376,25 @@
                     });
                 }
 
+                //Save to db
+
                 const obj = {
                     "namaLengkap": namaLengkap,
                     "nomorTelp": nomorWA,
                     "email": email,
                     "namaProduk": namaProduct,
-                    "descPelapor": descPelapor
+                    "descPelapor": descPelapor,
+                    "descLaporan": descLaporan,
+                    "latitude": '' + latitude,
+                    "longitude": '' + longitude,
+                    "alamatMap": address,
+                    "kelurahan": kelurahan,
+                    "kecamatan": kecamatan,
+                    "kabupaten": kabupatenkota,
+                    "provinsi": provinsi,
+                    "negara": negara
                 };
 
-                //Save to db
                 $.ajax({
                     url: "/api/PostReportProduct",
                     method: "POST",
@@ -257,8 +406,7 @@
                     },
                     success: function (response) {
                         $('#btnSubmit').prop('disabled', false);
-                        if (response.id == 1)
-                        {
+                        if (response.id == 1) {
                             Swal.fire({
                                 title: 'Berhasil!',
                                 text: response.message,
@@ -269,8 +417,7 @@
                                 }
                             });
                         }
-                        else
-                        {
+                        else {
                             return Swal.fire({
                                 title: 'Error !',
                                 text: response.message,
@@ -287,7 +434,6 @@
                         });
                     },
                 });
-
             }
             catch (err) {
                 $('#btnSubmit').prop('disabled', false);

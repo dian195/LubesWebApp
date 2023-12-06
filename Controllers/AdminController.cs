@@ -55,7 +55,7 @@ namespace WebApp.Controllers
             }
             catch (Exception ex)
             {
-                
+
             }
 
             return View(dto);
@@ -683,7 +683,7 @@ namespace WebApp.Controllers
                         var qry = _context.log_scanning.AsNoTracking().Where(e =>
                                     e.CreatedAt >= dtFrom &&
                                     e.CreatedAt < dtTo &&
-                                    EF.Functions.Like(e.provinsi, "%" + Prov + "%") 
+                                    EF.Functions.Like(e.provinsi, "%" + Prov + "%")
                                     ).OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
                         return View("Scan", qry);
                     }
@@ -717,7 +717,7 @@ namespace WebApp.Controllers
                     else if (Prov.Trim() != "" && kota.Trim() == "")
                     {
                         var qry = _context.log_scanning.AsNoTracking().Where(e =>
-                                    EF.Functions.Like(e.provinsi, "%" + Prov + "%") 
+                                    EF.Functions.Like(e.provinsi, "%" + Prov + "%")
                                     ).OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
                         return View("Scan", qry);
                     }
@@ -896,7 +896,8 @@ namespace WebApp.Controllers
                                 EF.Functions.Like(acc.email, "%" + filter + "%") ||
                                 EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
                                 EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%"))
+                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
                         )
                     .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
                     return View("Pengaduan", qry);
@@ -910,7 +911,8 @@ namespace WebApp.Controllers
                             EF.Functions.Like(acc.email, "%" + filter + "%") ||
                             EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
                             EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
-                            EF.Functions.Like(acc.namaProduk, "%" + filter + "%")
+                            EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                            EF.Functions.Like(acc.descLaporan, "%" + filter + "%")
                         )
                     .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
                     return View("Pengaduan", qry);

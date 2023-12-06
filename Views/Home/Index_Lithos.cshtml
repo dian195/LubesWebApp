@@ -31,7 +31,7 @@
         <div class="card-detail d-md-flex">
             <div class="col-md-3">
                 <div class="title-detail">
-                    Kode QR
+                    QR Code Number
                 </div>
             </div>
             <div class="col-md-1 d-none d-md-block">
@@ -84,7 +84,7 @@
             </div>
             <div class="col-md-8">
                 <div class="text-detail">
-                    @Model.jmlScan kali di scan
+                    @Model.jmlScan_Str
                 </div>
             </div>
         </div>        
@@ -143,19 +143,21 @@
         <div class="divider"></div>
         <ol>
             <li class="mb-3">
-                BATCH NUMBER print dengan Teknologi Laser Printing secara SEJAJAR pada Cap Ring dan Leher Botol.
-                Pastikan Nomor pada botol anda sama dengan Nomor Pada Tabel Diatas.
+                BATCH NUMBER diprint dengan Teknologi Laser Printing secara SEJAJAR pada Cap Ring dan Leher Botol. 
+                BATCH NUMBER adalah kode produksi lubricants yang terdiri dari kombinasi 8 angka.
+                Pastikan BATCH NUMBER pada botol anda sama dengan BATCH NUMBER yang ditunjukkan pada layar.
             </li class="mb-3">
             <li class="mb-3">
                 Pastikan Nama Produk pada botol Anda sesuai dengan Nama Produk pada Tabel.
             </li>
             <li class="mb-3">
-                QR Code Number adalah Unique tiap botol. Pastikan Nomor QR Botol Anda berbeda dengan QR Botol
-                yang lain, dan juga sesuai dengan Nomor QR yang ada pada Tabel.
+                QR Code Number adalah kombinasi 9 angka dan huruf dibawah gambar QR dan bersifat UNIQUE (berbeda) tiap botol. 
+                Pastikan Nomor QR Code Botol Anda berbeda dengan QR Code Botol
+                yang lain, dan pastikan juga sesuai dengan Nomor QR Code yang ada pada Tabel.
             </li>
         </ol>
         <div class="row mt-5 justify-content-center justify-content-md-start">
-            <div class="col-auto">
+            <div class="col-auto mb-3">
                 <a href="~/assets/pdf/Identifikasi_Botol_Pelumas_Pertamina.pdf" target="_blank" class="btn btn-danger rounded-pill" role="button">Lihat Panduan</a>
             </div>
             <div class="col-auto">
@@ -187,14 +189,18 @@
     });
 
     function getLocation() {
+        $("#panelDrum_1").hide();
+        $("#panelDrum_2").hide();
+        $("#panelError").show();
+
         if (navigator.geolocation) {
-            $("#panelDrum_1").show();
-            $("#panelDrum_2").show();
-            $("#panelError").hide();
-             navigator.geolocation.getCurrentPosition(function (position) {
+            navigator.geolocation.getCurrentPosition(function (position) {
                 // Callback showPosition akan dipanggil setelah mendapatkan lokasi
                 showPosition(position);
                 reverseGeocode(position.coords.latitude, position.coords.longitude,position);
+                $("#panelDrum_1").show();
+                $("#panelDrum_2").show();
+                $("#panelError").hide();
             }, showError);
         } else {
             $("#panelDrum_1").hide();

@@ -25,5 +25,25 @@ namespace WebApp.Models
 
         [Column("Create_Date")]
         public DateTime CreatedAt { get; set; } = DateTime.Now; // Default value set to current UTC time
+
+
+        public string? latitude { get; set; }
+        public string? longitude { get; set; }
+
+        [Column("Deskripsi_Laporan")]
+        public string? descLaporan { get; set; }
+
+        [Column("alamat_map")]
+        public string? alamatMap { get; set; }
+        [Column("Kelurahan")]
+        public string? kelurahan { get; set; }
+        [Column("Kecamatan")]
+        public string? kecamatan { get; set; }
+        [Column("Kabupaten")]
+        public string? kabupaten { get; set; }
+        [Column("Provinsi")]
+        public string? provinsi { get; set; }
+        [Column("Negara")]
+        public string? negara { get; set; }
     }
 }

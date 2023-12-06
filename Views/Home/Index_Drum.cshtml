@@ -29,7 +29,7 @@
         <div class="card-detail d-md-flex">
             <div class="col-md-3">
                 <div class="title-detail">
-                    Kode QR
+                    QR Code Number
                 </div>
             </div>
             <div class="col-md-1 d-none d-md-block">
@@ -82,7 +82,7 @@
             </div>
             <div class="col-md-8">
                 <div class="text-detail">
-                    @Model.jmlScan kali di scan
+                    @Model.jmlScan_Str
                 </div>
             </div>
         </div>
@@ -141,22 +141,24 @@
         <div class="divider"></div>
         <ol>
             <li class="mb-3">
-                Pada kedua tutup drum 2" dan " terlindungi oleh CAP SEAL yang akan RUSAK ketika dibuka. 
-                Setelahnya akan ada IN-CAP yang dipasang dengan PIN dan akan patah Ketika dibuka. 
-                Pastikan drum anda memiliki CAP SEAL dan IN-CAP dalam keadaan yang tidak rusak
+                Pada kedua tutup drum 2" dan 3/4" terlindungi oleh CAP SEAL yang akan RUSAK ketika dibuka. 
+                Setelahnya akan ada IN-CAP yang memiliki PIN dimana PIN akan patah Ketika dibuka. 
+                Pastikan drum anda memiliki CAP SEAL dan PIN IN-CAP dalam keadaan yang tidak rusak
             </li class="mb-3">
             <li class="mb-3">
-                QR Code Number adalah Unique tiap drum. Pastikan Nomor QR drum Anda berbeda dengan QR Code drum yang lain, dan juga sesuai dengan Nomor QR yang ada pada Tabel diatas
+                QR Code Number adalah kombinasi 9 angka dan huruf dibawah gambar QR dan bersifat UNIQUE (berbeda) tiap drum. 
+                Pastikan Nomor QR drum Anda berbeda degan QR Code drum yang lain, dan pastikan juga sesuai dengan Nomor QR Code yang ada pada tabel diatas
             </li>
             <li class="mb-3">
                 Pastikan Nama Produk pada drum Anda sesuai dengan Nama Produk pada Tabel
             </li>
             <li class="mb-3">
-                BATCH NUMBER di sablon dengan warna hitam dengan kombinasi 8 Angka. Pastikan Angka BATCH NUMBER ini sesuai dengan angka pada table diatas
+                BATCH NUMBER disablon dengan warna hitam dengan kombinasi 8 angka. BATCH NUMBER adalah identifikasi penting kode produksi. 
+                Pastikan Anka BATCH NUMBER ini sesuai dengan angka pada tabel diatas
             </li>
         </ol>
         <div class="row mt-5 justify-content-center justify-content-md-start">
-            <div class="col-auto">
+            <div class="col-auto mb-3">
                 <a href="~/assets/pdf/Identifikasi_Cap_Seal_Incap_Pertamina.pdf" target="_blank" class="btn btn-danger rounded-pill" role="button">Lihat Panduan</a>
             </div>
             <div class="col-auto">
@@ -190,14 +192,18 @@
     });
 
     function getLocation() {
+        $("#panelDrum_1").hide();
+        $("#panelDrum_2").hide();
+        $("#panelError").show();
+
         if (navigator.geolocation) {
-            $("#panelDrum_1").show();
-            $("#panelDrum_2").show();
-            $("#panelError").hide();
-             navigator.geolocation.getCurrentPosition(function (position) {
+            navigator.geolocation.getCurrentPosition(function (position) {
                 // Callback showPosition akan dipanggil setelah mendapatkan lokasi
                 showPosition(position);
                 reverseGeocode(position.coords.latitude, position.coords.longitude,position);
+                $("#panelDrum_1").show();
+                $("#panelDrum_2").show();
+                $("#panelError").hide();
             }, showError);
         } else {
             $("#panelDrum_1").hide();

@@ -24,5 +24,16 @@
         public string? lastLatitude { get; set; }
         public string? lastAlamatMap { get; set; }
         public string? lastScanTimestamp { get; set; }
+
+        public string jmlScan_Str
+        {
+            get
+            {
+                if (jmlScan <= 100)
+                    return "OK";
+                else
+                    return jmlScan.ToString("N0") + " kali discan";
+            }
+        }
     }
 }
