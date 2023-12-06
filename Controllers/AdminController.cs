@@ -1019,7 +1019,8 @@ namespace WebApp.Controllers
                                 EF.Functions.Like(acc.email, "%" + filter + "%") ||
                                 EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
                                 EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%"))
+                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
                             )
                         .OrderByDescending(p => p.CreatedAt).ToList();
                     }
@@ -1032,7 +1033,8 @@ namespace WebApp.Controllers
                                 EF.Functions.Like(acc.email, "%" + filter + "%") ||
                                 EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
                                 EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%")
+                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                                EF.Functions.Like(acc.descLaporan, "%" + filter + "%")
                             )
                         .OrderByDescending(p => p.CreatedAt).ToList();
                     }
