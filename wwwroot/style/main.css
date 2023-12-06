@@ -12257,11 +12257,11 @@ body {
   margin-bottom: 20px;
 }
 .product-detail .card-detail .title-batch {
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 600;
 }
 .product-detail .card-detail .text-batch {
-  font-size: 24px;
+  font-size: 36px;
   font-weight: 400;
 }
 
@@ -12310,11 +12310,11 @@ body {
     margin-bottom: 10px;
   }
   .product-detail .card-detail .title-batch {
-    font-size: 18px;
+    font-size: 20px;
     margin-bottom: 0;
   }
   .product-detail .card-detail .text-batch {
-    font-size: 20px;
+    font-size: 28px;
   }
   .overview {
     padding-block: 40px;
