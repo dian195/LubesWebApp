@@ -45,8 +45,26 @@
                         <input type="date" id="toDate" value="@ViewBag.ToDate" name="toDate" class="form-control" />
                     </div>
                 </div>
+            </div>
+
+            <div class="row px-3">
                 <div class="col-md-3 mb-2">
-                    <input type="text" id="txtSearch" value="@ViewBag.Filter" name="filter" autocomplete="off" class="form-control" placeholder="Search ..." />
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">Search</span>
+                        <input type="text" id="txtSearch" value="@ViewBag.Filter" name="filter" autocomplete="off" class="form-control" placeholder="Search ..." />
+                    </div>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">Kab. / Kota</span>
+                        <input type="text" id="txtKota" value="@ViewBag.kota" name="kota" autocomplete="off" class="form-control" placeholder="Search Kab. / Kota" />
+                    </div>
+                </div>
+                <div class="col-md-3 mb-2">
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text">Provinsi</span>
+                        <input type="text" id="txtProv" value="@ViewBag.Prov" name="Prov" autocomplete="off" class="form-control" placeholder="Search Provinsi" />
+                    </div>
                 </div>
                 <div class="col-md-2 mb-2">
                     <button type="submit" class="btn btn-primary" id="btnSearch"><i class="bx bx-search fs-4"></i>&nbsp;Search</button>
@@ -65,6 +83,41 @@
 
             <!-- Table Body -->
             <div class="table-responsive text-nowrap py-3">
+                <div class="row px-3">
+                    <!-- Button Add -->
+                    <div class="col-md-12 mb-2" style="display: flex; justify-content: flex-end">
+                        <select class="form-select" onchange="pgSizeChange()" name="opt" style="width: 100px" id="opt" aria-label="Show Data">
+                            @if (Convert.ToString(@ViewBag.opt) == "20")
+                            {
+                                <option value="10">10</option>
+                                <option value="20" selected>20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            }
+                            else if (Convert.ToString(@ViewBag.opt) == "50")
+                            {
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50" selected>50</option>
+                                <option value="100">100</option>
+                            }
+                            else if (Convert.ToString(@ViewBag.opt) == "100")
+                            {
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100" selected>100</option>
+                            }
+                            else
+                            {
+                                <option value="10" selected>10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            }
+                        </select>
+                    </div>
+                </div>
                 <table class="table table-striped" id="tblData">
                     <thead>
                         <tr>
@@ -75,6 +128,7 @@
                             <th>Nama Produk</th>
                             <th>Deskripsi Pelapor</th>
                             <th>Deskripsi Laporan</th>
+                            <th>Lokasi Laporan</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -88,6 +142,7 @@
                                 <td valign="top">@data.namaProduk</td>
                                 <td valign="top">@data.descPelapor</td>
                                 <td valign="top" style="white-space:pre-wrap; word-wrap:break-word">@data.descLaporan</td>
+                                <td valign="top" style="white-space:pre-wrap; word-wrap:break-word">@data.alamatMap</td>
                             </tr>
                         }
                     </tbody>
@@ -99,7 +154,7 @@
                     <div class="demo-inline-spacing">
                         <nav aria-label="Page navigation">
 
-                            @Html.PagedListPager(Model, page => Url.Action("Pengaduan", new { pg = page, filter = ViewBag.Filter, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate }), new PagedListRenderOptions()
+                            @Html.PagedListPager(Model, page => Url.Action("Pengaduan", new { pg = page, filter = ViewBag.Filter, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate, Prov = ViewBag.Prov, kota = ViewBag.kota, opt = ViewBag.Opt }), new PagedListRenderOptions()
                             {
                                 MaximumPageNumbersToDisplay = 4,
                                 ActiveLiElementClass = "active",
@@ -122,25 +177,19 @@
 
 
 @section scripts {
-    @* <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script> *@
     <script type="text/javascript">
+        function pgSizeChange() {
+            $("#btnSearch").click();
+        }
+
         $(function () {
             $("#btnExport").click(function () {
                 var from = $("#fromDate").val();
                 var to = $("#toDate").val();
                 var filter = $("#txtSearch").val();
-                window.open('/Admin/Pengaduan/Export?filter=' + filter + '&fromDate=' + from + '&toDate=' + to);
-
-                // if (fromDate != "" && toDate != "") {
-                //     window.open('/Reports/PrintCompanyRevenueReport?filter=' + filter + '&fromDate=' + from + '&toDate=' + to);
-                // }
-                // else {
-                //     alert('Tanggal harus diisi !');
-                // }
-
-                // $("#tblData").table2excel({
-                //     filename: "Pengaduan.xls"
-                // });
+                var kota = $("#txtKota").val();
+                var prov = $("#txtProv").val();
+                window.open('/Admin/Pengaduan/Export?filter=' + filter + '&fromDate=' + from + '&toDate=' + to + '&Prov=' + prov + '&kota=' + kota);
             });
         });
     </script>

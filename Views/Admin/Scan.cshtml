@@ -55,8 +55,8 @@
                 </div>
                 <div class="col-md-3 mb-2">
                     <div class="input-group input-group-merge">
-                        <span class="input-group-text">Kota</span>
-                        <input type="text" id="txtKota" value="@ViewBag.kota" name="kota" autocomplete="off" class="form-control" placeholder="Search Kota" />
+                        <span class="input-group-text">Kab. / Kota</span>
+                        <input type="text" id="txtKota" value="@ViewBag.kota" name="kota" autocomplete="off" class="form-control" placeholder="Search Kab. / Kota" />
                     </div>
                 </div>
                 <div class="col-md-3 mb-2">
@@ -82,6 +82,41 @@
 
             <!-- Table Body -->
             <div class="table-responsive text-nowrap py-3">
+                <div class="row px-3">
+                    <!-- Button Add -->
+                    <div class="col-md-12 mb-2" style="display: flex; justify-content: flex-end">
+                        <select class="form-select" onchange="pgSizeChange()" name="opt" style="width: 100px" id="opt" aria-label="Show Data">
+                            @if (Convert.ToString(@ViewBag.opt) == "20")
+                            {
+                                <option value="10">10</option>
+                                <option value="20" selected>20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            }
+                            else if (Convert.ToString(@ViewBag.opt) == "50")
+                            {
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50" selected>50</option>
+                                <option value="100">100</option>
+                            }
+                            else if (Convert.ToString(@ViewBag.opt) == "100")
+                            {
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100" selected>100</option>
+                            }
+                            else
+                            {
+                                <option value="10" selected>10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            }
+                        </select>
+                    </div>
+                </div>
                 <table class="table table-striped" id="tblData">
                     <thead>
                         <tr>
@@ -95,10 +130,10 @@
                         @foreach (LogScanningDTO data in Model)
                         {
                             <tr>
-                                <td>@data.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss")</td>
-                                <td>@data.qrNo</td>
-                                <td>@data.productId</td>
-                                <td>@data.alamatMap</td>
+                                <td valign="top">@data.CreatedAt.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                                <td valign="top">@data.qrNo</td>
+                                <td valign="top">@data.productId</td>
+                                <td valign="top" style="white-space:pre-wrap; word-wrap:break-word">@data.alamatMap</td>
                             </tr>
                         }
                     </tbody>
@@ -110,7 +145,7 @@
                     <div class="demo-inline-spacing">
                         <nav aria-label="Page navigation">
 
-                            @Html.PagedListPager(Model, page => Url.Action("Scan", new { pg = page, filter = ViewBag.Filter, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate, Prov = ViewBag.Prov, kota = ViewBag.kota }), new PagedListRenderOptions()
+                            @Html.PagedListPager(Model, page => Url.Action("Scan", new { pg = page, filter = ViewBag.Filter, FromDate = ViewBag.FromDate, ToDate = ViewBag.ToDate, Prov = ViewBag.Prov, kota = ViewBag.kota, opt = ViewBag.Opt }), new PagedListRenderOptions()
                             {
                                 MaximumPageNumbersToDisplay = 4,
                                 ActiveLiElementClass = "active",
@@ -134,6 +169,10 @@
 @section scripts {
     @* <script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script> *@
     <script type="text/javascript">
+        function pgSizeChange() {
+            $("#btnSearch").click();
+        }
+
         $(function () {
             $("#btnExport").click(function () {
                 var from = $("#fromDate").val();

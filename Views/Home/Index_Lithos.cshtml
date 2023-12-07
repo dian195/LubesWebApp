@@ -148,12 +148,12 @@
                 Pastikan BATCH NUMBER pada botol anda sama dengan BATCH NUMBER yang ditunjukkan pada layar.
             </li class="mb-3">
             <li class="mb-3">
-                Pastikan Nama Produk pada botol Anda sesuai dengan Nama Produk pada Tabel.
+                Pastikan Nama Produk pada botol Anda sesuai dengan Nama Produk pada tabel.
             </li>
             <li class="mb-3">
                 QR Code Number adalah kombinasi 9 angka dan huruf dibawah gambar QR dan bersifat UNIQUE (berbeda) tiap botol. 
                 Pastikan Nomor QR Code Botol Anda berbeda dengan QR Code Botol
-                yang lain, dan pastikan juga sesuai dengan Nomor QR Code yang ada pada Tabel.
+                yang lain, dan pastikan juga sesuai dengan Nomor QR Code yang ada pada tabel.
             </li>
         </ol>
         <div class="row mt-5 justify-content-center justify-content-md-start">
@@ -220,15 +220,6 @@
     function sendAjaxRequest(position, address,kelurahan,kecamatan,kabupatenkota,provinsi,negara) {
         var latitude = position.coords.latitude;
         var longitude = position.coords.longitude;
-
-        // console.log(JSON.stringify({
-        //     "qrNo": "@Model.qrCode",
-        //     "productId": "@Model.productName",
-        //     "customerProfile": "-",
-        //     "latitude": latitude,
-        //     "longitude": longitude,
-        //     "alamatMap": address
-        // }));
 
         var settings = {
             "url": "/api/PostLogScanning",

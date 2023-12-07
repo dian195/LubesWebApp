@@ -53,6 +53,41 @@
 
             <!-- Table Body -->
             <div class="table-responsive text-nowrap py-3">
+                <div class="row px-3">
+                    <!-- Button Add -->
+                    <div class="col-md-12 mb-2" style="display: flex; justify-content: flex-end">
+                        <select class="form-select" onchange="pgSizeChange()" name="opt" style="width: 100px" id="opt" aria-label="Show Data">
+                            @if (Convert.ToString(@ViewBag.opt) == "20")
+                            {
+                                <option value="10">10</option>
+                                <option value="20" selected>20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            }
+                            else if (Convert.ToString(@ViewBag.opt) == "50")
+                            {
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50" selected>50</option>
+                                <option value="100">100</option>
+                            }
+                            else if (Convert.ToString(@ViewBag.opt) == "100")
+                            {
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100" selected>100</option>
+                            }
+                            else
+                            {
+                                <option value="10" selected>10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            }
+                        </select>
+                    </div>
+                </div>
                 <table class="table table-striped" id="tblData">
                     <thead>
                         <tr>
@@ -110,7 +145,7 @@
                     <div class="demo-inline-spacing">
                         <nav aria-label="Page navigation">
 
-                            @Html.PagedListPager(Model, page => Url.Action("Users", new { pg = page, filter = ViewBag.Filter }), new PagedListRenderOptions()
+                            @Html.PagedListPager(Model, page => Url.Action("Users", new { pg = page, filter = ViewBag.Filter, opt = ViewBag.Opt }), new PagedListRenderOptions()
                             {
                                 MaximumPageNumbersToDisplay = 4,
                                 ActiveLiElementClass = "active",
@@ -135,6 +170,10 @@
 
 @section scripts {
     <script type="text/javascript">
+        function pgSizeChange() {
+            $("#btnSearch").click();
+        }
+
         $(function () {
 
             var PlaceHolderElement = $('#PlaceHolderHere');
@@ -162,16 +201,10 @@
                 var form = $(this).parents('.modal').find('form');
                 var actionurl = form.attr('action');
                 var sendData = form.serialize();
-                console.log(actionurl);
-                console.log(sendData);
                 $.post(actionurl, sendData).done(function (data) {
                     var newBody = $('.modal-body', data);
 
-                    // find IsValid input field and check it's value
-                    // if it's valid then hide modal window
-
                     var isValid = newBody.find('[name="IsValid"]').val() == 'True';
-                    console.log(newBody.find('[name="IsValid"]').val())
                     if (isValid) {
                         PlaceHolderElement.find('.modal').modal('hide');
 
@@ -184,12 +217,9 @@
                                 location.href = "/Admin/Users";
                             }
                         });
-
-                        //PlaceHolderElement.find('.modal-body').replaceWith(newBody); //kalo ga mau redirect ke halaman lain
                     } else {
                         PlaceHolderElement.find('.modal-body').replaceWith(newBody);
                     }
-
                     $('.modal-footer').find('[data-save="modal"]').prop('disabled', false);
                 })
 

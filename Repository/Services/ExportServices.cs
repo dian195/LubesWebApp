@@ -12,7 +12,7 @@ namespace WebApp.Repository.Services
 {
     public class ExportServices : IExport
     {
-        public void exportPengaduan(string fromDate, string toDate, string filter, List<ReportProductDTO> dataExport, ref MemoryStream mem)
+        public void exportPengaduan(string fromDate, string toDate, string filter, string kota, string prov, List<ReportProductDTO> dataExport, ref MemoryStream mem)
         {
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
             using (ExcelPackage p = new ExcelPackage())
@@ -36,6 +36,7 @@ namespace WebApp.Repository.Services
                 ws.Column(5).Width = 50;
                 ws.Column(6).Width = 45;
                 ws.Column(7).Width = 50;
+                ws.Column(8).Width = 55;
 
                 DataTable dt = new DataTable();
 
@@ -46,6 +47,7 @@ namespace WebApp.Repository.Services
                 dt.Columns.Add("Nama Produk");
                 dt.Columns.Add("Deskripsi Pelapor");
                 dt.Columns.Add("Deskripsi Laporan");
+                dt.Columns.Add("Lokasi Laporan");
 
                 //Print here
                 ws.Cells[1, 1].Value = "List Pengaduan";
@@ -54,11 +56,15 @@ namespace WebApp.Repository.Services
 
                 ws.Cells[2, 1].Value = "Tanggal";
                 ws.Cells[2, 2].Value = ": " + strFromDate + " - " + strToDate;
-                ws.Cells[3, 1].Value = "Filter Data";
-                ws.Cells[3, 2].Value = ": " + filter;
+                ws.Cells[3, 1].Value = "Kab. / Kota";
+                ws.Cells[3, 2].Value = ": " + kota;
+                ws.Cells[4, 1].Value = "Provinsi";
+                ws.Cells[4, 2].Value = ": " + prov;
+                ws.Cells[5, 1].Value = "Filter Data";
+                ws.Cells[5, 2].Value = ": " + filter;
 
                 // Create table header
-                int rowIndex = 5;
+                int rowIndex = 7;
                 int colIndex = 1;
 
                 foreach (DataColumn dc in dt.Columns)
@@ -187,6 +193,20 @@ namespace WebApp.Repository.Services
                             border.BorderAround(ExcelBorderStyle.Thin);
 
                             cell.Value = data.descLaporan;
+                        }
+                        else if (colIndex == 8)
+                        {
+                            var cell = ws.Cells[rowIndex, colIndex];
+
+                            cell.Style.WrapText = true;
+                            cell.Style.Font.Bold = false;
+                            cell.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                            cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                            var border = cell.Style.Border;
+                            border.BorderAround(ExcelBorderStyle.Thin);
+
+                            cell.Value = data.alamatMap;
                         }
                     }
 
@@ -369,7 +389,7 @@ namespace WebApp.Repository.Services
                 ws.Cells[2, 2].Value = ": " + strFromDate + " - " + strToDate;
                 ws.Cells[3, 1].Value = "Kode QR / Produk";
                 ws.Cells[3, 2].Value = ": " + filter;
-                ws.Cells[4, 1].Value = "Kota";
+                ws.Cells[4, 1].Value = "Kab. / Kota";
                 ws.Cells[4, 2].Value = ": " + kota;
                 ws.Cells[5, 1].Value = "Provinsi";
                 ws.Cells[5, 2].Value = ": " + prov;

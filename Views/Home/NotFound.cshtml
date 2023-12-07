@@ -46,15 +46,6 @@
             var latitude = position.coords.latitude;
             var longitude = position.coords.longitude;
 
-            console.log(JSON.stringify({
-                "qrNo": "@ViewBag.uniqueNumber",
-                "productId": "@ViewBag.curUrl",
-                "customerProfile": "-",
-                "latitude": '' + latitude,
-                "longitude": '' + longitude,
-                "alamatMap": address
-            }));
-
             var settings = {
                 "url": "../../api/PostLogScanning",
                 "method": "POST",
@@ -80,7 +71,6 @@
                         icon: 'error',
                     });
                 }
-                console.log(response.message);
             });
         }
 

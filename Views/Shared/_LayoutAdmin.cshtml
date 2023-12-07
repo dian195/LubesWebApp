@@ -110,20 +110,6 @@
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <script>
-        function IsEmail(email) {
-            var regex = /^([a-zA-Z0-9_\.\-\+])+\@@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-            console.log(regex);
-            if (!regex.test(email)) {
-                return false;
-            }
-            else {
-                return true;
-            }
-        }
-    </script>
-
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
     <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
     <script src="~/script/jquery-validation/dist/jquery.validate.min.js"></script>
@@ -133,7 +119,6 @@
     <script>
         function IsEmail(email) {
             var regex = /^([a-zA-Z0-9_\.\-\+])+\@@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
-            console.log(regex);
             if (!regex.test(email)) {
                 return false;
             }

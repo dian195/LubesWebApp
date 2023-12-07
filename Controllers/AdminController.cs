@@ -65,16 +65,22 @@ namespace WebApp.Controllers
 
         [Route("~/Admin/Users")]
         [Authorize]
-        public async Task<IActionResult> Users(string? filter, int pg = 1)
+        public async Task<IActionResult> Users(string? filter, int pg = 1, int opt = 10)
         {
             if (pg != null && pg < 1)
             {
                 pg = 1;
             }
 
-            ViewBag.Filter = filter;
+            if (opt != null && opt < 1)
+            {
+                opt = 10;
+            }
 
-            var pageSize = 10;
+            ViewBag.Filter = filter;
+            ViewBag.Opt = opt;
+
+            var pageSize = opt;
 
             if ((filter == null ? "" : filter.Trim()) == "")
             {
@@ -406,16 +412,22 @@ namespace WebApp.Controllers
         #region Products
         [Route("~/Admin/Products")]
         [Authorize]
-        public IActionResult Products(string? filter, int pg = 1)
+        public IActionResult Products(string? filter, int pg = 1, int opt = 10)
         {
             if (pg != null && pg < 1)
             {
                 pg = 1;
             }
 
-            ViewBag.Filter = filter;
+            if (opt != null && opt < 1)
+            {
+                opt = 10;
+            }
 
-            var pageSize = 10;
+            ViewBag.Filter = filter;
+            ViewBag.Opt = opt;
+
+            var pageSize = opt;
 
             if ((filter == null ? "" : filter.Trim()) == "")
             {
@@ -629,18 +641,26 @@ namespace WebApp.Controllers
         #region Scan
         [Route("~/Admin/Scan")]
         [Authorize]
-        public IActionResult Scan(string? filter, string? fromDate, string? toDate, string? Prov, string? kota, int pg = 1)
+        public IActionResult Scan(string? filter, string? fromDate, string? toDate, string? Prov, string? kota, int pg = 1, int opt = 10)
         {
             if (pg != null && pg < 1)
             {
                 pg = 1;
             }
 
+            if (opt != null && opt < 1)
+            {
+                opt = 10;
+            }
+
+            var pageSize = opt;
+
             fromDate = fromDate == null ? "" : fromDate;
             toDate = toDate == null ? "" : toDate;
             Prov = Prov == null ? "" : Prov;
             kota = kota == null ? "" : kota;
 
+            ViewBag.Opt = opt;
             ViewBag.Filter = filter;
             ViewBag.FromDate = fromDate;
             ViewBag.ToDate = toDate;
@@ -663,8 +683,6 @@ namespace WebApp.Controllers
                 fromDate = "";
                 toDate = "";
             }
-
-            var pageSize = 10;
 
             if ((filter == null ? "" : filter.Trim()) == "")
             {
@@ -833,19 +851,31 @@ namespace WebApp.Controllers
         #region Report
         [Route("~/Admin/Pengaduan")]
         [Authorize]
-        public IActionResult Pengaduan(string? filter, string? fromDate, string? toDate, int pg = 1)
+        public IActionResult Pengaduan(string? filter, string? fromDate, string? toDate, string? Prov, string? kota, int pg = 1, int opt = 10)
         {
             if (pg != null && pg < 1)
             {
                 pg = 1;
             }
 
+            if (opt != null && opt < 1)
+            {
+                opt = 10;
+            }
+
+            var pageSize = opt;
+
+            Prov = Prov == null ? "" : Prov;
+            kota = kota == null ? "" : kota;
             fromDate = fromDate == null ? "" : fromDate;
             toDate = toDate == null ? "" : toDate;
 
+            ViewBag.Opt = opt;
             ViewBag.Filter = filter;
             ViewBag.FromDate = fromDate;
             ViewBag.ToDate = toDate;
+            ViewBag.Prov = Prov;
+            ViewBag.Kota = kota;
 
             DateTime dtFrom = DateTime.Now;
             DateTime dtTo = DateTime.Now;
@@ -864,58 +894,234 @@ namespace WebApp.Controllers
                 toDate = "";
             }
 
-            var pageSize = 10;
-
             if ((filter == null ? "" : filter.Trim()) == "")
             {
                 if (fromDate.Trim() != "" && toDate.Trim() != "")
                 {
-                    var qry = _context.report_product.AsNoTracking()
-                    .Where(
-                        acc =>
-                            acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo
-                        )
-                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
-                    return View("Pengaduan", qry);
+                    if (Prov.Trim() == "" && kota.Trim() == "")
+                    {
+                        var qry = _context.report_product.AsNoTracking()
+                                    .Where(
+                                        acc =>
+                                            acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo
+                                        )
+                                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Pengaduan", qry);
+                    }
+                    else if (Prov.Trim() != "" && kota.Trim() == "")
+                    {
+                        var qry = _context.report_product.AsNoTracking()
+                                    .Where(
+                                        acc =>
+                                            acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
+                                            EF.Functions.Like(acc.provinsi, "%" + Prov + "%")
+                                        )
+                                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Pengaduan", qry);
+                    }
+                    else if (Prov.Trim() == "" && kota.Trim() != "")
+                    {
+                        var qry = _context.report_product.AsNoTracking()
+                                    .Where(
+                                        acc =>
+                                            acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
+                                            EF.Functions.Like(acc.kabupaten, "%" + kota + "%")
+                                        )
+                                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Pengaduan", qry);
+                    }
+                    else
+                    {
+                        var qry = _context.report_product.AsNoTracking()
+                                    .Where(
+                                        acc =>
+                                            acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
+                                    EF.Functions.Like(acc.provinsi, "%" + Prov + "%") &&
+                                    EF.Functions.Like(acc.kabupaten, "%" + kota + "%")
+                                        )
+                                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Pengaduan", qry);
+                    }
                 }
                 else
                 {
-                    var qry = _context.report_product.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
-                    return View("Pengaduan", qry);
+                    if (Prov.Trim() == "" && kota.Trim() == "")
+                    {
+                        var qry = _context.report_product.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Pengaduan", qry);
+                    }
+                    else if (Prov.Trim() != "" && kota.Trim() == "")
+                    {
+                        var qry = _context.report_product.AsNoTracking()
+                                    .Where(
+                                        acc =>
+                                            EF.Functions.Like(acc.provinsi, "%" + Prov + "%")
+                                        )
+                                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Pengaduan", qry);
+                    }
+                    else if (Prov.Trim() == "" && kota.Trim() != "")
+                    {
+                        var qry = _context.report_product.AsNoTracking()
+                                    .Where(
+                                        acc =>
+                                            EF.Functions.Like(acc.kabupaten, "%" + kota + "%")
+                                        )
+                                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Pengaduan", qry);
+                    }
+                    else
+                    {
+                        var qry = _context.report_product.AsNoTracking()
+                                    .Where(
+                                        acc =>
+                                            EF.Functions.Like(acc.provinsi, "%" + Prov + "%") &&
+                                            EF.Functions.Like(acc.kabupaten, "%" + kota + "%")
+                                        )
+                                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Pengaduan", qry);
+                    }
                 }
             }
             else
             {
                 if (fromDate.Trim() != "" && toDate.Trim() != "")
                 {
-                    var qry = _context.report_product.AsNoTracking()
-                    .Where(
-                        acc =>
-                            acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
-                            (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.email, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
-                        )
-                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
-                    return View("Pengaduan", qry);
+                    if (Prov.Trim() == "" && kota.Trim() == "")
+                    {
+                        var qry = _context.report_product.AsNoTracking()
+                                    .Where(
+                                        acc =>
+                                            acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
+                                            (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.email, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
+                                        )
+                                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Pengaduan", qry);
+                    }
+                    else if (Prov.Trim() != "" && kota.Trim() == "")
+                    {
+                        var qry = _context.report_product.AsNoTracking()
+                                    .Where(
+                                        acc =>
+                                            acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
+                                            EF.Functions.Like(acc.provinsi, "%" + Prov + "%") &&
+                                            (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.email, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
+                                        )
+                                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Pengaduan", qry);
+                    }
+                    else if (Prov.Trim() == "" && kota.Trim() != "")
+                    {
+                        var qry = _context.report_product.AsNoTracking()
+                                    .Where(
+                                        acc =>
+                                            acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
+                                            EF.Functions.Like(acc.kabupaten, "%" + kota + "%") &&
+                                            (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.email, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
+                                        )
+                                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Pengaduan", qry);
+                    }
+                    else
+                    {
+                        var qry = _context.report_product.AsNoTracking()
+                                    .Where(
+                                        acc =>
+                                            acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
+                                            EF.Functions.Like(acc.provinsi, "%" + Prov + "%") &&
+                                            EF.Functions.Like(acc.kabupaten, "%" + kota + "%") &&
+                                            (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.email, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
+                                        )
+                                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Pengaduan", qry);
+                    }
                 }
                 else
                 {
-                    var qry = _context.report_product.AsNoTracking()
-                    .Where(
-                        acc =>
-                            EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
-                            EF.Functions.Like(acc.email, "%" + filter + "%") ||
-                            EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
-                            EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
-                            EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
-                            EF.Functions.Like(acc.descLaporan, "%" + filter + "%")
-                        )
-                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
-                    return View("Pengaduan", qry);
+                    if (Prov.Trim() == "" && kota.Trim() == "")
+                    {
+                        var qry = _context.report_product.AsNoTracking()
+                                    .Where(
+                                        acc =>
+                                            (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.email, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
+                                        )
+                                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Pengaduan", qry);
+                    }
+                    else if (Prov.Trim() != "" && kota.Trim() == "")
+                    {
+                        var qry = _context.report_product.AsNoTracking()
+                                    .Where(
+                                        acc =>
+                                            EF.Functions.Like(acc.provinsi, "%" + Prov + "%") &&
+                                            (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.email, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
+                                        )
+                                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Pengaduan", qry);
+                    }
+                    else if (Prov.Trim() == "" && kota.Trim() != "")
+                    {
+                        var qry = _context.report_product.AsNoTracking()
+                                    .Where(
+                                        acc =>
+                                            EF.Functions.Like(acc.kabupaten, "%" + kota + "%") &&
+                                            (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.email, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
+                                        )
+                                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Pengaduan", qry);
+                    }
+                    else
+                    {
+                        var qry = _context.report_product.AsNoTracking()
+                                    .Where(
+                                        acc =>
+                                            EF.Functions.Like(acc.provinsi, "%" + Prov + "%") &&
+                                            EF.Functions.Like(acc.kabupaten, "%" + kota + "%") &&
+                                            (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.email, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                                                EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
+                                        )
+                                    .OrderByDescending(p => p.CreatedAt).ToPagedList(pg, pageSize);
+                        return View("Pengaduan", qry);
+                    }
                 }
             }
         }
@@ -967,7 +1173,7 @@ namespace WebApp.Controllers
         [Obsolete]
         [Authorize]
         [Route("~/Admin/Pengaduan/Export")]
-        public FileResult exportPengaduan(string fromDate, string toDate, string filter)
+        public FileResult exportPengaduan(string fromDate, string toDate, string filter, string? Prov, string? kota)
         {
             List<ReportProductDTO> dataExport = new List<ReportProductDTO>();
             MemoryStream result = new MemoryStream();
@@ -977,6 +1183,8 @@ namespace WebApp.Controllers
                 fromDate = fromDate == null ? "" : fromDate.Trim();
                 toDate = toDate == null ? "" : toDate.Trim();
                 filter = filter == null ? "" : filter.Trim();
+                Prov = Prov == null ? "" : Prov;
+                kota = kota == null ? "" : kota;
 
                 DateTime dtFrom = DateTime.Now;
                 DateTime dtTo = DateTime.Now;
@@ -1000,48 +1208,187 @@ namespace WebApp.Controllers
                 {
                     if (fromDate.Trim() != "" && toDate.Trim() != "")
                     {
-                        dataExport = _context.report_product.AsNoTracking().Where(acc => acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo).OrderByDescending(p => p.CreatedAt).ToList();
+                        if (Prov.Trim() == "" && kota.Trim() == "")
+                        {
+                            dataExport = _context.report_product.AsNoTracking().Where(acc => acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else if (Prov.Trim() != "" && kota.Trim() == "")
+                        {
+                            dataExport = _context.report_product.AsNoTracking().Where(acc => acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
+                                        EF.Functions.Like(acc.provinsi, "%" + Prov + "%")).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else if (Prov.Trim() == "" && kota.Trim() != "")
+                        {
+                            dataExport = _context.report_product.AsNoTracking().Where(acc => acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
+                                        EF.Functions.Like(acc.kabupaten, "%" + kota + "%")).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else
+                        {
+                            dataExport = _context.report_product.AsNoTracking().Where(acc => acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
+                                        EF.Functions.Like(acc.provinsi, "%" + Prov + "%") &&
+                                        EF.Functions.Like(acc.kabupaten, "%" + kota + "%")).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
                     }
                     else
                     {
-                        dataExport = _context.report_product.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToList();
+                        if (Prov.Trim() == "" && kota.Trim() == "")
+                        {
+                            dataExport = _context.report_product.AsNoTracking().OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else if (Prov.Trim() != "" && kota.Trim() == "")
+                        {
+                            dataExport = _context.report_product.AsNoTracking().Where(acc => 
+                                        EF.Functions.Like(acc.provinsi, "%" + Prov + "%")).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else if (Prov.Trim() == "" && kota.Trim() != "")
+                        {
+                            dataExport = _context.report_product.AsNoTracking().Where(acc => 
+                                        EF.Functions.Like(acc.kabupaten, "%" + kota + "%")).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else
+                        {
+                            dataExport = _context.report_product.AsNoTracking().Where(acc => 
+                                        EF.Functions.Like(acc.provinsi, "%" + Prov + "%") &&
+                                        EF.Functions.Like(acc.kabupaten, "%" + kota + "%")).OrderByDescending(p => p.CreatedAt).ToList();
+                        }
                     }
                 }
                 else
                 {
                     if (fromDate.Trim() != "" && toDate.Trim() != "")
                     {
-                        dataExport = _context.report_product.AsNoTracking()
-                        .Where(
-                            acc =>
-                                acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
-                                (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.email, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
-                            )
-                        .OrderByDescending(p => p.CreatedAt).ToList();
+                        if (Prov.Trim() == "" && kota.Trim() == "")
+                        {
+                            dataExport = _context.report_product.AsNoTracking()
+                                            .Where(
+                                                acc =>
+                                                    acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
+                                                    (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.email, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
+                                                )
+                                            .OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else if (Prov.Trim() != "" && kota.Trim() == "")
+                        {
+                            dataExport = _context.report_product.AsNoTracking()
+                                            .Where(
+                                                acc =>
+                                                    acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
+                                                    EF.Functions.Like(acc.provinsi, "%" + Prov + "%") &&
+                                                    (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.email, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
+                                                )
+                                            .OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else if (Prov.Trim() == "" && kota.Trim() != "")
+                        {
+                            dataExport = _context.report_product.AsNoTracking()
+                                            .Where(
+                                                acc =>
+                                                    acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
+                                                    EF.Functions.Like(acc.kabupaten, "%" + kota + "%") &&
+                                                    (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.email, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
+                                                )
+                                            .OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else
+                        {
+                            dataExport = _context.report_product.AsNoTracking()
+                                            .Where(
+                                                acc =>
+                                                    acc.CreatedAt >= dtFrom && acc.CreatedAt < dtTo &&
+                                                    EF.Functions.Like(acc.provinsi, "%" + Prov + "%") &&
+                                                    EF.Functions.Like(acc.kabupaten, "%" + kota + "%") &&
+                                                    (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.email, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
+                                                )
+                                            .OrderByDescending(p => p.CreatedAt).ToList();
+                        }
                     }
                     else
                     {
-                        dataExport = _context.report_product.AsNoTracking()
-                        .Where(
-                            acc =>
-                                EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.email, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
-                                EF.Functions.Like(acc.descLaporan, "%" + filter + "%")
-                            )
-                        .OrderByDescending(p => p.CreatedAt).ToList();
+                        if (Prov.Trim() == "" && kota.Trim() == "")
+                        {
+                            dataExport = _context.report_product.AsNoTracking()
+                                            .Where(
+                                                acc =>
+                                                    (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.email, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
+                                                )
+                                            .OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else if (Prov.Trim() != "" && kota.Trim() == "")
+                        {
+                            dataExport = _context.report_product.AsNoTracking()
+                                            .Where(
+                                                acc =>
+                                                    EF.Functions.Like(acc.provinsi, "%" + Prov + "%") &&
+                                                    (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.email, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
+                                                )
+                                            .OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else if (Prov.Trim() == "" && kota.Trim() != "")
+                        {
+                            dataExport = _context.report_product.AsNoTracking()
+                                            .Where(
+                                                acc =>
+                                                    EF.Functions.Like(acc.kabupaten, "%" + kota + "%") &&
+                                                    (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.email, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
+                                                )
+                                            .OrderByDescending(p => p.CreatedAt).ToList();
+                        }
+                        else
+                        {
+                            dataExport = _context.report_product.AsNoTracking()
+                                            .Where(
+                                                acc =>
+                                                    EF.Functions.Like(acc.provinsi, "%" + Prov + "%") &&
+                                                    EF.Functions.Like(acc.kabupaten, "%" + kota + "%") &&
+                                                    (EF.Functions.Like(acc.namaLengkap, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.email, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.descPelapor, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.nomorTelp, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.namaProduk, "%" + filter + "%") ||
+                                                    EF.Functions.Like(acc.descLaporan, "%" + filter + "%"))
+                                                )
+                                            .OrderByDescending(p => p.CreatedAt).ToList();
+                        }
                     }
                 }
 
                 ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-                _export.exportPengaduan(fromDate, toDate, filter, dataExport, ref result);
+                _export.exportPengaduan(fromDate, toDate, filter, kota, Prov, dataExport, ref result);
             }
             catch (Exception exc)
             {
