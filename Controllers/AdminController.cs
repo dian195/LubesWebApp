@@ -379,7 +379,7 @@ namespace WebApp.Controllers
             data.username = reg.username;
             data.namaUser = reg.namaUser;
             data.roleId = reg.roleId;
-            data.password = reg.password;
+            data.password = EncryptionHelper.Encrypt(reg.password);
             data.email = reg.email;
             data.isActive = 1;
             data.createdBy = userId;
