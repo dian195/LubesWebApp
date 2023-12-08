@@ -248,7 +248,7 @@
                 navigator.geolocation.getCurrentPosition(function (position) {
                     // Callback showPosition akan dipanggil setelah mendapatkan lokasi
                     reverseGeocode(position.coords.latitude, position.coords.longitude, position);
-                }, showError);
+                }, showError, { maximumAge: 60000, timeout: 5000, enableHighAccuracy: false });
             } else {
                 $("#panelLaporan").hide();
                 $("#panelError").show();

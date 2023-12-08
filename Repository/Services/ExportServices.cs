@@ -37,6 +37,8 @@ namespace WebApp.Repository.Services
                 ws.Column(6).Width = 45;
                 ws.Column(7).Width = 50;
                 ws.Column(8).Width = 55;
+                ws.Column(9).Width = 40;
+                ws.Column(10).Width = 40;
 
                 DataTable dt = new DataTable();
 
@@ -48,6 +50,8 @@ namespace WebApp.Repository.Services
                 dt.Columns.Add("Deskripsi Pelapor");
                 dt.Columns.Add("Deskripsi Laporan");
                 dt.Columns.Add("Lokasi Laporan");
+                dt.Columns.Add("Kab. / Kota");
+                dt.Columns.Add("Provinsi");
 
                 //Print here
                 ws.Cells[1, 1].Value = "List Pengaduan";
@@ -207,6 +211,34 @@ namespace WebApp.Repository.Services
                             border.BorderAround(ExcelBorderStyle.Thin);
 
                             cell.Value = data.alamatMap;
+                        }
+                        else if (colIndex == 9)
+                        {
+                            var cell = ws.Cells[rowIndex, colIndex];
+
+                            cell.Style.WrapText = true;
+                            cell.Style.Font.Bold = false;
+                            cell.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                            cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                            var border = cell.Style.Border;
+                            border.BorderAround(ExcelBorderStyle.Thin);
+
+                            cell.Value = data.kabupaten;
+                        }
+                        else if (colIndex == 10)
+                        {
+                            var cell = ws.Cells[rowIndex, colIndex];
+
+                            cell.Style.WrapText = true;
+                            cell.Style.Font.Bold = false;
+                            cell.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                            cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                            var border = cell.Style.Border;
+                            border.BorderAround(ExcelBorderStyle.Thin);
+
+                            cell.Value = data.provinsi;
                         }
                     }
 
@@ -372,6 +404,8 @@ namespace WebApp.Repository.Services
                 ws.Column(2).Width = 30;
                 ws.Column(3).Width = 50;
                 ws.Column(4).Width = 55;
+                ws.Column(5).Width = 40;
+                ws.Column(6).Width = 40;
 
                 DataTable dt = new DataTable();
 
@@ -379,6 +413,8 @@ namespace WebApp.Repository.Services
                 dt.Columns.Add("QR No");
                 dt.Columns.Add("Product");
                 dt.Columns.Add("Lokasi Scan");
+                dt.Columns.Add("Kab. / Kota");
+                dt.Columns.Add("Provinsi");
 
                 //Print here
                 ws.Cells[1, 1].Value = "List Scans";
@@ -482,6 +518,34 @@ namespace WebApp.Repository.Services
                             border.BorderAround(ExcelBorderStyle.Thin);
 
                             cell.Value = data.alamatMap;
+                        }
+                        else if (colIndex == 5)
+                        {
+                            var cell = ws.Cells[rowIndex, colIndex];
+
+                            cell.Style.WrapText = true;
+                            cell.Style.Font.Bold = false;
+                            cell.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                            cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                            var border = cell.Style.Border;
+                            border.BorderAround(ExcelBorderStyle.Thin);
+
+                            cell.Value = data.kabupaten;
+                        }
+                        else if (colIndex == 6)
+                        {
+                            var cell = ws.Cells[rowIndex, colIndex];
+
+                            cell.Style.WrapText = true;
+                            cell.Style.Font.Bold = false;
+                            cell.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                            cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                            var border = cell.Style.Border;
+                            border.BorderAround(ExcelBorderStyle.Thin);
+
+                            cell.Value = data.provinsi;
                         }
                     }
 

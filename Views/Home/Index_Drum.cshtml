@@ -204,7 +204,7 @@
                 $("#panelDrum_1").show();
                 $("#panelDrum_2").show();
                 $("#panelError").hide();
-            }, showError);
+            }, showError, {maximumAge:60000, timeout:5000, enableHighAccuracy:false});
         } else {
             $("#panelDrum_1").hide();
             $("#panelDrum_2").hide();
