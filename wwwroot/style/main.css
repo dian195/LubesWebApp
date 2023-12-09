@@ -12057,52 +12057,69 @@ body {
   margin-bottom: 30px;
 }
 .hero-banner .title-hero {
-  font-size: 60px;
+  font-size: 50px;
   line-height: 1em;
 }
 
-.guide {
-  padding: 30px;
+.guide-container {
+  padding-inline: 5%;
 }
-.guide .badge-guide {
+.guide-container .guide {
+  padding-block: 30px;
+  padding-inline: 5%;
+}
+.guide-container .guide .title-guide {
+  font-size: 35px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 30px;
+}
+.guide-container .guide .badge-guide {
   width: 90%;
-  max-width: 400px;
+  max-width: 320px;
 }
-.guide .card-guide {
+.guide-container .guide .card-guide {
   padding-inline: 5%;
   padding-block: 20px;
   background-color: rgb(248, 248, 248);
   border-radius: 20px;
 }
-.guide .card-guide .img-guide {
-  width: 200px;
+.guide-container .guide .card-guide .img-guide {
+  width: 100%;
 }
-.guide .card-guide .text-guide {
-  font-size: 20px;
+.guide-container .guide .card-guide .text-guide {
+  font-size: 18px;
   line-height: 1.5em;
   color: #4f4f4f;
 }
 
 @media (max-width: 575.98px) {
   .hero-banner .title-hero {
-    font-size: 40px;
+    font-size: 30px;
+    line-height: 1.2;
   }
-  .guide {
+  .guide-container .guide {
     padding: 20px;
   }
-  .guide .card-guide {
-    padding-inline: 30px;
+  .guide-container .guide .title-guide {
+    font-size: 24px;
+    line-height: 1.2;
+    margin-bottom: 20px;
   }
-  .guide .card-guide .text-guide {
-    font-size: 17px;
+  .guide-container .guide .card-guide {
+    padding-inline: 20px;
+  }
+  .guide-container .guide .card-guide .img-guide {
+    margin-bottom: 5px;
+    width: 85%;
+  }
+  .guide-container .guide .card-guide .text-guide {
+    font-size: 16px;
     margin-bottom: 10px;
     text-align: center;
+    line-height: 1.2em;
   }
 }
-.hero-banner .title-hero {
-  font-size: 40px;
-}
-
 .report {
   margin-top: 80px;
 }
@@ -12173,9 +12190,6 @@ body {
 }
 
 @media (max-width: 575.98px) {
-  .hero-banner .title-hero {
-    font-size: 30px;
-  }
   .report {
     margin-top: 40px;
     padding-inline: 40px;
