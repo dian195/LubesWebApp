@@ -36,7 +36,7 @@ namespace WebApp.Controllers
             _export = export;
         }
 
-        [Authorize(Roles = "Administrator,Staff")]
+        [Authorize(Roles = "Administrator,Staff,Operator")]
         [Route("~/Admin/Index", Name = "~/Admin/Index"), Route("~/Admin", Name = "~/Admin")]
         public IActionResult Index()
         {
@@ -411,7 +411,7 @@ namespace WebApp.Controllers
 
         #region Products
         [Route("~/Admin/Products")]
-        [Authorize(Roles = "Administrator,Staff")]
+        [Authorize(Roles = "Administrator,Staff,Operator")]
         public IActionResult Products(string? filter, int pg = 1, int opt = 10)
         {
             if (pg != null && pg < 1)
@@ -1129,7 +1129,7 @@ namespace WebApp.Controllers
 
         #region Navbar menu, profile, setting, etc..
         [Route("~/Admin/Profile")]
-        [Authorize(Roles = "Administrator,Staff")]
+        [Authorize(Roles = "Administrator,Staff,Operator")]
         public IActionResult Profile()
         {
             //Get Data User Login
@@ -1155,7 +1155,7 @@ namespace WebApp.Controllers
         }
 
         [Route("~/Admin/Settings")]
-        [Authorize(Roles = "Administrator,Staff")]
+        [Authorize(Roles = "Administrator,Staff,Operator")]
         public IActionResult Settings()
         {
             return View();
@@ -1406,7 +1406,7 @@ namespace WebApp.Controllers
         }
 
         [Obsolete]
-        [Authorize(Roles = "Administrator,Staff")]
+        [Authorize(Roles = "Administrator,Staff,Operator")]
         [Route("~/Admin/Products/Export")]
         public FileResult exportProducts(string filter)
         {
