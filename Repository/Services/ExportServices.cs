@@ -402,16 +402,20 @@ namespace WebApp.Repository.Services
 
                 ws.Column(1).Width = 20;
                 ws.Column(2).Width = 30;
-                ws.Column(3).Width = 50;
-                ws.Column(4).Width = 55;
+                ws.Column(3).Width = 40;
+                ws.Column(4).Width = 50;
                 ws.Column(5).Width = 40;
-                ws.Column(6).Width = 40;
+                ws.Column(6).Width = 55;
+                ws.Column(7).Width = 40;
+                ws.Column(8).Width = 40;
 
                 DataTable dt = new DataTable();
 
                 dt.Columns.Add("Tanggal Scan");
                 dt.Columns.Add("QR No");
+                dt.Columns.Add("Batch Number");
                 dt.Columns.Add("Product");
+                dt.Columns.Add("Kemasan");
                 dt.Columns.Add("Lokasi Scan");
                 dt.Columns.Add("Kab. / Kota");
                 dt.Columns.Add("Provinsi");
@@ -503,7 +507,7 @@ namespace WebApp.Repository.Services
                             var border = cell.Style.Border;
                             border.BorderAround(ExcelBorderStyle.Thin);
 
-                            cell.Value = data.productId;
+                            cell.Value = data.batchNumber;
                         }
                         else if (colIndex == 4)
                         {
@@ -517,7 +521,7 @@ namespace WebApp.Repository.Services
                             var border = cell.Style.Border;
                             border.BorderAround(ExcelBorderStyle.Thin);
 
-                            cell.Value = data.alamatMap;
+                            cell.Value = data.productId;
                         }
                         else if (colIndex == 5)
                         {
@@ -531,9 +535,37 @@ namespace WebApp.Repository.Services
                             var border = cell.Style.Border;
                             border.BorderAround(ExcelBorderStyle.Thin);
 
-                            cell.Value = data.kabupaten;
+                            cell.Value = data.kemasan;
                         }
                         else if (colIndex == 6)
+                        {
+                            var cell = ws.Cells[rowIndex, colIndex];
+
+                            cell.Style.WrapText = true;
+                            cell.Style.Font.Bold = false;
+                            cell.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                            cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                            var border = cell.Style.Border;
+                            border.BorderAround(ExcelBorderStyle.Thin);
+
+                            cell.Value = data.alamatMap;
+                        }
+                        else if (colIndex == 7)
+                        {
+                            var cell = ws.Cells[rowIndex, colIndex];
+
+                            cell.Style.WrapText = true;
+                            cell.Style.Font.Bold = false;
+                            cell.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                            cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                            var border = cell.Style.Border;
+                            border.BorderAround(ExcelBorderStyle.Thin);
+
+                            cell.Value = data.kabupaten;
+                        }
+                        else if (colIndex == 8)
                         {
                             var cell = ws.Cells[rowIndex, colIndex];
 

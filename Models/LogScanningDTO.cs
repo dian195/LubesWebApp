@@ -37,5 +37,11 @@ namespace WebApp.Models
         public string? provinsi { get; set; }
         [Column("Negara")]
         public string? negara { get; set; }
+
+        [Column("batch_number")]
+        public string? batchNumber { get; set; }
+
+        [Column("Kemasan")]
+        public string? kemasan { get; set; }
     }
 }

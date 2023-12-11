@@ -36,7 +36,7 @@ namespace WebApp.Controllers
             _export = export;
         }
 
-        [Authorize]
+        [Authorize(Roles = "Administrator,Staff")]
         [Route("~/Admin/Index", Name = "~/Admin/Index"), Route("~/Admin", Name = "~/Admin")]
         public IActionResult Index()
         {
@@ -64,7 +64,7 @@ namespace WebApp.Controllers
         #region Users
 
         [Route("~/Admin/Users")]
-        [Authorize]
+        [Authorize(Roles = "Administrator,Staff")]
         public async Task<IActionResult> Users(string? filter, int pg = 1, int opt = 10)
         {
             if (pg != null && pg < 1)
@@ -103,7 +103,7 @@ namespace WebApp.Controllers
 
         [HttpGet]
         [Route("~/Admin/NewUser")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public IActionResult NewUser()
         {
             //Reset Data
@@ -120,7 +120,7 @@ namespace WebApp.Controllers
 
         [HttpGet]
         [Route("~/Admin/EditUser")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public IActionResult EditUser(int id)
         {
             //Reset Data
@@ -157,7 +157,7 @@ namespace WebApp.Controllers
 
         [HttpGet]
         [Route("~/Admin/ChangePasswordUser")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public IActionResult ChangePasswordUser(int id)
         {
             ViewData["errormessage"] = "";
@@ -184,7 +184,7 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [Route("~/Admin/ChangePasswordUser")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public IActionResult ChangePasswordUser(UpdatePassProfileDTO reg)
         {
             var gf = new GlobalFunction();
@@ -249,7 +249,7 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [Route("~/Admin/EditUser")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public IActionResult EditUser(EditUserDTO reg)
         {
             var gf = new GlobalFunction();
@@ -320,7 +320,7 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [Route("~/Admin/NewUser")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public IActionResult NewUser(NewUserDTO reg)
         {
             var data = new UserDTO();
@@ -411,7 +411,7 @@ namespace WebApp.Controllers
 
         #region Products
         [Route("~/Admin/Products")]
-        [Authorize]
+        [Authorize(Roles = "Administrator,Staff")]
         public IActionResult Products(string? filter, int pg = 1, int opt = 10)
         {
             if (pg != null && pg < 1)
@@ -451,7 +451,7 @@ namespace WebApp.Controllers
 
         [HttpGet]
         [Route("~/Admin/NewProduct")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public IActionResult NewProduct()
         {
             //Reset Data
@@ -463,7 +463,7 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [Route("~/Admin/NewProduct")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public IActionResult NewProduct(AddSeriesMasterDTO reg)
         {
             var data = new SeriesMasterDTO();
@@ -531,7 +531,7 @@ namespace WebApp.Controllers
 
         [HttpGet]
         [Route("~/Admin/EditProduct")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public IActionResult EditProduct(int id)
         {
             //Reset Data
@@ -563,7 +563,7 @@ namespace WebApp.Controllers
 
         [HttpPost]
         [Route("~/Admin/EditProduct")]
-        [Authorize]
+        [Authorize(Roles = "Administrator")]
         public IActionResult EditProduct(EditSeriesMasterDTO reg)
         {
             string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -640,7 +640,7 @@ namespace WebApp.Controllers
 
         #region Scan
         [Route("~/Admin/Scan")]
-        [Authorize]
+        [Authorize(Roles = "Administrator,Staff")]
         public IActionResult Scan(string? filter, string? fromDate, string? toDate, string? Prov, string? kota, int pg = 1, int opt = 10)
         {
             if (pg != null && pg < 1)
@@ -850,7 +850,7 @@ namespace WebApp.Controllers
 
         #region Report
         [Route("~/Admin/Pengaduan")]
-        [Authorize]
+        [Authorize(Roles = "Administrator,Staff")]
         public IActionResult Pengaduan(string? filter, string? fromDate, string? toDate, string? Prov, string? kota, int pg = 1, int opt = 10)
         {
             if (pg != null && pg < 1)
@@ -1129,7 +1129,7 @@ namespace WebApp.Controllers
 
         #region Navbar menu, profile, setting, etc..
         [Route("~/Admin/Profile")]
-        [Authorize]
+        [Authorize(Roles = "Administrator,Staff")]
         public IActionResult Profile()
         {
             //Get Data User Login
@@ -1155,7 +1155,7 @@ namespace WebApp.Controllers
         }
 
         [Route("~/Admin/Settings")]
-        [Authorize]
+        [Authorize(Roles = "Administrator,Staff")]
         public IActionResult Settings()
         {
             return View();
@@ -1168,10 +1168,17 @@ namespace WebApp.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        [Route("~/Admin/AccessDenied")]
+        public IActionResult AccessDenied()
+        {
+            ViewData["errormessage"] = "You are not allowed to access this page!";
+            return View();
+        }
+
         #region Export
         //Print
         [Obsolete]
-        [Authorize]
+        [Authorize(Roles = "Administrator,Staff")]
         [Route("~/Admin/Pengaduan/Export")]
         public FileResult exportPengaduan(string fromDate, string toDate, string filter, string? Prov, string? kota)
         {
@@ -1399,7 +1406,7 @@ namespace WebApp.Controllers
         }
 
         [Obsolete]
-        [Authorize]
+        [Authorize(Roles = "Administrator,Staff")]
         [Route("~/Admin/Products/Export")]
         public FileResult exportProducts(string filter)
         {
@@ -1439,7 +1446,7 @@ namespace WebApp.Controllers
         }
 
         [Obsolete]
-        [Authorize]
+        [Authorize(Roles = "Administrator,Staff")]
         [Route("~/Admin/Scan/Export")]
         public FileResult exportScanAsync(string filter, string fromDate, string toDate, string? Prov, string? kota)
         {

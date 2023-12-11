@@ -42,6 +42,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
        {
            option.Cookie.Name = "LubesApp";
            option.LoginPath = new PathString("/Auth/SignIn");
+           option.AccessDeniedPath = new PathString("/Admin/AccessDenied");
            //option.ExpireTimeSpan = TimeSpan.FromMinutes(Convert.ToInt32(configTimeOut.Trim() == "" ? "10" : configTimeOut.Trim()));
            option.ExpireTimeSpan = TimeSpan.FromDays(Convert.ToInt32(configTimeOut.Trim() == "" ? "10" : configTimeOut.Trim()));
            option.Cookie.MaxAge = option.ExpireTimeSpan; // optional
