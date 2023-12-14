@@ -82,10 +82,12 @@ namespace WebApp.Controllers
                 {
                     return View("Index_Drum", prodDetail); //PDM
                 }
-                if (unit.Trim() == "BOX" || unit.Trim() == "LITHOS")
-                {
-                    return View("Index_Lithos", prodDetail); //PDM
-                }
+                //if (unit.Trim() == "BOX" || unit.Trim() == "LITHOS")
+                //{
+                //    return View("Index_Lithos", prodDetail); //PDM
+                //}
+
+                return View("Index_Lithos", prodDetail); //PDM
             }
             else
             {
@@ -126,13 +128,60 @@ namespace WebApp.Controllers
                 }
                 else
                 {
-                    ViewBag.MessageSeries = "Tidak Terdaftar pada Database Kami";
-                    return View("NotFound");
+                    //ViewBag.MessageSeries = "Tidak Terdaftar pada Database Kami";
+                    //return View("NotFound");
+
+                    if (_appconf.GetConnectionString("APIURL2").Trim() == "")
+                    {
+                        ViewBag.MessageSeries = "Tidak Terdaftar pada Database Kami";
+                        return View("NotFound");
+                    }
+
+                    var connn = _appconf.GetConnectionString("APIURL2");
+
+                    ApiResponseDTO response3 = await _API.MakeApiRequest(_appconf.GetConnectionString("APIURL2") + param2);
+                    if (response3.IsSuccess == 200)
+                    {
+                        Console.WriteLine(series);
+                        if (series == null)
+                        {
+                            ViewBag.MessageSeries = "Tidak Terdaftar pada Database Kami";
+                            return View("NotFound");
+                        }
+                        else
+                        {
+                            prodDetail.qrCode = param2;
+                            //prodDetail.productCode = series.productCode;
+                            prodDetail.productName = series.productName;
+                            prodDetail.seriesId = series.seriesID;
+                            prodDetail.productPackaging = series.productPackaging;
+                            //prodDetail.productionBatch = series.productionBatch;
+                            prodDetail.productionBatch = "-";
+
+                            //Get Last Scan
+                            var lastscan = _API.GetLastScan(param2, _context);
+                            if (lastscan != null)
+                            {
+                                prodDetail.lastAlamatMap = lastscan.Count() > 0 ? (lastscan.OrderByDescending(s => s.CreatedAt).First().alamatMap ?? "-") : "-";
+                                prodDetail.lastScanTimestamp = lastscan.Count() > 0 ? (lastscan.OrderByDescending(s => s.CreatedAt).First().CreatedAt.ToString("dd/MM/yyyy HH:mm:ss") ?? "-") : "-";
+                                prodDetail.jmlScan = lastscan.Count() + 1;
+                            }
+
+                            if (series.productPackaging == "DRUM" || series.productPackaging == "DR")
+                            {
+                                return View("Index_Drum", prodDetail);
+                            }
+
+                            return View("Index_Lithos", prodDetail);
+                        }
+                    }
+                    else
+                    {
+                        ViewBag.MessageSeries = "Tidak Terdaftar pada Database Kami";
+                        return View("NotFound");
+                    }
                 }
             }
-
-            ViewBag.MessageSeries = "Tidak Terdaftar pada Database Kami";
-            return View("NotFound");
         }
 
         [Route("~/Login")]
