@@ -30,12 +30,18 @@ namespace WebApp.Models
         public string? lastUpdateBy { get; set; }
         [Column("Last_Update")]
         public DateTime? lastUpdate { get; set; }
+
+
+        [Column(name: "no_kimap")]
+        public string? noKimap { get; set; }
     }
 
     public class AddSeriesMasterDTO
     {
         [Required]
         public string? seriesId { get; set; }
+        [Required]
+        public string? noKimap { get; set; }
         [Required]
         public string? productName { get; set; }
         [Required]
@@ -50,6 +56,8 @@ namespace WebApp.Models
         public int? id { get; set; }
         [Required]
         public string? seriesId { get; set; }
+        [Required]
+        public string? noKimap { get; set; }
         [Required]
         public string? productName { get; set; }
         [Required]

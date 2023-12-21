@@ -35,6 +35,16 @@
                     </div>
                     <div class="row g-md-2">
                         <div class="col-md-6 mb-3">
+                            <label for="noKimap" class="form-label">No Kimap<span asp-validation-for="noKimap" class="text-danger"></span></label>
+                            <input type="text" id="noKimap" asp-for="noKimap" class="form-control" placeholder="Enter Kimap No" maxlength="3">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="productVolume" class="form-label">Product Volume<span asp-validation-for="productVolume" class="text-danger"></span></label>
+                            <input type="text" asp-for="productVolume" id="productVolume" class="form-control" placeholder="Enter Product Value" maxlength="100">
+                        </div>
+                    </div>
+                    <div class="row g-md-2">
+                        <div class="col-md-6 mb-3">
                             <label for="productPackaging" class="form-label">Product Packaging<span asp-validation-for="productPackaging" class="text-danger"></span></label>
                             <select id="ddlProdPackaging" class="form-select" onchange="packageChange(this)" asp-for="productPackaging">
                                 <option value="0" disabled>-- Select Packaging --</option>
@@ -43,8 +53,7 @@
                             </select>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="productVolume" class="form-label">Product Volume<span asp-validation-for="productVolume" class="text-danger"></span></label>
-                            <input type="text" asp-for="productVolume" id="productVolume" class="form-control" placeholder="Enter Product Value" maxlength="100">
+                            
                         </div>
                     </div>
                     <div class="row g-md-2">

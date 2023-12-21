@@ -265,13 +265,15 @@ namespace WebApp.Repository.Services
                 ws.Cells.Style.Font.Name = "Calibri";
 
                 ws.Column(1).Width = 15;
-                ws.Column(2).Width = 55;
-                ws.Column(3).Width = 20;
+                ws.Column(2).Width = 15;
+                ws.Column(3).Width = 55;
                 ws.Column(4).Width = 20;
+                ws.Column(5).Width = 20;
 
                 DataTable dt = new DataTable();
 
                 dt.Columns.Add("Series ID");
+                dt.Columns.Add("No. Kimap");
                 dt.Columns.Add("Product Name");
                 dt.Columns.Add("Product Packaging");
                 dt.Columns.Add("Product Volume");
@@ -343,7 +345,7 @@ namespace WebApp.Repository.Services
                             var border = cell.Style.Border;
                             border.BorderAround(ExcelBorderStyle.Thin);
 
-                            cell.Value = data.productName;
+                            cell.Value = data.noKimap;
                         }
                         else if (colIndex == 3)
                         {
@@ -357,9 +359,23 @@ namespace WebApp.Repository.Services
                             var border = cell.Style.Border;
                             border.BorderAround(ExcelBorderStyle.Thin);
 
-                            cell.Value = data.productPackaging;
+                            cell.Value = data.productName;
                         }
                         else if (colIndex == 4)
+                        {
+                            var cell = ws.Cells[rowIndex, colIndex];
+
+                            cell.Style.WrapText = true;
+                            cell.Style.Font.Bold = false;
+                            cell.Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+                            cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+
+                            var border = cell.Style.Border;
+                            border.BorderAround(ExcelBorderStyle.Thin);
+
+                            cell.Value = data.productPackaging;
+                        }
+                        else if (colIndex == 5)
                         {
                             var cell = ws.Cells[rowIndex, colIndex];
 

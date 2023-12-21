@@ -19,6 +19,7 @@ builder.Services.AddControllersWithViews();
 
 //Add Session
 string configTimeOut = config.GetValue<string>("StringApplication:IdleTimeOut");
+builder.Services.AddMemoryCache();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(Convert.ToInt32(configTimeOut.Trim() == "" ? "10" : configTimeOut.Trim()));

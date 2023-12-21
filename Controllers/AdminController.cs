@@ -442,7 +442,8 @@ namespace WebApp.Controllers
                         EF.Functions.Like(acc.seriesID, "%" + filter + "%") ||
                         EF.Functions.Like(acc.productName, "%" + filter + "%") ||
                         EF.Functions.Like(acc.productPackaging, "%" + filter + "%") ||
-                        EF.Functions.Like(acc.productVolume, "%" + filter + "%")
+                        EF.Functions.Like(acc.productVolume, "%" + filter + "%") ||
+                        EF.Functions.Like(acc.noKimap, "%" + filter + "%")
                         )
                     .OrderBy(p => p.seriesID).ToPagedList(pg, pageSize);
                 return View("Products", qry);
@@ -458,6 +459,7 @@ namespace WebApp.Controllers
             AddSeriesMasterDTO rv = new AddSeriesMasterDTO();
             rv.productName = rv.seriesId = rv.productVolume = "";
             rv.productPackaging = "0";
+            rv.noKimap = "";
             return PartialView("_AddProduct", rv);
         }
 
@@ -476,7 +478,7 @@ namespace WebApp.Controllers
             ModelState.Clear();
 
             //Validasi
-            if (string.IsNullOrEmpty(reg.productName) || string.IsNullOrEmpty(reg.productPackaging) || string.IsNullOrEmpty(reg.productVolume) || string.IsNullOrEmpty(reg.seriesId))
+            if (string.IsNullOrEmpty(reg.productName) || string.IsNullOrEmpty(reg.productPackaging) || string.IsNullOrEmpty(reg.productVolume) || string.IsNullOrEmpty(reg.seriesId) || string.IsNullOrEmpty(reg.noKimap))
             {
                 ModelState.AddModelError("", "Lengkapi data!");
                 ViewData["errormessage"] = "Lengkapi data !";
@@ -500,7 +502,7 @@ namespace WebApp.Controllers
 
             //End Validasi
 
-            data.productVolume = reg.productVolume;
+            data.noKimap = reg.noKimap;
             data.productPackaging = reg.productPackaging;
             data.productName = reg.productName;
             data.seriesID = reg.seriesId;
@@ -513,6 +515,7 @@ namespace WebApp.Controllers
                 _context.SaveChanges();
 
                 reg = new AddSeriesMasterDTO();
+                reg.noKimap = "";
                 reg.productVolume = "";
                 reg.productName = "";
                 reg.productPackaging = "0";
@@ -540,13 +543,14 @@ namespace WebApp.Controllers
 
             ModelState.Clear();
             EditSeriesMasterDTO rv = new EditSeriesMasterDTO();
-            rv.productName = rv.seriesId = rv.productVolume = "";
+            rv.productName = rv.seriesId = rv.productVolume = rv.noKimap = "";
             rv.productPackaging = "0";
             rv.id = id;
 
             var data = _context.series_master.Find(id);
             if (data != null)
             {
+                rv.noKimap = data.noKimap;
                 rv.productName = data.productName;
                 rv.seriesId = data.seriesID;
                 rv.productVolume = data.productVolume;
@@ -581,7 +585,7 @@ namespace WebApp.Controllers
                 return PartialView("_EditProduct", reg);
             }
 
-            if (string.IsNullOrEmpty(reg.productName) || string.IsNullOrEmpty(reg.productPackaging) || string.IsNullOrEmpty(reg.productVolume) || string.IsNullOrEmpty(reg.seriesId))
+            if (string.IsNullOrEmpty(reg.productName) || string.IsNullOrEmpty(reg.productPackaging) || string.IsNullOrEmpty(reg.productVolume) || string.IsNullOrEmpty(reg.seriesId) || string.IsNullOrEmpty(reg.noKimap))
             {
                 ModelState.AddModelError("", "Lengkapi data!");
                 ViewData["errormessage"] = "Lengkapi data !";
@@ -610,6 +614,7 @@ namespace WebApp.Controllers
                 var dtusr = _context.series_master.Find(reg.id);
                 if (dtusr != null)
                 {
+                    dtusr.noKimap = reg.noKimap;
                     dtusr.productVolume = reg.productVolume;
                     dtusr.productPackaging = reg.productPackaging;
                     dtusr.productName = reg.productName;
@@ -1430,7 +1435,8 @@ namespace WebApp.Controllers
                             EF.Functions.Like(acc.seriesID, "%" + filter + "%") ||
                             EF.Functions.Like(acc.productName, "%" + filter + "%") ||
                             EF.Functions.Like(acc.productPackaging, "%" + filter + "%") ||
-                            EF.Functions.Like(acc.productVolume, "%" + filter + "%")
+                            EF.Functions.Like(acc.productVolume, "%" + filter + "%") ||
+                            EF.Functions.Like(acc.noKimap, "%" + filter + "%")
                     )
                         .OrderBy(p => p.seriesID).ToList();
                 }
