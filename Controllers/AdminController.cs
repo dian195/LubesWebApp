@@ -616,6 +616,14 @@ namespace WebApp.Controllers
                 return PartialView("_EditProduct", reg);
             }
 
+            var cek2 = _context.series_master.Where(e => e.noKimap == reg.noKimap && e.id != reg.id).ToList();
+            if (cek2.Count > 0)
+            {
+                ModelState.AddModelError("", "No Kimap sudah digunakan !");
+                ViewData["errormessage"] = "No Kimap sudah digunakan !";
+                return PartialView("_AddProduct", reg);
+            }
+
             //End Validasi
 
             try
