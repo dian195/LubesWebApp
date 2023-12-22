@@ -500,10 +500,19 @@ namespace WebApp.Controllers
                 return PartialView("_AddProduct", reg);
             }
 
+            var cek2 = _context.series_master.Where(e => e.noKimap == reg.noKimap).ToList();
+            if (cek2.Count > 0)
+            {
+                ModelState.AddModelError("", "No Kimap sudah digunakan !");
+                ViewData["errormessage"] = "No Kimap sudah digunakan !";
+                return PartialView("_AddProduct", reg);
+            }
+
             //End Validasi
 
             data.noKimap = reg.noKimap;
             data.productPackaging = reg.productPackaging;
+            data.productVolume = reg.productVolume;
             data.productName = reg.productName;
             data.seriesID = reg.seriesId;
             data.createdBy = userId;

@@ -30,8 +30,6 @@ namespace WebApp.Models
         public string? lastUpdateBy { get; set; }
         [Column("Last_Update")]
         public DateTime? lastUpdate { get; set; }
-
-
         [Column(name: "no_kimap")]
         public string? noKimap { get; set; }
     }
