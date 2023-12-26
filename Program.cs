@@ -17,6 +17,9 @@ var config = builder.Configuration;
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Add the configuration
+builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
 //Add Session
 string configTimeOut = config.GetValue<string>("StringApplication:IdleTimeOut");
 builder.Services.AddMemoryCache();
@@ -60,6 +63,8 @@ builder.Services.AddScoped<IExport, ExportServices>();
 
 
 #endregion
+
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
 var app = builder.Build();
 

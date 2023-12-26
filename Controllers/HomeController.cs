@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Net.Http;
@@ -18,9 +19,11 @@ namespace WebApp.Controllers
         private readonly AppDB _context;
         private readonly IConfiguration _appconf;
         private readonly IAPIQRScanServices _API;
+        private readonly string _captchaSiteKey;
 
-        public HomeController(ILogger<HomeController> logger, AppDB context, IAPIQRScanServices api, IConfiguration appconf)
+        public HomeController(ILogger<HomeController> logger, AppDB context, IAPIQRScanServices api, IConfiguration appconf, IOptions<AppSettings> appSettings)
         {
+            _captchaSiteKey = appSettings.Value.CaptchaSiteKey;
             _logger = logger;
             _context = context;
             _API = api;
@@ -35,7 +38,9 @@ namespace WebApp.Controllers
         [Route("~/Report")]
         public IActionResult Report()
         {
-            return View();
+            ReportProductDTO dto = new ReportProductDTO();
+            dto.gRecaptchasitekey = _captchaSiteKey;
+            return View(dto);
         }        
 
         [HttpGet("/{param1}/{param2}")]

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 using Org.BouncyCastle.Ocsp;
 using System;
 using System.Security.Claims;
@@ -12,9 +14,11 @@ namespace WebApp.Controllers
     public class APIController : ControllerBase
     {
         private readonly AppDB _context;
+        private readonly string _captchaSecretKey;
 
-        public APIController(AppDB context)
+        public APIController(AppDB context, IOptions<AppSettings> appSettings)
         {
+            _captchaSecretKey = appSettings.Value.CaptchaSecretKey;
             _context = context;
         }
 
@@ -49,18 +53,34 @@ namespace WebApp.Controllers
                 return Ok(new { Id = 0, Message = "Data kosong", dto });
             }
 
-            try
+            // Verify reCAPTCHA response
+            var captchaSecretKey = _captchaSecretKey;
+            var client = new HttpClient();
+            var response = client.GetStringAsync($"https://www.google.com/recaptcha/api/siteverify?secret={captchaSecretKey}&response={dto.gRecaptchaResponse}").Result;
+
+            // Parse and handle the response
+            var result = JsonConvert.DeserializeObject<RecaptchaResponse>(response);
+
+            if (result.Success)
             {
-                dto.CreatedAt = DateTime.Now;
+                try
+                {
+                    dto.CreatedAt = DateTime.Now;
 
-                _context.report_product.Add(dto);
-                _context.SaveChanges();
+                    _context.report_product.Add(dto);
+                    _context.SaveChanges();
 
-                return Ok(new { Id = 1, Message = "Laporan berhasil disubmit", dto });
+                    return Ok(new { Id = 1, Message = "Laporan berhasil disubmit", dto });
+                }
+                catch (Exception ex)
+                {
+                    return Ok(new { Id = 0, Message = ex.Message, dto });
+                }
             }
-            catch (Exception ex)
+            else
             {
-                return Ok(new { Id = 0, Message = ex.Message, dto });
+                // reCAPTCHA verification failed, show an error
+                return BadRequest(new { id = 0, message = "reCAPTCHA verification failed." });
             }
         }
 

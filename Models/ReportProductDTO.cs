@@ -11,17 +11,17 @@ namespace WebApp.Models
         public int Id { get; set; }
 
         [Column("Nama_Lengkap")]
-        public string namaLengkap { get; set; }
+        public string? namaLengkap { get; set; }
 
         [Column("Nomor_Telepon")]
-        public string nomorTelp { get; set; }
+        public string? nomorTelp { get; set; }
 
         [Column("Email")]
-        public string email { get; set; }
+        public string? email { get; set; }
         [Column("Nama_Produk")]
-        public string namaProduk { get; set; }
+        public string? namaProduk { get; set; }
         [Column("Deskripsi_Pelapor")]
-        public string descPelapor { get; set; }
+        public string? descPelapor { get; set; }
 
         [Column("Create_Date")]
         public DateTime CreatedAt { get; set; } = DateTime.Now; // Default value set to current UTC time
@@ -45,5 +45,20 @@ namespace WebApp.Models
         public string? provinsi { get; set; }
         [Column("Negara")]
         public string? negara { get; set; }
+
+        [NotMapped] // This property will not be mapped to the database
+        public string? gRecaptchaResponse { get; set; }
+        [NotMapped]
+        public string? gRecaptchasitekey { get; set; }
+    }
+
+    public class RecaptchaResponse
+    {
+        public bool Success { get; set; }
+        public string ChallengeTs { get; set; }
+        public string Hostname { get; set; }
+        public decimal Score { get; set; }
+        public string Action { get; set; }
+        public IList<string> ErrorCodes { get; set; }
     }
 }

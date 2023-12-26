@@ -225,13 +225,18 @@
                         </div>
                     </div>
                 </div>
+                <div class="col-12">
+                    <!-- Add this where you want the CAPTCHA widget to appear -->
+                    <div class="g-recaptcha" data-sitekey="@Model.gRecaptchasitekey"></div>
+                </div>
                 <div class="col-12 mt-3 text-end">
                     <button type="submit" id="btnSubmit" class="btn btn-submit btn-primary">Kirim Laporan</button>
                 </div>
             </div>
-        </div>
 
+        </div>
     </div>
+
 </div>
 
 @section scripts {
@@ -378,6 +383,19 @@
                     });
                 }
 
+
+                // Verify reCAPTCHA before submitting the form
+                var gRecaptchaResponse = grecaptcha.getResponse();
+
+                if (!gRecaptchaResponse) {
+                    $('#btnSubmit').prop('disabled', false);
+                    return Swal.fire({
+                        title: 'Error !',
+                        text: 'Please complete the reCAPTCHA verification.',
+                        icon: 'error',
+                    });
+                }
+
                 //Save to db
 
                 const obj = {
@@ -394,7 +412,8 @@
                     "kecamatan": kecamatan,
                     "kabupaten": kabupatenkota,
                     "provinsi": provinsi,
-                    "negara": negara
+                    "gRecaptchaResponse": gRecaptchaResponse
+
                 };
 
                 $.ajax({
