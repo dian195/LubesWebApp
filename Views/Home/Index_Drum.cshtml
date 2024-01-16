@@ -14,18 +14,24 @@
         </div>
     </div>
     <div class="row justify-content-center">
-        <div class="card-detail card-batch">
-            <div class="col">
-                <div class="title-batch">
-                    BATCH NUMBER
+        @if (@Model.productionBatch != null)
+        {
+            @if ((@Model.productionBatch.Trim() == "" ? "-" : @Model.productionBatch.Trim()) != "-")
+            {
+                <div class="card-detail card-batch">
+                    <div class="col">
+                        <div class="title-batch">
+                            BATCH NUMBER
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="text-batch">
+                            @Model.productionBatch
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col">
-                <div class="text-batch">
-                    @Model.productionBatch
-                </div>
-            </div>
-        </div>
+            }
+        }
         <div class="card-detail d-md-flex">
             <div class="col-md-3">
                 <div class="title-detail">
