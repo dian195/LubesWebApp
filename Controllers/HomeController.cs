@@ -41,7 +41,7 @@ namespace WebApp.Controllers
             ReportProductDTO dto = new ReportProductDTO();
             dto.gRecaptchasitekey = _captchaSiteKey;
             return View(dto);
-        }        
+        }
 
         [HttpGet("/{param1}/{param2}")]
         public async Task<IActionResult> Index(string param1, string param2)
@@ -73,6 +73,17 @@ namespace WebApp.Controllers
                 prodDetail.productionBatch = product.productionBatch == null ? "-" : (product.productionBatch == "" ? "-" : product.productionBatch);
 
                 string unit = product.productUnit;
+
+                //Jika nama produk PDM dan lubes beda
+                if (product.productName != null && series != null)
+                {
+                    if (series.productName != Convert.ToString(product.productName))
+                    {
+                        //prodDetail.productionBatch = "-";
+                        prodDetail.productName = series.productName;
+                        prodDetail.productPackaging = series.productPackaging;
+                    }
+                }
 
                 //Get Last Scan
                 var lastscan = _API.GetLastScan(param2, _context);
