@@ -79,7 +79,7 @@ namespace WebApp.Controllers
                 {
                     if (series.productName != Convert.ToString(product.productName))
                     {
-                        //prodDetail.productionBatch = "-";
+                        prodDetail.productionBatch = "-";
                         prodDetail.productName = series.productName;
                         prodDetail.productPackaging = series.productPackaging;
                     }
